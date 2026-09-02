@@ -1,0 +1,39 @@
+#Things to add
+#Category labels in legend or annotated over graph
+#mixed height and width
+#Mixed orientation
+#Data cleaning
+
+
+# DONE stretch/scale bars into speciic width, or center around mid
+# DONE Data values on bars or not
+    # DONE data value colour inverse for dark coloured bars
+    # DONE Left-align, mid-align, or right-align
+    # DONEformatting (rounding, % sign, etc.)
+    # DONE Hide data values on overlap
+
+#DONE different bar colours (also greyscale)
+#DONE Mid line style
+
+#Different axis scales
+#normalise into percentages
+#Aligning bars on bar number
+    #Ordering bars based on left/right total
+#Category
+#More explicit stats on bars (see https://www.datarevelations.com/rethinkingdivergent/)
+
+
+#Types of bar graph
+    #Basic
+    #Vertical
+    #Normalised
+
+#Bar basics
+    #auto ticks
+    #bars left aligned
+
+#Many functions for different types of stacked bar chart, one class that can do everything
+#Each function should do all the basic stuff, but also return a StackedBarplot obj which can be further customised
+
+
+
