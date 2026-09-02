@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 
 from core import StackedBarplot, DEFAULT_BAR_FONT, DEFAULT_BAR_STYLE, DEFAULT_LEGEND_STYLE, DEFAULT_FIG_STYLE, DEFAULT_VERTLINE_STYLE, StackedPlotStyle
 from tools import *
+from defaults import *
 
 
 
@@ -20,6 +21,7 @@ def basic(
         xaxisstep:int = None,
         barheight:float = 0.8
         ):
+    """
 
     stackedBarStyle = StackedPlotStyle()
     stackedBarStyle.figstored["title"] = title
@@ -60,7 +62,7 @@ def centered(
         xaxislim:tuple[int, int] = None,
         xaxisstep:int = None,
         barheight:float = 0.8
-        ):
+        ) -> StackedBarplot:
     
     stackedBarStyle = StackedPlotStyle()
     stackedBarStyle.figstored["title"] = title

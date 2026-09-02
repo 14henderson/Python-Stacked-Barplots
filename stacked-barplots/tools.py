@@ -1,7 +1,5 @@
 import copy
 
-type ResultsType = dict[str, list[float]]
-type LegendLabelsType = list[str]
 
 def cumu1d(data:list[float]):
     cumu_data = copy.deepcopy(data)
