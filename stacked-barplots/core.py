@@ -8,7 +8,8 @@ StackedBarplot object. The StackedBarplot and StackedPlotStyle classes maintain
 a one-to-one relationship.
 """
 
-import os, warnings
+import os
+import warnings
 import matplotlib.pyplot as plt
 import matplotlib.lines as mlines
 from matplotlib.artist import Artist
@@ -46,10 +47,10 @@ class StackedBarplot:
 
         Args:
             data: Dictionary of category headings and associated category integer or float 
-            data. For example, {"Ages": [12, 3, 4, 1], ...}. Order of data list must follow
-            order of series labels. 
+                data. For example, {"Ages": [12, 3, 4, 1], ...}. Order of data list must follow
+                order of series labels. 
             series_labels: List of string headings for series, to be (optionally) be displayed
-            on legend.
+                on legend.
             category_headings: List of string headings for data categories.
             fig: matplotlib.pyplot.figure object.
             ax: matplotlib.pyplot.axis object.
@@ -294,6 +295,10 @@ class StackedBarplot:
         self.fig.tight_layout()
 
 
+    def get_bar_labels_style(self) -> dict:
+        """Returns dictionary containing style configuration for chart bar labels."""
+        return self.style.barfontstored
+
     #TODO: Start and end bar data label movement is implicit in whether paddthresh is None, thus endthreshpadd is redundant. 
     def set_bar_labels_style(self,
                 fontsize:int=None,
@@ -311,18 +316,18 @@ class StackedBarplot:
             fontsize: Data label font size in points or as a string (e.g., 'large').
             fontcolour: The colour of data labels.
             fontcolourinvert: Boolean flag for if font colour should be inverted for
-            data labels displayed on bars with low luminence.
+                data labels displayed on bars with low luminence.
             barvalueformat: format()-style format string for data labels. Default '{0}'. Format
-            string can also round to (e.g., 1) decimal place(s) with '{0:.1}'. A suffix can
-            be added using (for example) '{0}%'. See Python documentation for more inforamtion 
-            (https://docs.python.org/3/library/string.html#format-specification-mini-language).
+                string can also round to (e.g., 1) decimal place(s) with '{0:.1}'. A suffix can
+                be added using (for example) '{0}%'. See Python documentation for more inforamtion 
+                (https://docs.python.org/3/library/string.html#format-specification-mini-language).
             displaythresh: Tuple of floats representing optional minimum and maximum display
-            thresholds. Data labels below minimum or above maximum thresholds will not be displayed.
+                thresholds. Data labels below minimum or above maximum thresholds will not be displayed.
             paddthresh: Threshold for whether data labels on start or end bars of categories should
-            be moved for better clarity (see parameter endthreshpadd).
+                be moved for better clarity (see parameter endthreshpadd).
             endthreshpadd: Boolean value indicating whether, for data values for start or end bars, 
-            if the data value is below paddthresh, is should be moved outside of the bar for better
-            clarity. 
+                if the data value is below paddthresh, is should be moved outside of the bar for better
+                clarity. 
             align: Alignment of data labels within bars. Can be 'left', 'center', or 'right'. 
             padding: Padding for data labels moved.
         """
@@ -337,6 +342,11 @@ class StackedBarplot:
         if padding is not None: self.style.barfontstored["fontpadd"] = padding
         self.unrendered_changes = True
 
+
+    def get_bar_style(self) -> dict:
+        """Returns dictionary containing style configuration for chart bars."""
+        return self.style.barstored
+
     def set_bar_style(self,
                     barheight:int = None,
                     align:str = None,
@@ -346,12 +356,12 @@ class StackedBarplot:
         """Update StackedBarplot bar style configuration.
 
         Args:
-            barheight: the height of each bar as a fraction. Selection 1 results on 
-            no whitespace between displayed categories.
+            barheight: The height of each bar as a fraction. Selection 1 results on 
+                no whitespace between displayed categories.
             align: The alignment of bars. Must be either 'left' or 'center'.
             ordered: Whether the displayed categories should be ordered. Must be either 
-            None, 'ascending', or 'descending'. Categories are ordered based on sum of 
-            leftmost bars.
+                None, 'ascending', or 'descending'. Categories are ordered based on sum of 
+                leftmost bars.
             barcolours: List of colour tuples, matching the number of series in each category.
         """
         #TODO: Improve method argument barcolours docstring to signpost colour methods.
@@ -361,6 +371,11 @@ class StackedBarplot:
         #TODO There should be some error checking that there are enough colours (i.e., matching shape of data.)
         if barcolours is not None: self._init_fig_colours(barcolours)
         self.unrendered_changes = True
+
+
+    def get_axis_title_style(self) -> dict:
+        """Returns dictionary containing style configuration for chart axis labels."""
+        return self.style.axistitlestored
 
     def set_axis_title_style(self,
                           xlabel:str = None,
@@ -383,6 +398,11 @@ class StackedBarplot:
             self.style.axistitlestored["axislabelfontcolour"] = axislabelfontcolour
         self.unrendered_changes = True
 
+
+    def get_fig_style(self) -> dict:
+        """Returns dictionary containing general style configuration for chart figure."""
+        return self.style.figstored
+
     def set_fig_style(self,
                     title:str = None,
                     titlefontsize:int = None,
@@ -397,7 +417,7 @@ class StackedBarplot:
             titlefontsize: Plot title font size in points or as a string (e.g., 'large').
             titlecolour: The colour of the plot title.
             fontfamily: The font family for all text used in the plot. User must select from
-            a list of font families (installed on user's machine).
+                a list of font families (installed on user's machine).
             figsize: Tuple of integers representing the width and height of the figure.
         """
         if title is not None: self.style.figstored["title"] = title
@@ -407,6 +427,9 @@ class StackedBarplot:
         if figsize is not None: self.style.figstored["size"] = figsize
         self.unrendered_changes = True
 
+    def get_vert_line_style(self) -> dict:
+        """Returns dictionary containing style configuration for chart vertical line."""
+        return self.style.vertlinestored
 
     def set_vert_line_style(self,
                     show:bool = None,
@@ -417,7 +440,7 @@ class StackedBarplot:
 
         Args:
             show: A boolean flag for whether the vertical line should be shown,
-            irrespectiev of other vertical line style configurations.
+                irrespectiev of other vertical line style configurations.
             linestyle: Set the linestyle of the line. Is {'-', '--', '-.', ':', '', ...}.
             colour: The colour of the line.
             alpha: The alpha value of the line.
@@ -428,7 +451,9 @@ class StackedBarplot:
         if alpha is not None: self.style.vertlinestored["alpha"] = alpha
         self.unrendered_changes = True
 
-
+    def get_legend_style(self) -> dict:
+        """Returns dictionary containing style configuration for chart legend."""
+        return self.style.legendstored
 
     def set_legend_style(self,
                        show:bool = None,
@@ -446,7 +471,7 @@ class StackedBarplot:
 
         Args:
             show: A boolean flag for whether the legend should be shown, irrespective
-            of other legend style configurations. 
+                of other legend style configurations. 
             fontsize: Series headings' font size in points or as a string (e.g., 'large').
             location: WORK IN PROGRESS
             spacing: Spacing between series headings, in font-size units.
@@ -455,9 +480,9 @@ class StackedBarplot:
             bordercolour: The legend's background patch edge color.
             placement: WORK IN PROGRESS
             markershape: Marker style string. {'*': 'star', '+': 'plus', 's':'square', 
-            'o':circle'}. For a full list of marker styles see https://matplotlib.org/stable/api/_as_gen/matplotlib.lines.Line2D.html.
+                'o':circle'}. For a full list of marker styles see https://matplotlib.org/stable/api/_as_gen/matplotlib.lines.Line2D.html.
             transform: Allows the user to make minor adjustments to the legend's placement
-            after placement choice.  
+                after placement choice.  
         """
         #TODO: finalise method argument documentation relating to legend placement.
         if show is not None: self.style.legendstored["show"] = show
@@ -474,7 +499,9 @@ class StackedBarplot:
         if transform is not None: self.style.legendstored["transform"] = transform
         self.unrendered_changes = True
 
-
+    def get_axis_style(self) -> dict:
+        """Returns dictionary containing style configuration for chart axis."""
+        return self.style.axisstored
 
     def set_axis_style(self,
                        xlim:tuple[int, int] = None,
@@ -490,9 +517,9 @@ class StackedBarplot:
             xfontsize: X axis tick label font size in points or as a string (e.g., 'large').
             yfontsize: Y axis tick label font size in points or as a string (e.g., 'large').
             xaxisformat: format()-style format string for x axis ticks. Default '{0}'. Format
-            string can also round to (e.g., 1) decimal place(s) with '{0:.1}'. A suffix can
-            be added using (for example) '{0}%'. See Python documentation for more inforamtion 
-            (https://docs.python.org/3/library/string.html#format-specification-mini-language).
+                string can also round to (e.g., 1) decimal place(s) with '{0:.1}'. A suffix can
+                be added using (for example) '{0}%'. See Python documentation for more inforamtion 
+                (https://docs.python.org/3/library/string.html#format-specification-mini-language).
         """
         if xlim is not None: self.style.axisstored["xlim"] = xlim
         if step is not None: self.style.axisstored["step"] = step
@@ -540,11 +567,11 @@ class StackedBarplot:
             transparent: If True, the Axes patches will all be transparent. 
             dpi: The resolution in dots per inch. If 'figure', use the figure's dpi value.
             bbox_inches: Bounding box in inches: only the given portion of the figure is saved. 
-            If 'tight', try to figure out the tight bbox of the figure.
+                If 'tight', try to figure out the tight bbox of the figure.
             pad_inches: Amount of padding in inches around the figure when bbox_inches is 
-            'tight'.
+                'tight'.
             format: The file format, e.g. 'png', 'pdf', 'svg', ... The behavior when this is 
-            unset is documented under fname.
+                unset is documented under fname.
 
         """
         if self.unrendered_changes:
