@@ -25,7 +25,6 @@ __all__ = [
 
 type results_type = dict[str, list[float]]
 type series_labels_type = list[str]
-type colour_type = list[tuple[int, int, int]]
 
 class StackedBarplot:
     """StackedBarplot object represents horizontal stacked barchart with given style.
@@ -38,24 +37,24 @@ class StackedBarplot:
 
 
     Attributes:
-        data: Dictionary of chart data.
-        series_labels: List of string headings for series used in chart.
-
+        data: Dictionary of category headings and associated category integer or float 
+            data. For example, {"Ages": [12, 3, 4, 1], ...}. Order of data list must follow
+            order of series labels. 
+        series_labels: List of string headings for series, to be (optionally) be displayed
+            on legend.
+        category_headings: List of string headings for data categories.
+        fig: matplotlib.pyplot.figure object.
+        ax: matplotlib.pyplot.axis object.
+        style: Instance of class StackedPlotStyle, containing chart style settings.
+        bar_colours: Instance of class ColourGradient, containing chart bar colours.
     """
     def __init__(self, data:results_type, series_labels:series_labels_type):
         """Initializes the instance based on chart data and series labels.
 
         Args:
-            data: Dictionary of category headings and associated category integer or float 
-                data. For example, {"Ages": [12, 3, 4, 1], ...}. Order of data list must follow
-                order of series labels. 
-            series_labels: List of string headings for series, to be (optionally) be displayed
-                on legend.
-            category_headings: List of string headings for data categories.
-            fig: matplotlib.pyplot.figure object.
-            ax: matplotlib.pyplot.axis object.
-            style: Instance of class StackedPlotStyle, containing chart style settings.
-
+            data: Dictionary of chart data.
+            series_labels: List of string headings for series used in chart.
+            
         """
         self.data = list(data.values())
         self.series_labels = series_labels
@@ -69,7 +68,10 @@ class StackedBarplot:
         self.unrendered_changes = True
 
         self.style = StackedPlotStyle()
-        self.style.barstored["barcolours"] = greyscaleGradient(len(self.series_labels), 0.3, 0.9)
+
+        self.bar_colours = ColourGradient()
+        self.bar_colours.grayscale_gradient(len(self.series_labels))
+
         self._init_legend_markers()
 
 
@@ -80,10 +82,9 @@ class StackedBarplot:
             style: Given StackedBarplot object that should be applied to the StackedBarplot plot.
         """
         self.style = style
+
         #Bar colours must be generated after the data is provided, as the number of colours must match the number of categories
-        self._init_fig_colours(colourGradient(len(self.series_labels),
-                                              DEFAULT_BAR_STYLE.startcolour, DEFAULT_BAR_STYLE.endcolour,
-                                              DEFAULT_BAR_STYLE.midcolour))
+        self.bar_colours.gradient(len(self.series_labels), DEFAULT_BAR_STYLE.startcolour, DEFAULT_BAR_STYLE.endcolour, DEFAULT_BAR_STYLE.midcolour)
         self._init_legend_markers()
 
 
@@ -118,7 +119,7 @@ class StackedBarplot:
                 else:
                     offsets.append(sum(self.data[row_index][0:middle_index]) + self.data[row_index][middle_index]/2)
 
-        for col_index, (colname, colour) in enumerate(zip(self.series_labels, self.style.barstored.get("barcolours"))):
+        for col_index, (colname, colour) in enumerate(zip(self.series_labels, self.bar_colours.get_normalised_gradient_list())):
             widths = [bar_data[col_index] for bar_data in self.data]
             starts = [bar_data[col_index] for bar_data in data_cum]
 
@@ -348,10 +349,10 @@ class StackedBarplot:
         return self.style.barstored
 
     def set_bar_style(self,
-                    barheight:int = None,
+                    bar_height:int = None,
                     align:str = None,
                     ordered:str = None,
-                    barcolours:colour_type = None
+                    bar_gradient:ColourGradient = None
                     ):
         """Update StackedBarplot bar style configuration.
 
@@ -362,14 +363,14 @@ class StackedBarplot:
             ordered: Whether the displayed categories should be ordered. Must be either 
                 None, 'ascending', or 'descending'. Categories are ordered based on sum of 
                 leftmost bars.
-            barcolours: List of colour tuples, matching the number of series in each category.
+            bar_gradient: ColourGradient object, containing colours matching the number of 
+                series in each category.
         """
         #TODO: Improve method argument barcolours docstring to signpost colour methods.
-        if barheight is not None: self.style.barstored["barheight"] = barheight
+        if bar_height is not None: self.style.barstored["barheight"] = bar_height
         if align is not None: self.style.barstored["align"] = align
         if ordered is not None: self.style.figstored["ordered"] = ordered
-        #TODO There should be some error checking that there are enough colours (i.e., matching shape of data.)
-        if barcolours is not None: self._init_fig_colours(barcolours)
+        if bar_gradient is not None: self.bar_colours = bar_gradient
         self.unrendered_changes = True
 
 
@@ -582,9 +583,9 @@ class StackedBarplot:
         self.fig.savefig(os.path.join(path, filename), transparent=transparent, dpi=dpi, bbox_inches=bbox_inches, pad_inches=pad_inches, format=fig_format)
 
 
-    def _init_fig_colours(self, colours:list[tuple[int, int, int]]):
-        """Defines figure colours, converting to float."""
-        self.style.barstored["barcolours"]  = [(col[0]/255.0, col[1]/255.0, col[2]/255.0) for col in colours]
+    #def _init_fig_colours(self, colours:list[tuple[int, int, int]]):
+    #    """Defines figure colours, converting to float."""
+    #    self.style.barstored["barcolours"]  = [(col[0]/255.0, col[1]/255.0, col[2]/255.0) for col in colours]
 
 
     def _init_legend_markers(self):
@@ -598,7 +599,7 @@ class StackedBarplot:
             self.style.legendstored["markers"].append(
                 mlines.Line2D([],
                 [],
-                color=self.style.barstored.get("barcolours")[i],
+                color=self.bar_colours.get_normalised_gradient_list()[i],
                 marker=self.style.legendstored.get("markershape"),
                 linestyle='None',
                 markersize=10,
@@ -633,6 +634,7 @@ class StackedPlotStyle:
     """
     def __init__(self):
         """Initializes the instance based on default values loaded from defaults.py."""
+
         self.barfontstored = {
             "fontsize": DEFAULT_BAR_FONT.size,
             "fontcolour": DEFAULT_BAR_FONT.colour,
@@ -648,7 +650,6 @@ class StackedPlotStyle:
         self.barstored = {
             "height": DEFAULT_BAR_STYLE.height,
             "align": DEFAULT_BAR_STYLE.align,
-            "barcolours": [], #Requires data to create correct length gradient
             "startcolour": DEFAULT_BAR_STYLE.startcolour,
             "endcolour": DEFAULT_BAR_STYLE.endcolour,
             "midcolour": DEFAULT_BAR_STYLE.midcolour

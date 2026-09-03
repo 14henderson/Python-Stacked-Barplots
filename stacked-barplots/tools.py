@@ -1,63 +1,137 @@
-"""A one-line summary of the module or program, terminated by a period.
+# pylint: disable=multiple-statements,too-many-positional-arguments,redefined-outer-name,line-too-long,disable=consider-using-enumerate
+"""Tools module pertaining to stacked-barplots Python library.
 
-Leave one blank line.  The rest of this docstring should contain an
-overall description of the module or program.  Optionally, it may also
-contain a brief description of exported classes and functions and/or usage
-examples.
+tools.py contains non-member functions relating that emulate the Numpy 
+cumsum() method (To keep this package lightweight, Numpy is not used). This
+module also contains the ColourGradient class, which stores colour data
+used by StackedBarplot. The StackedBarplot and ColourGradient classes maintain
+a one-to-one relationship.
 
 Typical usage example:
+    results = {"Category 1": [10, 5, 3, 11], "Category 2": [4, 2, 9, 12], "Category 3": [11, 12, 3, 4]}
+    series_labels = ["Series 1", "Series 2", "Series 3", "Series 4"]
+    custom_plot = basic(results, series_labels, title="Custom Plot")
 
-  foo = ClassFoo()
-  bar = foo.function_bar()
+    custom_colours = ColourGradient()
+    custom_colours.gradient(len(series_labels), (200, 100, 150), (100, 150, 200))
+    custom_plot.set_bar_style(bar_height=.5, bar_gradient=custom_colours)
+
+    custom_plot.render()
+    custom_plot.show()
 """
 
 
 import copy
 
+type colour_type = list[tuple[int, int, int]]
+type norm_colour_type = list[tuple[float, float, float]]
 
-def cumu1d(data:list[float]):
+
+
+def cumu1d(data:list[float]) -> list[float]:
+    """Return the cumulative sum of the elements along one axis."""
     cumu_data = copy.deepcopy(data)
     for x in range(len(cumu_data)):
-        if x == 0: continue
-        else: cumu_data[x] = cumu_data[x] + cumu_data[x-1]
+        if x == 0:
+            continue
+        cumu_data[x] = cumu_data[x] + cumu_data[x-1]
     return cumu_data
-    
-def cumu2d(data:list[list[float]]):
+
+#TODO: Add documentation on why this process is necessary.
+def cumu2d(data:list[list[float]]) -> list[list[float]]:
+    """Iterates over y axis of 2-d list and returns the cumulative sum of the elements 
+    along each one."""
     cumu_data = copy.deepcopy(data)
     for y in range(len(cumu_data)):
-        for x in range(len(cumu_data[y])):
-            if x == 0: continue
-            else: cumu_data[y][x] = cumu_data[y][x] + cumu_data[y][x-1]
+        cumu_data[y] = cumu1d(cumu_data[y])
     return cumu_data
 
 
-def colourGradient(total:int, startcolour:tuple[float, float, float], endcolour:tuple[float, float, float], centercolour:tuple[float, float, float] = (150, 150, 150)):
-    if(total %2 != 0 and centercolour is None):
-        raise ValueError("If total number of colours is odd, a center colour must be provided")
+class ColourGradient():
+    """ColourGradient objects represent the colour gradients for one StackedBarplot object.
     
-    colours = []
-    if centercolour is None:
-        col_step = [(end-start)/(total-1.0) for start, end in zip(startcolour, endcolour)]
-        for i in range(total):
-            colours.append(tuple([start+col_step[j]*i for j, start in enumerate(startcolour)]))
-    else:
-        col_step1 = [(center-start)/(total//2.0) for start, center in zip(startcolour, centercolour)]
-        col_step2 = [(end-center)/(total//2.0) for end, center in zip(endcolour, centercolour)]
-        for i in range(total):
-            if(i < total//2):
-                colours.append(tuple([start+col_step1[j]*i for j, start in enumerate(startcolour)]))
-            else:
-                colours.append(tuple([center+col_step2[j]*(i-(total//2)) for j, center in enumerate(centercolour)]))
-    return colours
-    
-def greyscaleGradient(total, min_val:int = 0.3, max_val:int = 0.9):
-    col_step = (max_val-min_val)/(total-1.0)
-    return [((min_val+col_step*i, min_val+col_step*i, min_val+col_step*i)) for i in range(total)]
+        Attributes:
+            colour_gradient_list: List of stored RGB tuples with length matching the total
+                number of series used in the StackedBarplot object.
+        """
+
+    def __init__(self):
+        """Initializes the ColourGradient instance."""
+        self.colour_gradient_list = []
+        #self.grayscale_gradient
+
+    def get_normalised_gradient_list(self) -> norm_colour_type:
+        """Returns stored colour gradient list matching data shape. RGB values are returned as fractions."""
+        print(self.colour_gradient_list)
+        norm = [(col[0]/255.0, col[1]/255.0, col[2]/255.0) for col in self.colour_gradient_list]
+        return norm
+
+    def get_gradient_list(self) -> colour_type:
+        """Returns stored colour gradient list matching data shape.."""
+        return self.colour_gradient_list
+        #TODO: if it doesn't exist, throw error? Use default?
+
+    def gradient(self,
+                series_length:int,
+                start_colour:tuple[int, int, int],
+                end_colour:tuple[int, int, int],
+                center_colour:tuple[int, int, int] = None
+                ):
+        """Creates and stores a list of RGB colours in gradient matching length of 
+        series
+        
+        Args:
+            series_length: The length of the series used in the chart.
+            start_colour: The intended RGB colour of the starting bar in each category.
+            end_colour: The intended RGB colour of the end bar in each category.
+            center_colour: The intended RGB colour of the central bar in each category.
+                This argument is optional, unless the series_length is optional, when it
+                is a required parameter. If defined, the created gradient will converge 
+                from start_colour and end_colour on to center_colour.
+        """
+        if series_length %2 != 0 and center_colour is None:
+            raise ValueError("If total number of colours is odd, a center colour must be provided")
+        series_colours = []
+        if center_colour is None:
+            col_step = [(end-start)/(series_length-1.0) for start, end in zip(start_colour, end_colour)]
+            for i in range(series_length):
+                series_colours.append(tuple([start+col_step[j]*i for j, start in enumerate(start_colour)]))
+        else:
+            col_step1 = [(center-start)/(series_length//2.0) for start, center in zip(start_colour, center_colour)]
+            col_step2 = [(end-center)/(series_length//2.0) for end, center in zip(end_colour, center_colour)]
+            for i in range(series_length):
+                if i < series_length//2:
+                    series_colours.append(tuple([start+col_step1[j]*i for j, start in enumerate(start_colour)]))
+                else:
+                    series_colours.append(tuple([center+col_step2[j]*(i-(series_length//2)) for j, center in enumerate(center_colour)]))
+        self.colour_gradient_list = series_colours
 
 
+    def grayscale_gradient(self,
+                           series_length:int,
+                           start_intensity:int = 0.3,
+                           end_intensity:int = 0.9
+                           ):
+        """Creates and stores a list of RGB colours in a grayscale gradient matching 
+        length of given series.
+        
+        Args:
+            series_length: The length of the series used in the chart.
+            start_intensity: The intended intensity of the starting bar in each 
+                category. Value given as integer between 0 and 255. 
+            end_intensity: The intended intensity of the ending bar in each category.
+                Value given as integer between 0 and 255.
+            """
+        col_step = (end_intensity-start_intensity)/(series_length-1.0)
+        self.colour_gradient_list = [((start_intensity+col_step*i, start_intensity+col_step*i, start_intensity+col_step*i)) for i in range(series_length)]
 
-if __name__ == "__main__":
-    x = [[1, 1], [4, 4], [2, 2], [3, 3]]
-    #x = [[25, 15, 10, 8, 12], [40, 12, 8, 10, 5], [30, 18, 7, 12, 8], [45, 10, 6, 8, 4], [42, 14, 5, 10, 3], [32, 15, 10, 12, 6], [38, 14, 7, 9, 5], [35, 16, 9, 11, 4], [40, 13, 8, 9, 5], [28, 20, 9, 13, 6], [43, 11, 6, 8, 4], [45, 12, 5, 7, 3], [36, 14, 9, 10, 5], [44, 13, 5, 8, 4], [34, 17, 11, 9, 6]]
-    x = sorted(x, key=lambda category: sum(category))
-    print(x)
+    def set_colour_gradient_list(self, new_colour_gradient_list:colour_type):
+        """Allows the user to define a custom colour gradient list, instead of using
+        a predefined gradient method.
+        
+        Arg: 
+            new_colour_gradient_list: List of RGB tuples with values between 0 and 255. 
+                Length must equal series length of corresponding StackedBarplot.             
+            """
+        print(new_colour_gradient_list)
+        self.colour_gradient_list = new_colour_gradient_list
