@@ -100,6 +100,7 @@ class DEFAULT_AXIS_STYLE:
     x_font_size:int = 12
     y_font_size:int = 12
     x_axis_format:str = "{0}"
+    x_axis_show:bool = True
 
 
 class DEFAULT_AXIS_TITLE_STYLE:

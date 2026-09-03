@@ -213,13 +213,17 @@ class StackedBarplot:
 
     def _plot_axes(self):
         """Internal method. Renders and applies plot labels/title and axes settings according to stored style configuration."""
-        if self.style.axis.get("xlim") is not None and self.style.axis.get("step") is not None:
-            self.ax.set_xlim(self.style.axis.get("xlim")[0], self.style.axis.get("xlim")[1])
-            self.ax.set_xticks([i for i in range(self.style.axis.get("xlim")[0], self.style.axis.get("xlim")[1]+1, self.style.axis.get("step"))])
+        if not self.style.axis.get("xaxisshow"):
+            self.ax.xaxis.set_visible(False)
+        else:
+            if self.style.axis.get("xlim") is not None and self.style.axis.get("step") is not None:
+                self.ax.set_xlim(self.style.axis.get("xlim")[0], self.style.axis.get("xlim")[1])
+                self.ax.set_xticks([i for i in range(self.style.axis.get("xlim")[0], self.style.axis.get("xlim")[1]+1, self.style.axis.get("step"))])
 
-        self.ax.xaxis.set_major_formatter(lambda x, pos: self.style.axis.get("xaxisformat").format(x))
+            
+            self.ax.xaxis.set_major_formatter(lambda x, pos: self.style.axis.get("xaxisformat").format(x))
+            self.ax.tick_params(axis='x', labelsize=int(self.style.axis.get("xfontsize")), labelfontfamily=self.style.fig.get("fontfamily"))
 
-        self.ax.tick_params(axis='x', labelsize=int(self.style.axis.get("xfontsize")), labelfontfamily=self.style.fig.get("fontfamily"))
         self.ax.tick_params(axis='y', labelsize=int(self.style.axis.get("yfontsize")), labelfontfamily=self.style.fig.get("fontfamily"))
 
         if not self.style.fig.get("spinedisplay")[0]: self.ax.spines['left'].set_visible(False)
@@ -504,7 +508,8 @@ class StackedBarplot:
                        step:int = None,
                        x_font_size:int = None,
                        y_font_size:int = None,
-                       x_axis_format:str = None):
+                       x_axis_format:str = None,
+                       x_axis_show:bool = None):
         """Update StackedBarplot axis style configuration.
 
         Args:
@@ -516,14 +521,15 @@ class StackedBarplot:
                 string can also round to (e.g., 1) decimal place(s) with '{0:.1}'. A suffix can
                 be added using (for example) '{0}%'. See Python documentation for more inforamtion 
                 (https://docs.python.org/3/library/string.html#format-specification-mini-language).
+            x_axis_show: Boolean flag for if the x axis should show (default True).
         """
         if x_lim is not None: self.style.axis["xlim"] = x_lim
         if step is not None: self.style.axis["step"] = step
         if x_font_size is not None: self.style.axis["xfontsize"] = x_font_size
         if y_font_size is not None: self.style.axis["yfontsize"] = y_font_size
         if x_axis_format is not None: self.style.axis["xaxisformat"] = x_axis_format
+        if x_axis_show is not None: self.style.axis["xaxisshow"] = x_axis_show
         self.unrendered_changes = True
-
 
 
 
@@ -694,4 +700,5 @@ class StackedPlotStyle:
             "xfontsize": DEFAULT_AXIS_STYLE.x_font_size,
             "yfontsize": DEFAULT_AXIS_STYLE.y_font_size,
             "xaxisformat": DEFAULT_AXIS_STYLE.x_axis_format,
+            "xaxisshow": DEFAULT_AXIS_STYLE.x_axis_show
         }
