@@ -1,140 +1,158 @@
-type ResultsType = dict[str, list[float]]
-type LegendLabelsType = list[str]
-type ColourType = list[tuple[int, int, int]]
+# pylint: disable=multiple-statements,too-many-positional-arguments,redefined-outer-name,line-too-long,invalid-name
+
+"""Contains default value classes for plot style settings.
+
+defaults.py contains classes which store the default values for
+all plot style elements covered in this project. Plot styles are 
+separated into bars, bar text, overall axes and figure styles, and 
+style settings relating to the plot legend and (where appropriate)
+the vertical line. 
+
+Typical usage example:
+
+  foo = ClassFoo()
+  bar = foo.function_bar()
+"""
+
+#TODO: Convert variable names to snake_case
+
+__all__ = [
+    "DEFAULT_BAR_FONT", "DEFAULT_BAR_STYLE", "DEFAULT_FIG_STYLE", 
+    "DEFAULT_AXIS_STYLE", "DEFAULT_AXIS_TITLE_STYLE", "DEFAULT_LEGEND_STYLE", 
+    "DEFAULT_VERTLINE_STYLE"
+]
+
 
 
 class DEFAULT_BAR_FONT:
-    size = 12
+    """Default style class for bar textual annotations.
+    
+    Default style settings for stacked barchart relating to 
+    textual annotations made on data bars containing bar values. 
+    Default values are stored on font size, colour, format, alignment in bar, and 
+    a display threshold. The user can also specify if the text colour should be
+    inverted when displayed on a dark-coloured bar; this is set to False by default.
+
+    More advanced style settings allow the user to specify if, when the 
+    bar value is below a certain value (and thus below a certain visual width), 
+    whether (for first or last bars for a category) the value should be moved outside 
+    of the bar."""
+
+    size:int = 12
     colour = "black"
-    format = "{0:.1f}"
-    align = "center"
-    padding = 1.5
-    displaythresh = (0, None)
-    colourinvert = False
-    paddingthresh = 0 #The threshold for if a label should be moved
-    endthreshpadd = False
+    format:str = "{0:.1f}"
+    align:str = "center"
+    padding:float = 1.5
+    displaythresh:tuple[float, float] = (0, None)
+    colourinvert:bool = False
+    paddingthresh:float = 0 #The threshold for if a label should be moved
+    endthreshpadd:bool = False
+
 
 class DEFAULT_BAR_STYLE:
-    align = "left"
-    height = 0.8
-    startcolour = (227, 108, 85)
-    endcolour = (106, 139, 239)
-    midcolour = (220, 221, 221)
+    """Default style class for bar design and alignment.
     
+    Default style settings for stacked barchart relating to
+    the design of bars themselves. Align defines how to align the
+    figure: [left] stacks bars from 0 on X axis, and [center] aligns bars 
+    centrally on X axis. The start, mid, and end colour are also defined
+    here for a colour gradient to be generated."""
+
+    align:str = "left"
+    height:float = 0.8
+    startcolour:tuple[int, int, int] = (227, 108, 85)
+    endcolour:tuple[int, int, int] = (106, 139, 239)
+    midcolour:tuple[int, int, int] = (220, 221, 221)
+
+
 class DEFAULT_FIG_STYLE:
-    size = None
-    title = None
-    titlefontsize = 12
+    """Default style class for general figure style.
+
+    Default style settings for stacked barchart relating to the
+    style of the figure itself. Default values on figure size, title (and
+    related settings), figure font family, background colour, spine display, 
+    and whether the bars are ordered are defined here."""
+
+    size:tuple[int, int] = None
+    title:str = None
+    titlefontsize:int = 12
     titlecolour = "black"
-    fontfamily = "sans-serif"
+    fontfamily:str = "sans-serif"
     backgroundcolour = "#ffffff"
-    ordered = "unordered"
-    spinedisplay = (False, False, False, True) #left, top, right, bottom
+    ordered:str = "unordered"
+    spinedisplay:tuple[bool, bool, bool, bool] = (False, False, False, True) #left, top, right, bottom
+
 
 class DEFAULT_AXIS_STYLE:
-    xlim = None
-    step = None
-    xfontsize = 12
-    yfontsize = 12
-    xaxisformat = "{0}"
+    """Default style class for axis font and values
     
+    Default style settings for stacked barchart relating to the
+    style of axis font and format are defined here. This includes
+    axis min and max limits, font size, and format.
+    
+    xlim is stored as tuple of two integers representing the minimum
+    and maximum values to be displayed on the X axis (None indicates 
+    no limit). Font format is str.format() type, default as "{0}".
+    """
+
+    xlim:tuple[int, int] = None
+    step:int = None
+    xfontsize:int = 12
+    yfontsize:int = 12
+    xaxisformat:str = "{0}"
+
+
 class DEFAULT_AXIS_TITLE_STYLE:
-    xlabel = None
-    ylabel = None
-    axislabelfontsize = 12
+    """Default style class for axis labels.
+
+    Default style settings for stacked barchart relating to the 
+    style of X and Y axis labels. None value indicates no label.
+    """
+    xlabel:str = None
+    ylabel:str = None
+    axislabelfontsize:int = 12
     axislabelfontcolour = "black"
 
+
 class DEFAULT_LEGEND_STYLE:
-    show = False
-    fontsize = 12
-    labelspacing = 0.5
-    location = "upper left" #Which corner of the legend box is the anchor
+    """Default style class for plot legend.
+    
+    Default style settings for stacked barchart relating to the
+    style of the plot legend. The visibility, font size, legend marker
+    shape, and spacing between legend items is defined here. 
+
+    Default positioning for the legend is also defined here, which
+    is managed through a legend anchor location combined with a figure anchor.
+    Users are expected to choose one of the given placement options for
+    accessibility. A 'placementtransform' is also given to adjust placement.
+    """
+
+    show:bool = False
+    fontsize:int = 12
+    labelspacing:float = 0.5
+    location:str = "upper left" #Which corner of the legend box is the anchor
     fontcolour = "black"
-    markershape = "s" #see for different marker shapes https://matplotlib.org/stable/api/_as_gen/matplotlib.lines.Line2D.html
+    markershape:str = "s" #see for different marker shapes https://matplotlib.org/stable/api/_as_gen/matplotlib.lines.Line2D.html
     bordercolour = "#ededed"
     backgroundcolour = "#ededed"
-    placement = "right-vertical"
-    placementoptions = { 
+    placement:str = "right-vertical" #TODO: tidy up the difference between placement and location
+    placementoptions = {
         "right-vertical": ["upper left", (1.12, 1)],
         "left-vertical": ["upper right", (-0.12, 1)],
         "below-horizontal": ["upper center", (0.5, -0.12)],
         "above-horizontal": ["lower center", (0.5, 1.02)]
     }
-    placementtransform = [0, 0]
+    placementtransform:tuple[float, float] = (0, 0)
+
 
 class DEFAULT_VERTLINE_STYLE:
-    show = False
-    linestyle = "-"
+    """Default style class for central vertical line.
+    
+    Default style settings for stacked barchart relating
+    to the style of the vertically plotted line for centered
+    charts. Linestyle follows the matplotlib standard 
+    (see https://matplotlib.org/stable/gallery/lines_bars_and_markers/linestyles.html)."""
+    show:bool = False
+    linestyle:str = "-"
     colour = "black"
-    alpha = 1
-
-
-class StackedPlotStyle:
-    def __init__(self):
-        self.barfontstored = {
-            "fontsize": DEFAULT_BAR_FONT.size,
-            "fontcolour": DEFAULT_BAR_FONT.colour,
-            "fontformat": DEFAULT_BAR_FONT.format,
-            "fontalign": DEFAULT_BAR_FONT.align,
-            "fontpadd": DEFAULT_BAR_FONT.padding,
-            "fontcolourinvert": DEFAULT_BAR_FONT.colourinvert,
-            "fontdisplaythresh": DEFAULT_BAR_FONT.displaythresh,
-            "fontpaddthresh": DEFAULT_BAR_FONT.paddingthresh,
-            "fontendthreshpadd": DEFAULT_BAR_FONT.endthreshpadd
-        }
-
-        self.barstored = {
-            "height": DEFAULT_BAR_STYLE.height,
-            "align": DEFAULT_BAR_STYLE.align,
-            "barcolours": [], #Requires data to create correct length gradient
-            "startcolour": DEFAULT_BAR_STYLE.startcolour,
-            "endcolour": DEFAULT_BAR_STYLE.endcolour,
-            "midcolour": DEFAULT_BAR_STYLE.midcolour
-        }
-
-        self.legendstored = {
-            "show": DEFAULT_LEGEND_STYLE.show,
-            "fontsize": DEFAULT_LEGEND_STYLE.fontsize,
-            "location": DEFAULT_LEGEND_STYLE.location,
-            "spacing": DEFAULT_LEGEND_STYLE.labelspacing,
-            "fontcolour": DEFAULT_LEGEND_STYLE.fontcolour,
-            "backgroundcolour": DEFAULT_LEGEND_STYLE.backgroundcolour,
-            "bordercolour": DEFAULT_LEGEND_STYLE.bordercolour,
-            "placement": DEFAULT_LEGEND_STYLE.placement,
-            "markershape": DEFAULT_LEGEND_STYLE.markershape,
-            "markers": [],
-            "transform": DEFAULT_LEGEND_STYLE.placementtransform
-        }
-
-        self.figstored = {
-            "title": DEFAULT_FIG_STYLE.title,
-            "titlefontsize": DEFAULT_FIG_STYLE.titlefontsize,
-            "titlecolour": DEFAULT_FIG_STYLE.titlecolour,
-            "fontfamily": DEFAULT_FIG_STYLE.fontfamily,
-            "size": DEFAULT_FIG_STYLE.size,
-            "backgroundcolour": DEFAULT_FIG_STYLE.backgroundcolour,
-            "ordered": DEFAULT_FIG_STYLE.ordered,
-            "spinedisplay": DEFAULT_FIG_STYLE.spinedisplay
-        }
-
-        self.axistitlestored = {
-            "xlabel": DEFAULT_AXIS_TITLE_STYLE.xlabel,
-            "ylabel": DEFAULT_AXIS_TITLE_STYLE.ylabel,
-            "axislabelfontsize": DEFAULT_AXIS_TITLE_STYLE.axislabelfontsize,
-            "axislabelfontcolour": DEFAULT_AXIS_TITLE_STYLE.axislabelfontcolour
-        }
-
-        self.vertlinestored = {
-            "show": DEFAULT_VERTLINE_STYLE.show,
-            "linestyle": DEFAULT_VERTLINE_STYLE.linestyle,
-            "colour": DEFAULT_VERTLINE_STYLE.colour,
-            "alpha": DEFAULT_VERTLINE_STYLE.alpha
-        }
-
-        self.axisstored = {
-            "xlim": DEFAULT_AXIS_STYLE.xlim,
-            "step": DEFAULT_AXIS_STYLE.step,
-            "xfontsize": DEFAULT_AXIS_STYLE.xfontsize,
-            "yfontsize": DEFAULT_AXIS_STYLE.yfontsize,
-            "xaxisformat": DEFAULT_AXIS_STYLE.xaxisformat,
-        }
+    alpha:float = 1
