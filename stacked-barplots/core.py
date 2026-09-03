@@ -403,6 +403,7 @@ class StackedBarplot:
                     title_colour:str = None,
                     font_family:str = None,
                     fig_size:tuple[int, int] = None,
+                    spine_display:tuple[bool, bool, bool, bool] = None
                     ):
         """Update StackedBarplot general figure style configuration.
 
@@ -413,12 +414,15 @@ class StackedBarplot:
             fontfamily: The font family for all text used in the plot. User must select from
                 a list of font families (installed on user's machine).
             figsize: Tuple of integers representing the width and height of the figure.
+            spinedisplay: Tuple of booleans representing the four figure spines. Ordered as (left, top, right, bottom).
         """
         if title is not None: self.style.fig["title"] = title
         if title_font_size is not None: self.style.fig["titlefontsize"] = title_font_size
         if title_colour is not None: self.style.fig["titlecolour"] = title_colour
         if font_family is not None: self.style.fig["fontfamily"] = font_family
         if fig_size is not None: self.style.fig["size"] = fig_size
+        if spine_display is not None: self.style.fig["spinedisplay"] = spine_display
+
         self.unrendered_changes = True
 
     def get_vert_line_style(self) -> dict:
