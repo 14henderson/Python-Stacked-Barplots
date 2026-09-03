@@ -20,13 +20,16 @@ Typical usage example:
     center_plot.render()
     center_plot.show()
 
-    custom_plot = basic(results, series_labels, title="Custom Plot")
+    custom_colours = ColourGradient()
+    custom_colours.gradient(len(series_labels), (200, 100, 150), (100, 150, 200))
+    custom_plot = basic(results, series_labels, title="Custom Plot", bar_colours=custom_colours)
     custom_plot.set_legend_style(show=True, fontsize=8)
     custom_plot.set_bar_labels_style(barvalueformat="{0}%", align="left", padding=.5)
     custom_plot.set_axis_style(step=5)
-    custom_plot.set_bar_style(barheight=.5)
+    custom_plot.set_bar_style(bar_height=.5)
     custom_plot.render()
     custom_plot.show()
+
 """
 
 
@@ -34,21 +37,20 @@ from defaults import DEFAULT_BAR_FONT
 from tools import *
 import core
 
-#TODO: Change parameters to snake case.
 def basic(
         data:core.results_type,
         series_labels:core.series_labels_type,
         title:str = None,
-        figsize:list[int, int] = [10, 5],
-        fontsize:int = DEFAULT_BAR_FONT.size,
-        fontcolour:str = DEFAULT_BAR_FONT.colour,
-        barvalueformat:str = DEFAULT_BAR_FONT.format,
-        barvaluealign:str = DEFAULT_BAR_FONT.align,
-        barcolours:ColourGradient = None,
-        legendloc:str = None,
-        xaxislim:tuple[int, int] = None,
-        xaxisstep:int = None,
-        barheight:float = 0.8
+        fig_size:list[int, int] = [10, 5],
+        font_size:int = DEFAULT_BAR_FONT.size,
+        font_colour:str = DEFAULT_BAR_FONT.colour,
+        data_label_format:str = DEFAULT_BAR_FONT.format,
+        data_label_align:str = DEFAULT_BAR_FONT.align,
+        bar_colours:ColourGradient = None,
+        legend_loc:str = None,
+        x_axis_lim:tuple[int, int] = None,
+        x_axis_step:int = None,
+        bar_height:float = 0.8
         ) -> core.StackedBarplot:
     """
     Draw a simple left-aligned horizontal stacked bar chart.
@@ -82,31 +84,28 @@ def basic(
             figure can be saved or displayed with .save() or .show().
     
     """
-    #TODO: Improve method argument barcolours docstring to signpost colour methods.
-
     local_style = core.StackedPlotStyle()
-    local_style.figstored["title"] = title
-    local_style.barfontstored["fontsize"] = fontsize
-    local_style.barfontstored["fontcolour"] = fontcolour
-    local_style.barfontstored["fontformat"] = barvalueformat
-    local_style.barfontstored["fontalign"] = barvaluealign
-    local_style.barfontstored["endthreshpadd"] = True
-    local_style.barfontstored["paddthresh"] = 4
+    local_style.fig["title"] = title
+    local_style.bar_font["fontsize"] = font_size
+    local_style.bar_font["fontcolour"] = font_colour
+    local_style.bar_font["fontformat"] = data_label_format
+    local_style.bar_font["fontalign"] = data_label_align
+    local_style.bar_font["endthreshpadd"] = True
+    local_style.bar_font["paddthresh"] = 4
 
-    if xaxislim is not None: local_style.axisstored["xlim"] = xaxislim
-    if xaxisstep is not None: local_style.axisstored["step"] = xaxisstep
-    if legendloc is not None: local_style.legendstored["location"] = legendloc
+    if x_axis_lim is not None: local_style.axis["xlim"] = x_axis_lim
+    if x_axis_step is not None: local_style.axis["step"] = x_axis_step
+    if legend_loc is not None: local_style.legend["location"] = legend_loc
 
-    local_style.legendstored["fontsize"] = fontsize
-    local_style.figstored["size"] = figsize
-    local_style.barstored["align"] = "left"
-    local_style.barstored["barheight"] = barheight
-    local_style.figstored["spinedisplay"] = (False, False, False, True)
+    local_style.legend["fontsize"] = font_size
+    local_style.fig["size"] = fig_size
+    local_style.bar["align"] = "left"
+    local_style.bar["barheight"] = bar_height
+    local_style.fig["spinedisplay"] = (False, False, False, True)
 
     plot = core.StackedBarplot(data, series_labels)
     plot.set_style(local_style)
-    if barcolours is not None: plot.set_bar_style(bar_gradient=barcolours)
-
+    if bar_colours is not None: plot.set_bar_style(bar_gradient=bar_colours)
 
     return plot
 
@@ -114,16 +113,16 @@ def centered(
         data:core.results_type,
         series_labels:core.series_labels_type,
         title:str = None,
-        figsize:list[int, int] = [10, 5],
-        fontsize:int = DEFAULT_BAR_FONT.size,
-        fontcolour:str = DEFAULT_BAR_FONT.colour,
-        barvalueformat:str = DEFAULT_BAR_FONT.format,
-        barvaluealign:str = DEFAULT_BAR_FONT.align,
-        barcolours:ColourGradient = None,
-        legendloc:str = None,
-        xaxislim:tuple[int, int] = None,
-        xaxisstep:int = None,
-        barheight:float = 0.8
+        fig_size:list[int, int] = [10, 5],
+        font_size:int = DEFAULT_BAR_FONT.size,
+        font_colour:str = DEFAULT_BAR_FONT.colour,
+        data_label_format:str = DEFAULT_BAR_FONT.format,
+        data_label_align:str = DEFAULT_BAR_FONT.align,
+        bar_colours:ColourGradient = None,
+        legend_loc:str = None,
+        x_axis_lim:tuple[int, int] = None,
+        x_axis_step:int = None,
+        bar_height:float = 0.8
         ) -> core.StackedBarplot:
     """
     Draw a simple center-aligned horizontal stacked bar chart with central dividing line.
@@ -157,32 +156,29 @@ def centered(
             figure can be saved or displayed with .save() or .show().
         
     """
-    #TODO: Improve method argument barcolours docstring to signpost colour methods.
-
     local_style = core.StackedPlotStyle()
-    local_style.figstored["title"] = title
-    local_style.barfontstored["fontsize"] = fontsize
-    local_style.barfontstored["fontcolour"] = fontcolour
-    local_style.barfontstored["fontformat"] = barvalueformat
-    local_style.barfontstored["fontalign"] = barvaluealign
-    local_style.barfontstored["endthreshpadd"] = True
-    local_style.barfontstored["paddthresh"] = 4
+    local_style.fig["title"] = title
+    local_style.bar_font["fontsize"] = font_size
+    local_style.bar_font["fontcolour"] = font_colour
+    local_style.bar_font["fontformat"] = data_label_format
+    local_style.bar_font["fontalign"] = data_label_align
+    local_style.bar_font["endthreshpadd"] = True
+    local_style.bar_font["paddthresh"] = 4
 
-    if xaxislim is not None: local_style.axisstored["xlim"] = xaxislim
-    if xaxisstep is not None: local_style.axisstored["step"] = xaxisstep
-    if legendloc is not None: local_style.legendstored["location"] = legendloc
+    if x_axis_lim is not None: local_style.axis["xlim"] = x_axis_lim
+    if x_axis_step is not None: local_style.axis["step"] = x_axis_step
+    if legend_loc is not None: local_style.legend["location"] = legend_loc
 
-    local_style.legendstored["fontsize"] = fontsize
-    local_style.figstored["size"] = figsize
-    local_style.barstored["align"] = "center"
-    local_style.barstored["barheight"] = barheight
-    local_style.vertlinestored["show"] = True
-    local_style.figstored["spinedisplay"] = (False, False, False, True)
+    local_style.legend["fontsize"] = font_size
+    local_style.fig["size"] = fig_size
+    local_style.bar["align"] = "center"
+    local_style.bar["barheight"] = bar_height
+    local_style.vert_line["show"] = True
+    local_style.fig["spinedisplay"] = (False, False, False, True)
 
     plot = core.StackedBarplot(data, series_labels)
     plot.set_style(local_style)
-    if barcolours is not None: plot.set_bar_style(bar_gradient=barcolours)
-    
+    if bar_colours is not None: plot.set_bar_style(bar_gradient=bar_colours)
 
     return plot
 
@@ -200,7 +196,10 @@ if __name__ == "__main__":
     results = {"Category 1": [10, 5, 3, 11], "Category 2": [4, 2, 9, 12], "Category 3": [11, 12, 3, 4]}
     series_labels = ["Series 1", "Series 2", "Series 3", "Series 4"]
 
-    basic_plot = basic(results, series_labels)
+    custom_colours = ColourGradient()
+    custom_colours.gradient(len(series_labels), (200, 100, 150), (100, 150, 200))
+
+    basic_plot = basic(results, series_labels, bar_colours=custom_colours)
     basic_plot.render()
     basic_plot.show()
 
@@ -209,9 +208,13 @@ if __name__ == "__main__":
     center_plot.show()
 
     custom_plot = basic(results, series_labels, title="Custom Plot")
-    custom_plot.set_legend_style(show=True, fontsize=8)
-    custom_plot.set_bar_labels_style(barvalueformat="{0}%", align="left", padding=.5)
+    custom_plot.set_legend_style(show=True, font_size=12, spacing=2, background_colour="white", border_colour="white", transform=[-0.15, 0])
+    custom_plot.set_bar_labels_style(bar_value_format="{0}%", align="left", padding=.5)
     custom_plot.set_axis_style(step=5)
-    custom_plot.set_bar_style(barheight=.5)
+
+    custom_colours = ColourGradient()
+    custom_colours.gradient(len(series_labels), (200, 100, 150), (100, 150, 200))
+
+    custom_plot.set_bar_style(bar_height=.5, bar_gradient=custom_colours)
     custom_plot.render()
     custom_plot.show()

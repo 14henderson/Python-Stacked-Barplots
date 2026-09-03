@@ -43,10 +43,10 @@ class DEFAULT_BAR_FONT:
     format:str = "{0:.1f}"
     align:str = "center"
     padding:float = 1.5
-    displaythresh:tuple[float, float] = (0, None)
-    colourinvert:bool = False
-    paddingthresh:float = 0 #The threshold for if a label should be moved
-    endthreshpadd:bool = False
+    display_thresh:tuple[float, float] = (0, None)
+    colour_invert:bool = False
+    padding_thresh:float = 0 #The threshold for if a label should be moved
+    end_thresh_padd:bool = False
 
 
 class DEFAULT_BAR_STYLE:
@@ -60,9 +60,9 @@ class DEFAULT_BAR_STYLE:
 
     align:str = "left"
     height:float = 0.8
-    startcolour:tuple[int, int, int] = (227, 108, 85)
-    endcolour:tuple[int, int, int] = (106, 139, 239)
-    midcolour:tuple[int, int, int] = (220, 221, 221)
+    start_colour:tuple[int, int, int] = (227, 108, 85)
+    end_colour:tuple[int, int, int] = (106, 139, 239)
+    mid_colour:tuple[int, int, int] = (220, 221, 221)
 
 
 class DEFAULT_FIG_STYLE:
@@ -75,12 +75,12 @@ class DEFAULT_FIG_STYLE:
 
     size:tuple[int, int] = None
     title:str = None
-    titlefontsize:int = 12
-    titlecolour = "black"
-    fontfamily:str = "sans-serif"
-    backgroundcolour = "#ffffff"
+    title_font_size:int = 12
+    title_colour = "black"
+    font_family:str = "sans-serif"
+    background_colour = "#ffffff"
     ordered:str = "unordered"
-    spinedisplay:tuple[bool, bool, bool, bool] = (False, False, False, True) #left, top, right, bottom
+    spine_display:tuple[bool, bool, bool, bool] = (False, False, False, True) #left, top, right, bottom
 
 
 class DEFAULT_AXIS_STYLE:
@@ -95,11 +95,11 @@ class DEFAULT_AXIS_STYLE:
     no limit). Font format is str.format() type, default as "{0}".
     """
 
-    xlim:tuple[int, int] = None
+    x_lim:tuple[int, int] = None
     step:int = None
-    xfontsize:int = 12
-    yfontsize:int = 12
-    xaxisformat:str = "{0}"
+    x_font_size:int = 12
+    y_font_size:int = 12
+    x_axis_format:str = "{0}"
 
 
 class DEFAULT_AXIS_TITLE_STYLE:
@@ -108,10 +108,10 @@ class DEFAULT_AXIS_TITLE_STYLE:
     Default style settings for stacked barchart relating to the 
     style of X and Y axis labels. None value indicates no label.
     """
-    xlabel:str = None
-    ylabel:str = None
-    axislabelfontsize:int = 12
-    axislabelfontcolour = "black"
+    x_label:str = None
+    y_label:str = None
+    axis_label_font_size:int = 12
+    axis_label_font_colour = "black"
 
 
 class DEFAULT_LEGEND_STYLE:
@@ -128,21 +128,21 @@ class DEFAULT_LEGEND_STYLE:
     """
 
     show:bool = False
-    fontsize:int = 12
-    labelspacing:float = 0.5
+    font_size:int = 12
+    label_spacing:float = 0.5
     location:str = "upper left" #Which corner of the legend box is the anchor
-    fontcolour = "black"
-    markershape:str = "s" #see for different marker shapes https://matplotlib.org/stable/api/_as_gen/matplotlib.lines.Line2D.html
-    bordercolour = "#ededed"
-    backgroundcolour = "#ededed"
+    font_colour = "black"
+    marker_shape:str = "s" #see for different marker shapes https://matplotlib.org/stable/api/_as_gen/matplotlib.lines.Line2D.html
+    border_colour = "#ededed"
+    background_colour = "#ededed"
     placement:str = "right-vertical" #TODO: tidy up the difference between placement and location
-    placementoptions = {
+    placement_options = {
         "right-vertical": ["upper left", (1.12, 1)],
         "left-vertical": ["upper right", (-0.12, 1)],
         "below-horizontal": ["upper center", (0.5, -0.12)],
         "above-horizontal": ["lower center", (0.5, 1.02)]
     }
-    placementtransform:tuple[float, float] = (0, 0)
+    placement_transform:tuple[float, float] = (0, 0)
 
 
 class DEFAULT_VERTLINE_STYLE:
@@ -153,6 +153,6 @@ class DEFAULT_VERTLINE_STYLE:
     charts. Linestyle follows the matplotlib standard 
     (see https://matplotlib.org/stable/gallery/lines_bars_and_markers/linestyles.html)."""
     show:bool = False
-    linestyle:str = "-"
+    line_style:str = "-"
     colour = "black"
     alpha:float = 1

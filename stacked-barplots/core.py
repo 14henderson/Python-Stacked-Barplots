@@ -81,25 +81,25 @@ class StackedBarplot:
         self.style = style
 
         #Bar colours must be generated after the data is provided, as the number of colours must match the number of categories
-        self.bar_colours.gradient(len(self.series_labels), DEFAULT_BAR_STYLE.startcolour, DEFAULT_BAR_STYLE.endcolour, DEFAULT_BAR_STYLE.midcolour)
+        self.bar_colours.gradient(len(self.series_labels), DEFAULT_BAR_STYLE.start_colour, DEFAULT_BAR_STYLE.end_colour, DEFAULT_BAR_STYLE.mid_colour)
 
 
     def _plot_bars(self):
         """Internal method. Renders bars and category headings according to stored style configuration."""
         self.fig, self.ax = plt.subplots(figsize=(
-            self.style.figstored["size"][0],
-            self.style.figstored["size"][1]
+            self.style.fig["size"][0],
+            self.style.fig["size"][1]
             ))
 
         middle_index = len(self.data[0]) // 2
 
-        if self.style.figstored.get("ordered") != "unordered":
-            if self.style.figstored.get("ordered") == "ascending": toreverse = True
-            elif self.style.figstored.get("ordered") == "descending": toreverse = False
+        if self.style.fig.get("ordered") != "unordered":
+            if self.style.fig.get("ordered") == "ascending": toreverse = True
+            elif self.style.fig.get("ordered") == "descending": toreverse = False
             else: toreverse = False
-            if self.style.barstored.get("align") == "left":
+            if self.style.bar.get("align") == "left":
                 self.category_headings, self.data = zip(*sorted(zip(self.category_headings, self.data), key=lambda category: sum(category[1]), reverse=toreverse)) #Making sure the labels get ordered with the data
-            elif self.style.barstored.get("align") == "center":
+            elif self.style.bar.get("align") == "center":
                 if len(self.data[0]) % 2 == 0:
                     self.category_headings, self.data = zip(*sorted(zip(self.category_headings, self.data),key=lambda category: sum(category[1][:middle_index]),reverse=toreverse))
                 else:
@@ -107,7 +107,7 @@ class StackedBarplot:
         data_cum = cumu2d(self.data)
 
         offsets = [0]*len(self.data)
-        if self.style.barstored.get("align") == "center":
+        if self.style.bar.get("align") == "center":
             offsets = []
             for(row_index, row) in enumerate(self.data):
                 if len(self.data[0]) % 2 == 0:
@@ -120,27 +120,27 @@ class StackedBarplot:
             starts = [bar_data[col_index] for bar_data in data_cum]
 
             for bar_index, width in enumerate(widths):
-                if self.style.barstored.get("align") == "left":
+                if self.style.bar.get("align") == "left":
                     starts[bar_index] = starts[bar_index]-widths[bar_index]
-                elif self.style.barstored.get("align") == "center":
+                elif self.style.bar.get("align") == "center":
                     starts[bar_index] = starts[bar_index]-widths[bar_index]-offsets[bar_index]
-                elif self.style.barstored.get("align") == "right":
+                elif self.style.bar.get("align") == "right":
                     raise NotImplementedError("Right-aligned bars not yet implemented")
                 else:
                     raise ValueError("Invalid alignment value, must be 'left', 'center', or 'right'")
             rects = self.ax.barh(self.category_headings,
                                  widths,
                                  left=starts,
-                                 height=self.style.barstored.get("height"),
+                                 height=self.style.bar.get("height"),
                                  color = colour,
                                  label=colname,
                                  zorder=1)
 
-        for tick in self.ax.get_yticklabels(): tick.set_fontfamily(self.style.figstored.get("fontfamily"))
-        self.fig.set_facecolor(self.style.figstored.get("backgroundcolour"))
-        self.ax.set_facecolor(self.style.figstored.get("backgroundcolour"))
+        for tick in self.ax.get_yticklabels(): tick.set_fontfamily(self.style.fig.get("fontfamily"))
+        self.fig.set_facecolor(self.style.fig.get("backgroundcolour"))
+        self.ax.set_facecolor(self.style.fig.get("backgroundcolour"))
 
-        if self.style.figstored.get("verline"): self.ax.axvline(0, linestyle="--", color="black", alpha=0.25, zorder=0)
+        if self.style.fig.get("verline"): self.ax.axvline(0, linestyle="--", color="black", alpha=0.25, zorder=0)
 
 
     def _plot_bar_labels(self):
@@ -152,11 +152,11 @@ class StackedBarplot:
             #Formatting bar value labels
             for val in c.datavalues:
                 display = True
-                if self.style.barfontstored.get("fontdisplaythresh")[0] is not None: #Threshold for displaying labels, if value is below or above given threshold, don't display label
-                    if val <= self.style.barfontstored.get("fontdisplaythresh")[0]: display = False
-                if self.style.barfontstored.get("fontdisplaythresh")[1] is not None:
-                    if val >= self.style.barfontstored.get("fontdisplaythresh")[1]: display = False
-                if display: bar_labels.append(str.format(self.style.barfontstored.get("fontformat"), val))
+                if self.style.bar_font.get("fontdisplaythresh")[0] is not None: #Threshold for displaying labels, if value is below or above given threshold, don't display label
+                    if val <= self.style.bar_font.get("fontdisplaythresh")[0]: display = False
+                if self.style.bar_font.get("fontdisplaythresh")[1] is not None:
+                    if val >= self.style.bar_font.get("fontdisplaythresh")[1]: display = False
+                if display: bar_labels.append(str.format(self.style.bar_font.get("fontformat"), val))
                 else: bar_labels.append("")
 
             #Positioning bar value labels
@@ -167,35 +167,35 @@ class StackedBarplot:
 
                 #Threshold for first and last bar on a row, if value is below threshold, move label to outside of bar
                 topadd = False
-                if col_index == 0 and self.style.barfontstored.get("fontpaddthresh") is not None and self.style.barfontstored.get("fontendthreshpadd"): #Leftmost bar label
-                    if c.datavalues[row_index] <= self.style.barfontstored.get("fontpaddthresh"):
+                if col_index == 0 and self.style.bar_font.get("fontpaddthresh") is not None and self.style.bar_font.get("fontendthreshpadd"): #Leftmost bar label
+                    if c.datavalues[row_index] <= self.style.bar_font.get("fontpaddthresh"):
                         topadd = True
                         ha = "right"
-                        x = rect.get_x() - self.style.barfontstored.get("fontpadd")
-                elif col_index == len(self.data[0])-1 and self.style.barfontstored.get("fontpaddthresh") is not None and self.style.barfontstored.get("fontendthreshpadd"): #Rightmost bar label
-                    if c.datavalues[row_index] <= self.style.barfontstored.get("fontpaddthresh"):
+                        x = rect.get_x() - self.style.bar_font.get("fontpadd")
+                elif col_index == len(self.data[0])-1 and self.style.bar_font.get("fontpaddthresh") is not None and self.style.bar_font.get("fontendthreshpadd"): #Rightmost bar label
+                    if c.datavalues[row_index] <= self.style.bar_font.get("fontpaddthresh"):
                         topadd = True
                         ha = "left"
-                        x = rect.get_x() + rect.get_width() + self.style.barfontstored.get("fontpadd")
+                        x = rect.get_x() + rect.get_width() + self.style.bar_font.get("fontpadd")
 
                 if not topadd: #Normal alignment for all other bars, or if no outside-of-bar threshold is set
-                    if self.style.barfontstored.get("fontalign") == "center":
+                    if self.style.bar_font.get("fontalign") == "center":
                         x = rect.get_x() + rect.get_width() / 2
-                    elif self.style.barfontstored.get("fontalign") == "left":
-                        x = rect.get_x() + self.style.barfontstored.get("fontpadd")
+                    elif self.style.bar_font.get("fontalign") == "left":
+                        x = rect.get_x() + self.style.bar_font.get("fontpadd")
                         ha = "left"
-                    elif self.style.barfontstored.get("fontalign") == "right":
-                        x = rect.get_x() + rect.get_width() - self.style.barfontstored.get("fontpadd")
+                    elif self.style.bar_font.get("fontalign") == "right":
+                        x = rect.get_x() + rect.get_width() - self.style.bar_font.get("fontpadd")
                         ha = "right"
 
                 #TODO if(rect.get_width() <= 3): y -= ((rect.get_height() / 2) +0.07) #raising labels above the bar if the bar is too small, so that it doesn't overlap with the bar boundary
                 #TODO if text is made white and shifted outside of bar, it becomes white text on white background.
                 #TODO also, this should invert the colour rather than force white or black?
-                if self.style.barfontstored.get("fontcolourinvert"):
+                if self.style.bar_font.get("fontcolourinvert"):
                     luminence = 0.2126*rect.get_facecolor()[0] + 0.7152*rect.get_facecolor()[1] + 0.0722*rect.get_facecolor()[2]
                     if luminence < 0.4: fontcolour = "white"
                     else: fontcolour = "black"
-                else: fontcolour = self.style.barfontstored.get("fontcolour")
+                else: fontcolour = self.style.bar_font.get("fontcolour")
 
                 textartist = self.ax.annotate(
                     text,
@@ -203,9 +203,9 @@ class StackedBarplot:
                     textcoords="offset points",
                     xytext=(0, 0),
                     ha=ha, va=va,
-                    fontsize=self.style.barfontstored.get("fontsize"),
+                    fontsize=self.style.bar_font.get("fontsize"),
                     color=fontcolour,
-                    fontfamily=self.style.figstored.get("fontfamily")
+                    fontfamily=self.style.bar_font.get("fontfamily")
                     )
                 self.textbarvarartists.append(textartist)
 
@@ -213,54 +213,54 @@ class StackedBarplot:
 
     def _plot_axes(self):
         """Internal method. Renders and applies plot labels/title and axes settings according to stored style configuration."""
-        if self.style.axisstored.get("xlim") is not None and self.style.axisstored.get("step") is not None:
-            self.ax.set_xlim(self.style.axisstored.get("xlim")[0], self.style.axisstored.get("xlim")[1])
-            self.ax.set_xticks([i for i in range(self.style.axisstored.get("xlim")[0], self.style.axisstored.get("xlim")[1]+1, self.style.axisstored.get("step"))])
+        if self.style.axis.get("xlim") is not None and self.style.axis.get("step") is not None:
+            self.ax.set_xlim(self.style.axis.get("xlim")[0], self.style.axis.get("xlim")[1])
+            self.ax.set_xticks([i for i in range(self.style.axis.get("xlim")[0], self.style.axis.get("xlim")[1]+1, self.style.axis.get("step"))])
 
-        self.ax.xaxis.set_major_formatter(lambda x, pos: self.style.axisstored.get("xaxisformat").format(x))
+        self.ax.xaxis.set_major_formatter(lambda x, pos: self.style.axis.get("xaxisformat").format(x))
 
-        self.ax.tick_params(axis='x', labelsize=int(self.style.axisstored.get("xfontsize")), labelfontfamily=self.style.figstored.get("fontfamily"))
-        self.ax.tick_params(axis='y', labelsize=int(self.style.axisstored.get("yfontsize")), labelfontfamily=self.style.figstored.get("fontfamily"))
+        self.ax.tick_params(axis='x', labelsize=int(self.style.axis.get("xfontsize")), labelfontfamily=self.style.fig.get("fontfamily"))
+        self.ax.tick_params(axis='y', labelsize=int(self.style.axis.get("yfontsize")), labelfontfamily=self.style.fig.get("fontfamily"))
 
-        if not self.style.figstored.get("spinedisplay")[0]: self.ax.spines['left'].set_visible(False)
-        if not self.style.figstored.get("spinedisplay")[1]: self.ax.spines['top'].set_visible(False)
-        if not self.style.figstored.get("spinedisplay")[2]: self.ax.spines['right'].set_visible(False)
-        if not self.style.figstored.get("spinedisplay")[3]: self.ax.spines['bottom'].set_visible(False)
+        if not self.style.fig.get("spinedisplay")[0]: self.ax.spines['left'].set_visible(False)
+        if not self.style.fig.get("spinedisplay")[1]: self.ax.spines['top'].set_visible(False)
+        if not self.style.fig.get("spinedisplay")[2]: self.ax.spines['right'].set_visible(False)
+        if not self.style.fig.get("spinedisplay")[3]: self.ax.spines['bottom'].set_visible(False)
 
-        if self.style.figstored.get("title") is not None:
-            self.ax.set_title(self.style.figstored.get("title"),
-                              fontsize=self.style.figstored.get("titlefontsize"),
-                              color=self.style.figstored.get("titlecolour"),
-                              fontfamily=self.style.figstored.get("fontfamily"))
-        if self.style.axistitlestored.get("xlabel") is not None:
-            self.ax.set_xlabel(self.style.axistitlestored.get("xlabel"),
-                               fontsize=self.style.axistitlestored.get("axislabelfontsize"),
-                               color=self.style.axistitlestored.get("axislabelfontcolour"),
-                               fontfamily=self.style.figstored.get("fontfamily"))
-        if self.style.axistitlestored.get("ylabel") is not None:
-            self.ax.set_ylabel(self.style.axistitlestored.get("ylabel"),
-                               fontsize=self.style.axistitlestored.get("axislabelfontsize"),
-                               color=self.style.axistitlestored.get("axislabelfontcolour"),
-                               fontfamily=self.style.figstored.get("fontfamily"))
+        if self.style.fig.get("title") is not None:
+            self.ax.set_title(self.style.fig.get("title"),
+                              fontsize=self.style.fig.get("titlefontsize"),
+                              color=self.style.fig.get("titlecolour"),
+                              fontfamily=self.style.fig.get("fontfamily"))
+        if self.style.axis_title.get("xlabel") is not None:
+            self.ax.set_xlabel(self.style.axis_title.get("xlabel"),
+                               fontsize=self.style.axis_title.get("axislabelfontsize"),
+                               color=self.style.axis_title.get("axislabelfontcolour"),
+                               fontfamily=self.style.fig.get("fontfamily"))
+        if self.style.axis_title.get("ylabel") is not None:
+            self.ax.set_ylabel(self.style.axis_title.get("ylabel"),
+                               fontsize=self.style.axis_title.get("axislabelfontsize"),
+                               color=self.style.axis_title.get("axislabelfontcolour"),
+                               fontfamily=self.style.fig.get("fontfamily"))
 
     def _plot_legend(self):
         """Internal method. Renders a plot legend according to stored style configuration."""
-        if"horizontal" in self.style.legendstored.get("placement"): ncol = len(self.series_labels)
+        if"horizontal" in self.style.legend.get("placement"): ncol = len(self.series_labels)
         else: ncol = 1
 
-        bbox_to_anchor = list(DEFAULT_LEGEND_STYLE.placementoptions[self.style.legendstored.get("placement")][1])
-        bbox_to_anchor[0] += self.style.legendstored.get("transform")[0]
-        bbox_to_anchor[1] += self.style.legendstored.get("transform")[1]
+        bbox_to_anchor = list(DEFAULT_LEGEND_STYLE.placement_options[self.style.legend.get("placement")][1])
+        bbox_to_anchor[0] += self.style.legend.get("transform")[0]
+        bbox_to_anchor[1] += self.style.legend.get("transform")[1]
 
-        leg = self.ax.legend(handles=self.style.legendstored["markers"],
+        leg = self.ax.legend(handles=self.style.legend["markers"],
                        ncol=ncol,
                        bbox_to_anchor=bbox_to_anchor,
-                       loc=DEFAULT_LEGEND_STYLE.placementoptions[self.style.legendstored.get("placement")][0],
-                       fontsize=self.style.legendstored.get("fontsize"),
-                       labelspacing = self.style.legendstored.get("spacing"),
-                       labelcolor=self.style.legendstored.get("fontcolour"),
-                       facecolor=self.style.legendstored.get("backgroundcolour"),
-                       edgecolor = self.style.legendstored.get("bordercolour"),
+                       loc=DEFAULT_LEGEND_STYLE.placement_options[self.style.legend.get("placement")][0],
+                       fontsize=self.style.legend.get("fontsize"),
+                       labelspacing = self.style.legend.get("spacing"),
+                       labelcolor=self.style.legend.get("fontcolour"),
+                       facecolor=self.style.legend.get("backgroundcolour"),
+                       edgecolor = self.style.legend.get("bordercolour"),
                        framealpha=1,
                        shadow=False
         )
@@ -270,9 +270,9 @@ class StackedBarplot:
         if len(self.series_labels) %2 == 0: z = 2
         else: z = 0
         self.ax.axvline(0,
-                        linestyle=self.style.vertlinestored.get("linestyle"),
-                        color=self.style.vertlinestored.get("colour"),
-                        alpha=self.style.vertlinestored.get("alpha"),
+                        linestyle=self.style.vert_line.get("linestyle"),
+                        color=self.style.vert_line.get("colour"),
+                        alpha=self.style.vert_line.get("alpha"),
                         zorder=z)
 
 
@@ -282,27 +282,27 @@ class StackedBarplot:
         self._plot_bars()
         self._plot_bar_labels()
         self._plot_axes()
-        if self.style.legendstored.get("show"):
+        if self.style.legend.get("show"):
             self._init_legend_markers()
             self._plot_legend()
-        if self.style.vertlinestored.get("show"): self._plot_vert_line()
+        if self.style.vert_line.get("show"): self._plot_vert_line()
 
         self.fig.tight_layout()
 
 
     def get_bar_labels_style(self) -> dict:
         """Returns dictionary containing style configuration for chart bar labels."""
-        return self.style.barfontstored
+        return self.style.bar_font
 
     #TODO: Start and end bar data label movement is implicit in whether paddthresh is None, thus endthreshpadd is redundant. 
     def set_bar_labels_style(self,
-                fontsize:int=None,
-                fontcolour:str = None,
-                fontcolourinvert:bool = False,
-                barvalueformat:str = None,
-                displaythresh:tuple[float, float] = (None, None),
-                paddthresh:float = None,
-                endthreshpadd:bool = None,
+                font_size:int=None,
+                font_colour:str = None,
+                font_colour_invert:bool = False,
+                bar_value_format:str = None,
+                display_thresh:tuple[float, float] = (None, None),
+                padd_thresh:float = None,
+                end_thresh_padd:bool = None,
                 align:str=None,
                 padding:float = None):
         """Update StackedBarplot bar text style configuration.
@@ -326,21 +326,21 @@ class StackedBarplot:
             align: Alignment of data labels within bars. Can be 'left', 'center', or 'right'. 
             padding: Padding for data labels moved.
         """
-        if fontsize is not None: self.style.barfontstored["fontsize"] = fontsize
-        if fontcolour is not None: self.style.barfontstored["fontcolour"] = fontcolour
-        if fontcolourinvert is not None: self.style.barfontstored["fontcolourinvert"] = fontcolourinvert
-        if barvalueformat is not None: self.style.barfontstored["fontformat"] = barvalueformat
-        if displaythresh is not None: self.style.barfontstored["fontdisplaythresh"] = displaythresh
-        if paddthresh is not None: self.style.barfontstored["fontpaddthresh"] = paddthresh
-        if endthreshpadd is not None: self.style.barfontstored["fontendthreshpadd"] = endthreshpadd
-        if align is not None: self.style.barfontstored["fontalign"] = align
-        if padding is not None: self.style.barfontstored["fontpadd"] = padding
+        if font_size is not None: self.style.bar_font["fontsize"] = font_size
+        if font_colour is not None: self.style.bar_font["fontcolour"] = font_colour
+        if font_colour_invert is not None: self.style.bar_font["fontcolourinvert"] = font_colour_invert
+        if bar_value_format is not None: self.style.bar_font["fontformat"] = bar_value_format
+        if display_thresh is not None: self.style.bar_font["fontdisplaythresh"] = display_thresh
+        if padd_thresh is not None: self.style.bar_font["fontpaddthresh"] = padd_thresh
+        if end_thresh_padd is not None: self.style.bar_font["fontendthreshpadd"] = end_thresh_padd
+        if align is not None: self.style.bar_font["fontalign"] = align
+        if padding is not None: self.style.bar_font["fontpadd"] = padding
         self.unrendered_changes = True
 
 
     def get_bar_style(self) -> dict:
         """Returns dictionary containing style configuration for chart bars."""
-        return self.style.barstored
+        return self.style.bar
 
     def set_bar_style(self,
                     bar_height:int = None,
@@ -360,22 +360,22 @@ class StackedBarplot:
             bar_gradient: ColourGradient object, containing colours matching the number of 
                 series in each category.
         """
-        if bar_height is not None: self.style.barstored["barheight"] = bar_height
-        if align is not None: self.style.barstored["align"] = align
-        if ordered is not None: self.style.figstored["ordered"] = ordered
+        if bar_height is not None: self.style.bar["barheight"] = bar_height
+        if align is not None: self.style.bar["align"] = align
+        if ordered is not None: self.style.fig["ordered"] = ordered
         if bar_gradient is not None: self.bar_colours = bar_gradient
         self.unrendered_changes = True
 
 
     def get_axis_title_style(self) -> dict:
         """Returns dictionary containing style configuration for chart axis labels."""
-        return self.style.axistitlestored
+        return self.style.axis_title
 
     def set_axis_title_style(self,
-                          xlabel:str = None,
-                          ylabel:str = None,
-                          axislabelfontsize:int = None,
-                          axislabelfontcolour:str = None):
+                          x_label:str = None,
+                          y_label:str = None,
+                          axis_label_font_size:int = None,
+                          axis_label_font_colour:str = None):
         """Update StackedBarplot axis title style configuration.
 
         Args:
@@ -384,25 +384,25 @@ class StackedBarplot:
             axislabelfontsize: Axes label font size in points or as a string (e.g., 'large').
             axislabelfontcolour: Axes font colour.
         """
-        if xlabel is not None: self.style.axistitlestored["xlabel"] = xlabel
-        if ylabel is not None: self.style.axistitlestored["ylabel"] = ylabel
-        if axislabelfontsize is not None:
-            self.style.axistitlestored["axislabelfontsize"] = axislabelfontsize
-        if axislabelfontcolour is not None:
-            self.style.axistitlestored["axislabelfontcolour"] = axislabelfontcolour
+        if x_label is not None: self.style.axis_title["xlabel"] = x_label
+        if y_label is not None: self.style.axis_title["ylabel"] = y_label
+        if axis_label_font_size is not None:
+            self.style.axis_title["axislabelfontsize"] = axis_label_font_size
+        if axis_label_font_colour is not None:
+            self.style.axis_title["axislabelfontcolour"] = axis_label_font_colour
         self.unrendered_changes = True
 
 
     def get_fig_style(self) -> dict:
         """Returns dictionary containing general style configuration for chart figure."""
-        return self.style.figstored
+        return self.style.fig
 
     def set_fig_style(self,
                     title:str = None,
-                    titlefontsize:int = None,
-                    titlecolour:str = None,
-                    fontfamily:str = None,
-                    figsize:tuple[int, int] = None
+                    title_font_size:int = None,
+                    title_colour:str = None,
+                    font_family:str = None,
+                    fig_size:tuple[int, int] = None
                     ):
         """Update StackedBarplot general figure style configuration.
 
@@ -414,20 +414,20 @@ class StackedBarplot:
                 a list of font families (installed on user's machine).
             figsize: Tuple of integers representing the width and height of the figure.
         """
-        if title is not None: self.style.figstored["title"] = title
-        if titlefontsize is not None: self.style.figstored["titlefontsize"] = titlefontsize
-        if titlecolour is not None: self.style.figstored["titlecolour"] = titlecolour
-        if fontfamily is not None: self.style.figstored["fontfamily"] = fontfamily
-        if figsize is not None: self.style.figstored["size"] = figsize
+        if title is not None: self.style.fig["title"] = title
+        if title_font_size is not None: self.style.fig["titlefontsize"] = title_font_size
+        if title_colour is not None: self.style.fig["titlecolour"] = title_colour
+        if font_family is not None: self.style.fig["fontfamily"] = font_family
+        if fig_size is not None: self.style.fig["size"] = fig_size
         self.unrendered_changes = True
 
     def get_vert_line_style(self) -> dict:
         """Returns dictionary containing style configuration for chart vertical line."""
-        return self.style.vertlinestored
+        return self.style.vert_line
 
     def set_vert_line_style(self,
                     show:bool = None,
-                    linestyle:str = None,
+                    line_style:str = None,
                     colour:str = None,
                     alpha:float = None):
         """Update StackedBarplot central vertical line style configuration.
@@ -439,26 +439,26 @@ class StackedBarplot:
             colour: The colour of the line.
             alpha: The alpha value of the line.
         """
-        if show is not None: self.style.vertlinestored["show"] = show
-        if linestyle is not None: self.style.vertlinestored["linestyle"] = linestyle
-        if colour is not None: self.style.vertlinestored["colour"] = colour
-        if alpha is not None: self.style.vertlinestored["alpha"] = alpha
+        if show is not None: self.style.vert_line["show"] = show
+        if line_style is not None: self.style.vert_line["linestyle"] = line_style
+        if colour is not None: self.style.vert_line["colour"] = colour
+        if alpha is not None: self.style.vert_line["alpha"] = alpha
         self.unrendered_changes = True
 
     def get_legend_style(self) -> dict:
         """Returns dictionary containing style configuration for chart legend."""
-        return self.style.legendstored
+        return self.style.legend
 
     def set_legend_style(self,
                        show:bool = None,
-                       fontsize:int = None,
+                       font_size:int = None,
                        location:str = None,
                        spacing:float = None,
-                       fontcolour:str = None,
-                       backgroundcolour:str = None,
-                       bordercolour:str = None,
+                       font_colour:str = None,
+                       background_colour:str = None,
+                       border_colour:str = None,
                        placement:str = None,
-                       markershape:str = None,
+                       marker_shape:str = None,
                        transform:tuple[float, float] = None
                        ):
         """Update StackedBarplot legend style configuration.
@@ -479,28 +479,28 @@ class StackedBarplot:
                 after placement choice.  
         """
         #TODO: finalise method argument documentation relating to legend placement.
-        if show is not None: self.style.legendstored["show"] = show
-        if fontsize is not None: self.style.legendstored["fontsize"] = fontsize
-        if location is not None: self.style.legendstored["location"] = location
-        if spacing is not None: self.style.legendstored["spacing"] = spacing
-        if fontcolour is not None: self.style.legendstored["fontcolour"] = fontcolour
-        if backgroundcolour is not None: self.style.legendstored["backgroundcolour"] = backgroundcolour
-        if bordercolour is not None: self.style.legendstored["bordercolour"] = bordercolour
-        if placement is not None: self.style.legendstored["placement"] = placement
-        if markershape is not None: self.style.legendstored["markershape"] = markershape
-        if transform is not None: self.style.legendstored["transform"] = transform
+        if show is not None: self.style.legend["show"] = show
+        if font_size is not None: self.style.legend["fontsize"] = font_size
+        if location is not None: self.style.legend["location"] = location
+        if spacing is not None: self.style.legend["spacing"] = spacing
+        if font_colour is not None: self.style.legend["fontcolour"] = font_colour
+        if background_colour is not None: self.style.legend["backgroundcolour"] = background_colour
+        if border_colour is not None: self.style.legend["bordercolour"] = border_colour
+        if placement is not None: self.style.legend["placement"] = placement
+        if marker_shape is not None: self.style.legend["markershape"] = marker_shape
+        if transform is not None: self.style.legend["transform"] = transform
         self.unrendered_changes = True
 
     def get_axis_style(self) -> dict:
         """Returns dictionary containing style configuration for chart axis."""
-        return self.style.axisstored
+        return self.style.axis
 
     def set_axis_style(self,
-                       xlim:tuple[int, int] = None,
+                       x_lim:tuple[int, int] = None,
                        step:int = None,
-                       xfontsize:int = None,
-                       yfontsize:int = None,
-                       xaxisformat:str = None):
+                       x_font_size:int = None,
+                       y_font_size:int = None,
+                       x_axis_format:str = None):
         """Update StackedBarplot axis style configuration.
 
         Args:
@@ -513,11 +513,11 @@ class StackedBarplot:
                 be added using (for example) '{0}%'. See Python documentation for more inforamtion 
                 (https://docs.python.org/3/library/string.html#format-specification-mini-language).
         """
-        if xlim is not None: self.style.axisstored["xlim"] = xlim
-        if step is not None: self.style.axisstored["step"] = step
-        if xfontsize is not None: self.style.axisstored["xfontsize"] = xfontsize
-        if yfontsize is not None: self.style.axisstored["yfontsize"] = yfontsize
-        if xaxisformat is not None: self.style.axisstored["xaxisformat"] = xaxisformat
+        if x_lim is not None: self.style.axis["xlim"] = x_lim
+        if step is not None: self.style.axis["step"] = step
+        if x_font_size is not None: self.style.axis["xfontsize"] = x_font_size
+        if y_font_size is not None: self.style.axis["yfontsize"] = y_font_size
+        if x_axis_format is not None: self.style.axis["xaxisformat"] = x_axis_format
         self.unrendered_changes = True
 
 
@@ -543,7 +543,6 @@ class StackedBarplot:
         if self.fig is not None:
             if len(self.textbarvarartists) != 0:
                 self.clear_bar_text()
-            #self._destroyAxes()
             self.fig.clear()
             plt.close(self.fig)
 
@@ -571,12 +570,12 @@ class StackedBarplot:
             "have been rendered. Beware that render() must be called on the StackedBarplot" \
             "object for any style changes to be displayed.")
         path = os.path.dirname(os.path.abspath(__file__))
-        self.fig.savefig(os.path.join(path, filename), transparent=transparent, dpi=dpi, bbox_inches=bbox_inches, pad_inches=pad_inches, format=fig_format)
-
-
-    #def _init_fig_colours(self, colours:list[tuple[int, int, int]]):
-    #    """Defines figure colours, converting to float."""
-    #    self.style.barstored["barcolours"]  = [(col[0]/255.0, col[1]/255.0, col[2]/255.0) for col in colours]
+        self.fig.savefig(os.path.join(path, filename),
+                         transparent=transparent,
+                         dpi=dpi, 
+                         bbox_inches=bbox_inches,
+                         pad_inches=pad_inches,
+                         format=fig_format)
 
 
     def _init_legend_markers(self):
@@ -585,13 +584,13 @@ class StackedBarplot:
         Method defines legend marker colours according to (previously) 
         initialised bar colours. Called by _render()."""
 
-        self.style.legendstored["markers"] = []
+        self.style.legend["markers"] = []
         for i, cat in enumerate(self.series_labels):
-            self.style.legendstored["markers"].append(
+            self.style.legend["markers"].append(
                 mlines.Line2D([],
                 [],
                 color=self.bar_colours.get_normalised_gradient_list()[i],
-                marker=self.style.legendstored.get("markershape"),
+                marker=self.style.legend.get("markershape"),
                 linestyle='None',
                 markersize=10,
                 label=cat
@@ -615,80 +614,80 @@ class StackedPlotStyle:
     variables which are stored as attributes. 
 
     Attributes:
-        barfontstored: Style configurations for bar textual annotations.
-        barstored: Style configurations for bar design and alignment.
-        legendstored: Style configurations for plot legend.
-        figstored: Style configurations for general figure style.
-        axistitlestored: Style configurations for axis labels.
-        vertlinestored: Style configurations for central vertical line.
-        axisstored: Style configurations for axis scale font and values
+        bar_font: Style configurations for bar textual annotations.
+        bar: Style configurations for bar design and alignment.
+        legend: Style configurations for plot legend.
+        fig: Style configurations for general figure style.
+        axis_title: Style configurations for axis labels.
+        vert_line: Style configurations for central vertical line.
+        axis: Style configurations for axis scale font and values
     """
     def __init__(self):
         """Initializes the instance based on default values loaded from defaults.py."""
 
-        self.barfontstored = {
+        self.bar_font = {
             "fontsize": DEFAULT_BAR_FONT.size,
             "fontcolour": DEFAULT_BAR_FONT.colour,
             "fontformat": DEFAULT_BAR_FONT.format,
             "fontalign": DEFAULT_BAR_FONT.align,
             "fontpadd": DEFAULT_BAR_FONT.padding,
-            "fontcolourinvert": DEFAULT_BAR_FONT.colourinvert,
-            "fontdisplaythresh": DEFAULT_BAR_FONT.displaythresh,
-            "fontpaddthresh": DEFAULT_BAR_FONT.paddingthresh,
-            "fontendthreshpadd": DEFAULT_BAR_FONT.endthreshpadd
+            "fontcolourinvert": DEFAULT_BAR_FONT.colour_invert,
+            "fontdisplaythresh": DEFAULT_BAR_FONT.display_thresh,
+            "fontpaddthresh": DEFAULT_BAR_FONT.padding_thresh,
+            "fontendthreshpadd": DEFAULT_BAR_FONT.end_thresh_padd
         }
 
-        self.barstored = {
+        self.bar = {
             "height": DEFAULT_BAR_STYLE.height,
             "align": DEFAULT_BAR_STYLE.align,
-            "startcolour": DEFAULT_BAR_STYLE.startcolour,
-            "endcolour": DEFAULT_BAR_STYLE.endcolour,
-            "midcolour": DEFAULT_BAR_STYLE.midcolour
+            "startcolour": DEFAULT_BAR_STYLE.start_colour,
+            "endcolour": DEFAULT_BAR_STYLE.end_colour,
+            "midcolour": DEFAULT_BAR_STYLE.mid_colour
         }
 
-        self.legendstored = {
+        self.legend = {
             "show": DEFAULT_LEGEND_STYLE.show,
-            "fontsize": DEFAULT_LEGEND_STYLE.fontsize,
+            "fontsize": DEFAULT_LEGEND_STYLE.font_size,
             "location": DEFAULT_LEGEND_STYLE.location,
-            "spacing": DEFAULT_LEGEND_STYLE.labelspacing,
-            "fontcolour": DEFAULT_LEGEND_STYLE.fontcolour,
-            "backgroundcolour": DEFAULT_LEGEND_STYLE.backgroundcolour,
-            "bordercolour": DEFAULT_LEGEND_STYLE.bordercolour,
+            "spacing": DEFAULT_LEGEND_STYLE.label_spacing,
+            "fontcolour": DEFAULT_LEGEND_STYLE.font_colour,
+            "backgroundcolour": DEFAULT_LEGEND_STYLE.background_colour,
+            "bordercolour": DEFAULT_LEGEND_STYLE.border_colour,
             "placement": DEFAULT_LEGEND_STYLE.placement,
-            "markershape": DEFAULT_LEGEND_STYLE.markershape,
+            "markershape": DEFAULT_LEGEND_STYLE.marker_shape,
             "markers": [],
-            "transform": DEFAULT_LEGEND_STYLE.placementtransform
+            "transform": DEFAULT_LEGEND_STYLE.placement_transform
         }
 
-        self.figstored = {
+        self.fig = {
             "title": DEFAULT_FIG_STYLE.title,
-            "titlefontsize": DEFAULT_FIG_STYLE.titlefontsize,
-            "titlecolour": DEFAULT_FIG_STYLE.titlecolour,
-            "fontfamily": DEFAULT_FIG_STYLE.fontfamily,
+            "titlefontsize": DEFAULT_FIG_STYLE.title_font_size,
+            "titlecolour": DEFAULT_FIG_STYLE.title_colour,
+            "fontfamily": DEFAULT_FIG_STYLE.font_family,
             "size": DEFAULT_FIG_STYLE.size,
-            "backgroundcolour": DEFAULT_FIG_STYLE.backgroundcolour,
+            "backgroundcolour": DEFAULT_FIG_STYLE.background_colour,
             "ordered": DEFAULT_FIG_STYLE.ordered,
-            "spinedisplay": DEFAULT_FIG_STYLE.spinedisplay
+            "spinedisplay": DEFAULT_FIG_STYLE.spine_display
         }
 
-        self.axistitlestored = {
-            "xlabel": DEFAULT_AXIS_TITLE_STYLE.xlabel,
-            "ylabel": DEFAULT_AXIS_TITLE_STYLE.ylabel,
-            "axislabelfontsize": DEFAULT_AXIS_TITLE_STYLE.axislabelfontsize,
-            "axislabelfontcolour": DEFAULT_AXIS_TITLE_STYLE.axislabelfontcolour
+        self.axis_title = {
+            "xlabel": DEFAULT_AXIS_TITLE_STYLE.x_label,
+            "ylabel": DEFAULT_AXIS_TITLE_STYLE.y_label,
+            "axislabelfontsize": DEFAULT_AXIS_TITLE_STYLE.axis_label_font_size,
+            "axislabelfontcolour": DEFAULT_AXIS_TITLE_STYLE.axis_label_font_colour
         }
 
-        self.vertlinestored = {
+        self.vert_line = {
             "show": DEFAULT_VERTLINE_STYLE.show,
-            "linestyle": DEFAULT_VERTLINE_STYLE.linestyle,
+            "linestyle": DEFAULT_VERTLINE_STYLE.line_style,
             "colour": DEFAULT_VERTLINE_STYLE.colour,
             "alpha": DEFAULT_VERTLINE_STYLE.alpha
         }
 
-        self.axisstored = {
-            "xlim": DEFAULT_AXIS_STYLE.xlim,
+        self.axis = {
+            "xlim": DEFAULT_AXIS_STYLE.x_lim,
             "step": DEFAULT_AXIS_STYLE.step,
-            "xfontsize": DEFAULT_AXIS_STYLE.xfontsize,
-            "yfontsize": DEFAULT_AXIS_STYLE.yfontsize,
-            "xaxisformat": DEFAULT_AXIS_STYLE.xaxisformat,
+            "xfontsize": DEFAULT_AXIS_STYLE.x_font_size,
+            "yfontsize": DEFAULT_AXIS_STYLE.y_font_size,
+            "xaxisformat": DEFAULT_AXIS_STYLE.x_axis_format,
         }
