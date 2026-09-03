@@ -1,6 +1,6 @@
 # pylint: disable=multiple-statements,too-many-positional-arguments,redefined-outer-name,line-too-long,invalid-name
 
-"""Contains default value classes for plot style settings.
+"""Defaults module pertaining to stacked-barplots Python library.
 
 defaults.py contains classes which store the default values for
 all plot style elements covered in this project. Plot styles are 
@@ -84,7 +84,7 @@ class DEFAULT_FIG_STYLE:
 
 
 class DEFAULT_AXIS_STYLE:
-    """Default style class for axis font and values
+    """Default style class for axis scale font and values
     
     Default style settings for stacked barchart relating to the
     style of axis font and format are defined here. This includes
