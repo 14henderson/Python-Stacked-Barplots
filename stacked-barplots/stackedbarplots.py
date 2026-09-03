@@ -194,28 +194,108 @@ def normcentered():
 
 if __name__ == "__main__":
     #Typical Example Usage
-    results = {"Category 1": [10, 5, 3, 11], "Category 2": [4, 2, 9, 12], "Category 3": [11, 12, 3, 4]}
-    series_labels = ["Series 1", "Series 2", "Series 3", "Series 4"]
+    # results = {"Category 1": [10, 5, 3, 11], "Category 2": [4, 2, 9, 12], "Category 3": [11, 12, 3, 4]}
+    # series_labels = ["Series 1", "Series 2", "Series 3", "Series 4"]
 
-    custom_colours = ColourGradient()
-    custom_colours.gradient(len(series_labels), (200, 100, 150), (100, 150, 200))
+    # custom_colours = ColourGradient()
+    # custom_colours.gradient(len(series_labels), (200, 100, 150), (100, 150, 200))
 
-    basic_plot = basic(results, series_labels, bar_colours=custom_colours)
+    # basic_plot = basic(results, series_labels, bar_colours=custom_colours)
+    # basic_plot.render()
+    # basic_plot.show()
+
+    # center_plot = centered(results, series_labels)
+    # center_plot.render()
+    # center_plot.show()
+
+    # custom_plot = basic(results, series_labels, title="Custom Plot")
+    # custom_plot.set_legend_style(show=True, font_size=12, spacing=2, background_colour="white", border_colour="white", transform=[-0.16, -0.02])
+    # custom_plot.set_bar_labels_style(bar_value_format="{0}%", align="left", padding=.5)
+    # custom_plot.set_axis_style(step=5)
+
+    # custom_colours = ColourGradient()
+    # custom_colours.gradient(len(series_labels), (200, 100, 150), (100, 150, 200))
+
+    # custom_plot.set_bar_style(bar_height=.5, bar_gradient=custom_colours)
+    # custom_plot.render()
+    # custom_plot.show()
+    import pandas as pd
+    import numpy as np
+
+    firstcolumn = "total_deaths_per_million"
+    secondcolumn = "total_tests_per_thousand"
+ 
+    df = pd.read_csv("owid-covid-data.csv")[["location", firstcolumn, secondcolumn]].dropna()
+    df[firstcolumn] = pd.to_numeric(df[firstcolumn], errors="coerce")
+    df[secondcolumn] = pd.to_numeric(df[secondcolumn], errors="coerce")
+
+    df[firstcolumn] = df[firstcolumn]/1000.0#np.log(df[firstcolumn])
+    df[secondcolumn] = df[secondcolumn]/1000.0#np.log(df[secondcolumn])
+    #df[secondcolumn] = np.log(df[secondcolumn])#np.log(df["human_development_index"])
+
+    #print(df.head())
+
+    # Depending on the OWID data version, this field may contain either
+    # percentages (0-100) or fractions (0-1). Use the same percentage scale
+    # for both columns before grouping and plotting.
+    #if df[firstcolumn].max() <= 1: df[firstcolumn] *= 100
+    #if df["people_vaccinated_per_hundred"].max() <= 1: df["people_vaccinated_per_hundred"] *= 100
+
+    df = df.groupby("location")[[firstcolumn, secondcolumn]].max()
+    #df["people_unvaccinated"] = 100 - df["people_fully_vaccinated_per_hundred"]
+    print(df.head())
+    
+    result = df.apply(list, axis=1).to_dict()
+
+    EUCountries = [
+    "Austria",
+    "Belgium",
+    "Bulgaria",
+    "Croatia",
+    "Cyprus",
+    "Czechia",
+    "Denmark",
+    "Estonia",
+    "Finland",
+    "France",
+    "Germany",
+    "Greece",
+    "Hungary",
+    "Ireland",
+    "Italy",
+    "Latvia",
+    "Lithuania",
+    "Luxembourg",
+    "Malta",
+    "Netherlands",
+    "Poland",
+    "Portugal",
+    "Romania",
+    "Slovakia",
+    "Slovenia",
+    "Spain",
+    "Sweden",
+    "England"
+]
+    subset = {k: v for k, v in result.items() if k in EUCountries}
+
+
+    custom_colour = ColourGradient()
+    custom_colour.set_colour_gradient_list([(227, 108, 85), (101, 219, 133)])
+
+    basic_plot = centered(subset, ["Total Deaths Per 100 People", "Total Tests Per Person"], fig_size=(10, 8))
+
+    basic_plot.set_bar_style(bar_gradient=custom_colour)
+
+    basic_plot.set_axis_style(y_font_size=10, x_axis_format="{0:.0f}")
+    basic_plot.set_bar_style(ordered="descending")
+
+    basic_plot.set_bar_labels_style(bar_value_format="{0:.1f}", font_size=8, align="left", padd_thresh=2, end_thresh_padd=True, padding=0.5)
+    basic_plot.set_legend_style(show=True, placement="above-horizontal", background_colour="white", border_colour="white", transform=[-.3, -.03], font_size=10)
     basic_plot.render()
     basic_plot.show()
 
-    center_plot = centered(results, series_labels)
-    center_plot.render()
-    center_plot.show()
 
-    custom_plot = basic(results, series_labels, title="Custom Plot")
-    custom_plot.set_legend_style(show=True, font_size=12, spacing=2, background_colour="white", border_colour="white", transform=[-0.16, -0.02])
-    custom_plot.set_bar_labels_style(bar_value_format="{0}%", align="left", padding=.5)
-    custom_plot.set_axis_style(step=5)
-
-    custom_colours = ColourGradient()
-    custom_colours.gradient(len(series_labels), (200, 100, 150), (100, 150, 200))
-
-    custom_plot.set_bar_style(bar_height=.5, bar_gradient=custom_colours)
-    custom_plot.render()
-    custom_plot.show()
+#https://github.com/owid/covid-19-data/tree/master/public/data
+https://github.com/Opensourcefordatascience/Data-sets
+https://github.com/mwaskom/seaborn-data/blob/master/mpg.csv

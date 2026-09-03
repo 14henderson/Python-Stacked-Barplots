@@ -40,7 +40,7 @@ def cumu1d(data:list[float]) -> list[float]:
 def cumu2d(data:list[list[float]]) -> list[list[float]]:
     """Iterates over y axis of 2-d list and returns the cumulative sum of the elements 
     along each one."""
-    cumu_data = copy.deepcopy(data)
+    cumu_data = list(copy.deepcopy(data))
     for y in range(len(cumu_data)):
         cumu_data[y] = cumu1d(cumu_data[y])
     return cumu_data

@@ -402,7 +402,7 @@ class StackedBarplot:
                     title_font_size:int = None,
                     title_colour:str = None,
                     font_family:str = None,
-                    fig_size:tuple[int, int] = None
+                    fig_size:tuple[int, int] = None,
                     ):
         """Update StackedBarplot general figure style configuration.
 
