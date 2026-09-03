@@ -34,7 +34,7 @@ from defaults import DEFAULT_BAR_FONT
 from tools import *
 import core
 
-
+#TODO: Change parameters to snake case.
 def basic(
         data:core.results_type,
         series_labels:core.series_labels_type,
@@ -44,7 +44,7 @@ def basic(
         fontcolour:str = DEFAULT_BAR_FONT.colour,
         barvalueformat:str = DEFAULT_BAR_FONT.format,
         barvaluealign:str = DEFAULT_BAR_FONT.align,
-        barcolours:core.colour_type = None,
+        barcolours:ColourGradient = None,
         legendloc:str = None,
         xaxislim:tuple[int, int] = None,
         xaxisstep:int = None,
@@ -95,7 +95,6 @@ def basic(
 
     if xaxislim is not None: local_style.axisstored["xlim"] = xaxislim
     if xaxisstep is not None: local_style.axisstored["step"] = xaxisstep
-    if barcolours is not None: local_style.barstored["barcolours"] = barcolours
     if legendloc is not None: local_style.legendstored["location"] = legendloc
 
     local_style.legendstored["fontsize"] = fontsize
@@ -106,6 +105,8 @@ def basic(
 
     plot = core.StackedBarplot(data, series_labels)
     plot.set_style(local_style)
+    if barcolours is not None: plot.set_bar_style(bar_gradient=barcolours)
+
 
     return plot
 
@@ -118,7 +119,7 @@ def centered(
         fontcolour:str = DEFAULT_BAR_FONT.colour,
         barvalueformat:str = DEFAULT_BAR_FONT.format,
         barvaluealign:str = DEFAULT_BAR_FONT.align,
-        barcolours:list[tuple[float, float, float]] = None,
+        barcolours:ColourGradient = None,
         legendloc:str = None,
         xaxislim:tuple[int, int] = None,
         xaxisstep:int = None,
@@ -169,7 +170,6 @@ def centered(
 
     if xaxislim is not None: local_style.axisstored["xlim"] = xaxislim
     if xaxisstep is not None: local_style.axisstored["step"] = xaxisstep
-    if barcolours is not None: local_style.barstored["barcolours"] = barcolours
     if legendloc is not None: local_style.legendstored["location"] = legendloc
 
     local_style.legendstored["fontsize"] = fontsize
@@ -181,6 +181,8 @@ def centered(
 
     plot = core.StackedBarplot(data, series_labels)
     plot.set_style(local_style)
+    if barcolours is not None: plot.set_bar_style(bar_gradient=barcolours)
+    
 
     return plot
 

@@ -68,11 +68,8 @@ class StackedBarplot:
         self.unrendered_changes = True
 
         self.style = StackedPlotStyle()
-
         self.bar_colours = ColourGradient()
         self.bar_colours.grayscale_gradient(len(self.series_labels))
-
-        self._init_legend_markers()
 
 
     def set_style(self, style:StackedPlotStyle):
@@ -85,7 +82,6 @@ class StackedBarplot:
 
         #Bar colours must be generated after the data is provided, as the number of colours must match the number of categories
         self.bar_colours.gradient(len(self.series_labels), DEFAULT_BAR_STYLE.startcolour, DEFAULT_BAR_STYLE.endcolour, DEFAULT_BAR_STYLE.midcolour)
-        self._init_legend_markers()
 
 
     def _plot_bars(self):
@@ -197,7 +193,6 @@ class StackedBarplot:
                 #TODO also, this should invert the colour rather than force white or black?
                 if self.style.barfontstored.get("fontcolourinvert"):
                     luminence = 0.2126*rect.get_facecolor()[0] + 0.7152*rect.get_facecolor()[1] + 0.0722*rect.get_facecolor()[2]
-                    print(luminence)
                     if luminence < 0.4: fontcolour = "white"
                     else: fontcolour = "black"
                 else: fontcolour = self.style.barfontstored.get("fontcolour")
@@ -257,8 +252,6 @@ class StackedBarplot:
         bbox_to_anchor[0] += self.style.legendstored.get("transform")[0]
         bbox_to_anchor[1] += self.style.legendstored.get("transform")[1]
 
-        print(self.style.legendstored.get("bordercolour"))
-
         leg = self.ax.legend(handles=self.style.legendstored["markers"],
                        ncol=ncol,
                        bbox_to_anchor=bbox_to_anchor,
@@ -284,13 +277,14 @@ class StackedBarplot:
 
 
 
-
     def _render(self):
         """Internal method. Internal method for rendering plot following render pipeline."""
         self._plot_bars()
         self._plot_bar_labels()
         self._plot_axes()
-        if self.style.legendstored.get("show"): self._plot_legend()
+        if self.style.legendstored.get("show"):
+            self._init_legend_markers()
+            self._plot_legend()
         if self.style.vertlinestored.get("show"): self._plot_vert_line()
 
         self.fig.tight_layout()
@@ -366,7 +360,6 @@ class StackedBarplot:
             bar_gradient: ColourGradient object, containing colours matching the number of 
                 series in each category.
         """
-        #TODO: Improve method argument barcolours docstring to signpost colour methods.
         if bar_height is not None: self.style.barstored["barheight"] = bar_height
         if align is not None: self.style.barstored["align"] = align
         if ordered is not None: self.style.figstored["ordered"] = ordered
@@ -494,9 +487,7 @@ class StackedBarplot:
         if backgroundcolour is not None: self.style.legendstored["backgroundcolour"] = backgroundcolour
         if bordercolour is not None: self.style.legendstored["bordercolour"] = bordercolour
         if placement is not None: self.style.legendstored["placement"] = placement
-        if markershape is not None:
-            self.style.legendstored["markershape"] = markershape
-            self._init_legend_markers()
+        if markershape is not None: self.style.legendstored["markershape"] = markershape
         if transform is not None: self.style.legendstored["transform"] = transform
         self.unrendered_changes = True
 

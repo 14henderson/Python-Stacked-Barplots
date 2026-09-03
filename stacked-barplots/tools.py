@@ -20,7 +20,6 @@ Typical usage example:
     custom_plot.show()
 """
 
-
 import copy
 
 type colour_type = list[tuple[int, int, int]]
@@ -58,11 +57,9 @@ class ColourGradient():
     def __init__(self):
         """Initializes the ColourGradient instance."""
         self.colour_gradient_list = []
-        #self.grayscale_gradient
 
     def get_normalised_gradient_list(self) -> norm_colour_type:
         """Returns stored colour gradient list matching data shape. RGB values are returned as fractions."""
-        print(self.colour_gradient_list)
         norm = [(col[0]/255.0, col[1]/255.0, col[2]/255.0) for col in self.colour_gradient_list]
         return norm
 
@@ -133,5 +130,4 @@ class ColourGradient():
             new_colour_gradient_list: List of RGB tuples with values between 0 and 255. 
                 Length must equal series length of corresponding StackedBarplot.             
             """
-        print(new_colour_gradient_list)
         self.colour_gradient_list = new_colour_gradient_list
