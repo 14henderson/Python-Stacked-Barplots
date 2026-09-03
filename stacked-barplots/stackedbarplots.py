@@ -193,6 +193,7 @@ def normcentered():
     pass
 
 if __name__ == "__main__":
+    #Typical Example Usage
     results = {"Category 1": [10, 5, 3, 11], "Category 2": [4, 2, 9, 12], "Category 3": [11, 12, 3, 4]}
     series_labels = ["Series 1", "Series 2", "Series 3", "Series 4"]
 
@@ -208,7 +209,7 @@ if __name__ == "__main__":
     center_plot.show()
 
     custom_plot = basic(results, series_labels, title="Custom Plot")
-    custom_plot.set_legend_style(show=True, font_size=12, spacing=2, background_colour="white", border_colour="white", transform=[-0.15, 0])
+    custom_plot.set_legend_style(show=True, font_size=12, spacing=2, background_colour="white", border_colour="white", transform=[-0.16, -0.02])
     custom_plot.set_bar_labels_style(bar_value_format="{0}%", align="left", padding=.5)
     custom_plot.set_axis_style(step=5)
 
