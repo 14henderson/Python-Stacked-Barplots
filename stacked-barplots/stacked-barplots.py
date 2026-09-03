@@ -66,7 +66,7 @@ def basic(
     local_style.figstored["spinedisplay"] = (False, False, False, True)
 
     plot = core.StackedBarplot(data, series_labels)
-    plot.setStyle(local_style)
+    plot.set_style(local_style)
 
     return plot
 
@@ -108,7 +108,7 @@ def centered(
     local_style.figstored["spinedisplay"] = (False, False, False, True)
 
     plot = core.StackedBarplot(data, series_labels)
-    plot.setStyle(local_style)
+    plot.set_style(local_style)
 
     return plot
 
