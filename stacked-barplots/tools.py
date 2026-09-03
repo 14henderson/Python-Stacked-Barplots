@@ -1,10 +1,24 @@
+"""A one-line summary of the module or program, terminated by a period.
+
+Leave one blank line.  The rest of this docstring should contain an
+overall description of the module or program.  Optionally, it may also
+contain a brief description of exported classes and functions and/or usage
+examples.
+
+Typical usage example:
+
+  foo = ClassFoo()
+  bar = foo.function_bar()
+"""
+
+
 import copy
 
 
 def cumu1d(data:list[float]):
     cumu_data = copy.deepcopy(data)
     for x in range(len(cumu_data)):
-        if(x == 0): continue
+        if x == 0: continue
         else: cumu_data[x] = cumu_data[x] + cumu_data[x-1]
     return cumu_data
     
@@ -12,17 +26,17 @@ def cumu2d(data:list[list[float]]):
     cumu_data = copy.deepcopy(data)
     for y in range(len(cumu_data)):
         for x in range(len(cumu_data[y])):
-            if(x == 0): continue
+            if x == 0: continue
             else: cumu_data[y][x] = cumu_data[y][x] + cumu_data[y][x-1]
     return cumu_data
 
 
 def colourGradient(total:int, startcolour:tuple[float, float, float], endcolour:tuple[float, float, float], centercolour:tuple[float, float, float] = (150, 150, 150)):
-    if(total %2 != 0 and centercolour == None):
+    if(total %2 != 0 and centercolour is None):
         raise ValueError("If total number of colours is odd, a center colour must be provided")
     
     colours = []
-    if(centercolour == None):
+    if centercolour is None:
         col_step = [(end-start)/(total-1.0) for start, end in zip(startcolour, endcolour)]
         for i in range(total):
             colours.append(tuple([start+col_step[j]*i for j, start in enumerate(startcolour)]))
@@ -36,11 +50,9 @@ def colourGradient(total:int, startcolour:tuple[float, float, float], endcolour:
                 colours.append(tuple([center+col_step2[j]*(i-(total//2)) for j, center in enumerate(centercolour)]))
     return colours
     
-def greyscaleGradient(total, min:int = 0.3, max:int = 0.9):
-    col_min = min
-    col_max = max
-    col_step = (col_max-col_min)/(total-1.0)
-    return [((col_min+col_step*i, col_min+col_step*i, col_min+col_step*i)) for i in range(total)]
+def greyscaleGradient(total, min_val:int = 0.3, max_val:int = 0.9):
+    col_step = (max_val-min_val)/(total-1.0)
+    return [((min_val+col_step*i, min_val+col_step*i, min_val+col_step*i)) for i in range(total)]
 
 
 

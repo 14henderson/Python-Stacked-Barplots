@@ -1,14 +1,28 @@
-import matplotlib.pyplot as plt
+# pylint: disable=multiple-statements,too-many-positional-arguments,redefined-outer-name,line-too-long
+"""A one-line summary of the module or program, terminated by a period.
+
+Leave one blank line.  The rest of this docstring should contain an
+overall description of the module or program.  Optionally, it may also
+contain a brief description of exported classes and functions and/or usage
+examples.
+
+Typical usage example:
+
+  foo = ClassFoo()
+  bar = foo.function_bar()
+"""
+
 
 from core import StackedBarplot, DEFAULT_BAR_FONT, DEFAULT_BAR_STYLE, DEFAULT_LEGEND_STYLE, DEFAULT_FIG_STYLE, DEFAULT_VERTLINE_STYLE, StackedPlotStyle
 from tools import *
 from defaults import *
-
+#from core import *
+import core
 
 
 def basic(
-        data:ResultsType, 
-        legendLabels:LegendLabelsType,
+        data:core.results_type,
+        series_labels:core.series_labels_type,
         title:str = None,
         figsize:list[int, int] = [10, 5],
         fontsize:int = DEFAULT_BAR_FONT.size,
@@ -20,37 +34,45 @@ def basic(
         xaxislim:tuple[int, int] = None,
         xaxisstep:int = None,
         barheight:float = 0.8
-        ):
+        ) -> core.StackedBarplot:
+    """
+    Short description
+
+    Long description spanning multiple lines
+
+    :param data
+    :param legendLabels
+    :param str title
     """
 
-    stackedBarStyle = StackedPlotStyle()
-    stackedBarStyle.figstored["title"] = title
-    stackedBarStyle.barfontstored["fontsize"] = fontsize
-    stackedBarStyle.barfontstored["fontcolour"] = fontcolour
-    stackedBarStyle.barfontstored["fontformat"] = barvalueformat
-    stackedBarStyle.barfontstored["fontalign"] = barvaluealign
-    stackedBarStyle.barfontstored["endthreshpadd"] = True
-    stackedBarStyle.barfontstored["paddthresh"] = 4
+    local_style = StackedPlotStyle()
+    local_style.figstored["title"] = title
+    local_style.barfontstored["fontsize"] = fontsize
+    local_style.barfontstored["fontcolour"] = fontcolour
+    local_style.barfontstored["fontformat"] = barvalueformat
+    local_style.barfontstored["fontalign"] = barvaluealign
+    local_style.barfontstored["endthreshpadd"] = True
+    local_style.barfontstored["paddthresh"] = 4
 
-    if(xaxislim != None): stackedBarStyle.axisstored["xlim"] = xaxislim
-    if(xaxisstep != None): stackedBarStyle.axisstored["step"] = xaxisstep
-    if(barcolours != None): stackedBarStyle.barstored["barcolours"] = barcolours
-    if(legendloc != None): stackedBarStyle.legendstored["location"] = legendloc
+    if xaxislim is not None: local_style.axisstored["xlim"] = xaxislim
+    if xaxisstep is not None: local_style.axisstored["step"] = xaxisstep
+    if barcolours is not None: local_style.barstored["barcolours"] = barcolours
+    if legendloc is not None: local_style.legendstored["location"] = legendloc
 
-    stackedBarStyle.legendstored["fontsize"] = fontsize
-    stackedBarStyle.figstored["size"] = figsize
-    stackedBarStyle.barstored["align"] = "left"
-    stackedBarStyle.barstored["barheight"] = barheight
-    stackedBarStyle.figstored["spinedisplay"] = (False, False, False, True)
+    local_style.legendstored["fontsize"] = fontsize
+    local_style.figstored["size"] = figsize
+    local_style.barstored["align"] = "left"
+    local_style.barstored["barheight"] = barheight
+    local_style.figstored["spinedisplay"] = (False, False, False, True)
 
-    plot = StackedBarplot(data, legendLabels)
-    plot.setStyle(stackedBarStyle)
+    plot = core.StackedBarplot(data, series_labels)
+    plot.setStyle(local_style)
 
     return plot
 
 def centered(
-        data:ResultsType, 
-        legendLabels:LegendLabelsType,
+        data:core.results_type,
+        series_labels:core.series_labels_type,
         title:str = None,
         figsize:list[int, int] = [10, 5],
         fontsize:int = DEFAULT_BAR_FONT.size,
@@ -62,31 +84,31 @@ def centered(
         xaxislim:tuple[int, int] = None,
         xaxisstep:int = None,
         barheight:float = 0.8
-        ) -> StackedBarplot:
+        ) -> core.StackedBarplot:
     
-    stackedBarStyle = StackedPlotStyle()
-    stackedBarStyle.figstored["title"] = title
-    stackedBarStyle.barfontstored["fontsize"] = fontsize
-    stackedBarStyle.barfontstored["fontcolour"] = fontcolour
-    stackedBarStyle.barfontstored["fontformat"] = barvalueformat
-    stackedBarStyle.barfontstored["fontalign"] = barvaluealign
-    stackedBarStyle.barfontstored["endthreshpadd"] = True
-    stackedBarStyle.barfontstored["paddthresh"] = 4
+    local_style = StackedPlotStyle()
+    local_style.figstored["title"] = title
+    local_style.barfontstored["fontsize"] = fontsize
+    local_style.barfontstored["fontcolour"] = fontcolour
+    local_style.barfontstored["fontformat"] = barvalueformat
+    local_style.barfontstored["fontalign"] = barvaluealign
+    local_style.barfontstored["endthreshpadd"] = True
+    local_style.barfontstored["paddthresh"] = 4
 
-    if(xaxislim != None): stackedBarStyle.axisstored["xlim"] = xaxislim
-    if(xaxisstep != None): stackedBarStyle.axisstored["step"] = xaxisstep
-    if(barcolours != None): stackedBarStyle.barstored["barcolours"] = barcolours
-    if(legendloc != None): stackedBarStyle.legendstored["location"] = legendloc
+    if xaxislim is not None: local_style.axisstored["xlim"] = xaxislim
+    if xaxisstep is not None: local_style.axisstored["step"] = xaxisstep
+    if barcolours is not None: local_style.barstored["barcolours"] = barcolours
+    if legendloc is not None: local_style.legendstored["location"] = legendloc
 
-    stackedBarStyle.legendstored["fontsize"] = fontsize
-    stackedBarStyle.figstored["size"] = figsize
-    stackedBarStyle.barstored["align"] = "center"
-    stackedBarStyle.barstored["barheight"] = barheight
-    stackedBarStyle.vertlinestored["show"] = True
-    stackedBarStyle.figstored["spinedisplay"] = (False, False, False, True)
+    local_style.legendstored["fontsize"] = fontsize
+    local_style.figstored["size"] = figsize
+    local_style.barstored["align"] = "center"
+    local_style.barstored["barheight"] = barheight
+    local_style.vertlinestored["show"] = True
+    local_style.figstored["spinedisplay"] = (False, False, False, True)
 
-    plot = StackedBarplot(data, legendLabels)
-    plot.setStyle(stackedBarStyle)
+    plot = core.StackedBarplot(data, series_labels)
+    plot.setStyle(local_style)
 
     return plot
 
@@ -105,8 +127,8 @@ if __name__ == "__main__":
 
     
     plot = centered(results, reliability_category_names)
-    plot.setBarStyle(barcolours=colourGradient(len(reliability_category_names), (100, 200, 10), (50, 100, 150), (150, 75, 80)))
-    plot.setLegendStyle(show=True, fontsize=8, spacing=1, markershape='o', backgroundcolour="white", bordercolour="white")
+    #plot.set_bar_style(barcolours=colourGradient(len(reliability_category_names), (100, 200, 10), (50, 100, 150), (150, 75, 80)))
+    #plot.set_legend_style(show=True, fontsize=8, spacing=1, markershape='o', backgroundcolour="white", bordercolour="white")
 
     plot.render()
     plot.show()
