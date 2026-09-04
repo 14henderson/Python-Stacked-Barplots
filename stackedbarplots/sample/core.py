@@ -131,7 +131,7 @@ class StackedBarplot:
             rects = self.ax.barh(self.category_headings,
                                  widths,
                                  left=starts,
-                                 height=self.style.bar.get("height"),
+                                 height=self.style.bar.get("barheight"),
                                  color = colour,
                                  label=colname,
                                  zorder=1)
@@ -356,7 +356,7 @@ class StackedBarplot:
         """Update StackedBarplot bar style configuration.
 
         Args:
-            barheight: The height of each bar as a fraction. Selection 1 results on 
+            bar_height: The height of each bar as a fraction. Selection 1 results on 
                 no whitespace between displayed categories.
             align: The alignment of bars. Must be either 'left' or 'center'.
             ordered: Whether the displayed categories should be ordered. Must be either 
