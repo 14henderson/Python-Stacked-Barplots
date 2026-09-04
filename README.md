@@ -98,7 +98,7 @@ basic_plot.save("COVID-Deaths-EU-Tests-Fig.png")
 ```
 
 <p align="center">
-    <img src="https://github.com/14henderson/Python-Stacked-Barplots/blob/main/stackedbarplots/tests/readmefigures/COVID-Deaths-Tests-Fig.png?raw=true" width=69% alt="Example 4 Horizontal Stacked Barchart created using this library.">
+    <img src="https://github.com/14henderson/Python-Stacked-Barplots/blob/main/stackedbarplots/tests/readmefigures/COVID-Deaths-Tests-Fig.png?raw=true" width=90% alt="Example 4 Horizontal Stacked Barchart created using this library.">
 </p>
 
 
