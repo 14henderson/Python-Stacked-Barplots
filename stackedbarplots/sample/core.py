@@ -216,11 +216,12 @@ class StackedBarplot:
         if not self.style.axis.get("xaxisshow"):
             self.ax.xaxis.set_visible(False)
         else:
-            if self.style.axis.get("xlim") is not None and self.style.axis.get("step") is not None:
+            if self.style.axis.get("xlim") is not None:
                 self.ax.set_xlim(self.style.axis.get("xlim")[0], self.style.axis.get("xlim")[1])
-                self.ax.set_xticks([i for i in range(self.style.axis.get("xlim")[0], self.style.axis.get("xlim")[1]+1, self.style.axis.get("step"))])
+                if self.style.axis.get("step") is not None:
+                    self.ax.set_xticks([i for i in range(self.style.axis.get("xlim")[0], self.style.axis.get("xlim")[1]+1, self.style.axis.get("step"))])
 
-            
+
             self.ax.xaxis.set_major_formatter(lambda x, pos: self.style.axis.get("xaxisformat").format(x))
             self.ax.tick_params(axis='x', labelsize=int(self.style.axis.get("xfontsize")), labelfontfamily=self.style.fig.get("fontfamily"))
 
@@ -513,11 +514,12 @@ class StackedBarplot:
         """Update StackedBarplot axis style configuration.
 
         Args:
-            xlim: Left and right xlim in data coordinates, as a tuple.
-            step: Intevals at which x axis ticks should be displayed.
-            xfontsize: X axis tick label font size in points or as a string (e.g., 'large').
-            yfontsize: Y axis tick label font size in points or as a string (e.g., 'large').
-            xaxisformat: format()-style format string for x axis ticks. Default '{0}'. Format
+            x_lim: Left and right xlim in data coordinates, as a tuple.
+            step: Intevals at which x axis ticks should be displayed. Custom x_lim definition
+                is a requirement for step.
+            x_font_size: X axis tick label font size in points or as a string (e.g., 'large').
+            y_font)size: Y axis tick label font size in points or as a string (e.g., 'large').
+            x_axis_format: format()-style format string for x axis ticks. Default '{0}'. Format
                 string can also round to (e.g., 1) decimal place(s) with '{0:.1}'. A suffix can
                 be added using (for example) '{0}%'. See Python documentation for more inforamtion 
                 (https://docs.python.org/3/library/string.html#format-specification-mini-language).
@@ -540,7 +542,7 @@ class StackedBarplot:
         self.unrendered_changes = False
 
     def show(self):
-        """Displays the current figure."""
+        """Displays all figures currently created in the plt environment."""
 
         if self.unrendered_changes:
             warnings.warn("You are attempting to display the figure before style changes " \
