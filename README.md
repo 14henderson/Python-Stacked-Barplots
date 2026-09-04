@@ -23,8 +23,10 @@ basic_plot = basic(results, series_labels)
 basic_plot.render()
 basic_plot.save("Example-Graph-1.png")
 ```
+
 <img src="https://github.com/14henderson/Python-Stacked-Barplots/blob/main/stackedbarplots/tests/readmefigures/Example-Graph-1.png?raw=true" width=50% alt="Example 1 Horizontal Stacked Barchart created using this library.">
 A centered horizontal stacked bar chart can easily be drawn from the same data by calling centered(). See code snippet below for simple example use.
+
 ```Python
 results = {"Category 1": [10, 5, 3, 11], "Category 2": [4, 2, 9, 12], "Category 3": [11, 12, 3, 4]}
 series_labels = ["Series 1", "Series 2", "Series 3", "Series 4"]
@@ -32,8 +34,10 @@ center_plot = centered(results, series_labels)
 center_plot.render()
 center_plot.save("Example-Graph-2.png")
 ```
+
 <img src="https://github.com/14henderson/Python-Stacked-Barplots/blob/main/stackedbarplots/tests/readmefigures/Example-Graph-2.png?raw=true" width=50% alt="Example 2 Horizontal Stacked Barchart created using this library.">
 Custom style settings from the StackedBarplot object can easily be changed. See following code snippet below for simple example use.
+
 ```Python
 center_plot = centered(results, series_labels)
 center_plot.render()
@@ -49,6 +53,7 @@ custom_plot.set_bar_style(bar_height=.5)
 custom_plot.render()
 custom_plot.show()
 ```
+
 ![Example 3 Horizontal Stacked Barchart created using this library.](https://github.com/14henderson/Python-Stacked-Barplots/blob/main/stackedbarplots/tests/readmefigures/Example-Graph-3.png?raw=true)
 ## Technical implementation
 * Written in Python 3.14.
