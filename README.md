@@ -83,14 +83,14 @@ custom_colour.set_colour_gradient_list([(227, 108, 85), (101, 219, 133)])
 
 basic_plot = centered(dataset, ["Total COVID-19 Deaths Per Million People in 2021", "Total COVID-19 Tests Per 1,000 People in 2021"], fig_size=(10, 8))
 
-basic_plot.set_bar_style(bar_gradient=custom_colour)
-
-basic_plot.set_axis_style(y_font_size=10, x_axis_show=False)
-basic_plot.set_bar_style(ordered="descending")
-basic_plot.set_fig_style(spine_display=(False, False, False, False))
-
+basic_plot.set_bar_style(bar_gradient=custom_colour, ordered="descending")
 basic_plot.set_bar_labels_style(bar_value_format="{0:.0f}", font_size=8, align="left", padd_thresh=1000, end_thresh_padd=True, padding=100)
+
+basic_plot.set_fig_style(spine_display=(False, False, False, False))
+basic_plot.set_axis_style(y_font_size=10, x_axis_show=False)
+
 basic_plot.set_legend_style(show=True, placement="above-horizontal", background_colour="white", border_colour="white", transform=[-.2, -.03], font_size=10)
+
 basic_plot.set_vert_line_style(line_style="--", alpha=.9)
 
 basic_plot.render()
@@ -98,7 +98,7 @@ basic_plot.save("COVID-Deaths-EU-Tests-Fig.png")
 ```
 
 <p align="center">
-    <img src="https://github.com/14henderson/Python-Stacked-Barplots/blob/main/stackedbarplots/tests/readmefigures/COVID-Deaths-Tests-Fig.png?raw=true" width=60% alt="Example 4 Horizontal Stacked Barchart created using this library.">
+    <img src="https://github.com/14henderson/Python-Stacked-Barplots/blob/main/stackedbarplots/tests/readmefigures/COVID-Deaths-Tests-Fig.png?raw=true" width=69% alt="Example 4 Horizontal Stacked Barchart created using this library.">
 </p>
 
 
