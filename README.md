@@ -1,4 +1,4 @@
-![Example Horizontal Stacked Barchart created using this library, showing Likert-scale data.](https://github.com/14henderson/Python-Stacked-Barplots/blob/main/stackedbarplots/tests/readmefigures/Likert-example-graph?raw=true)
+<img src="https://github.com/14henderson/Python-Stacked-Barplots/blob/main/stackedbarplots/tests/readmefigures/Likert-example-graph.png?raw=true" width=100% alt="Example Horizontal Stacked Barchart created using this library, showing Likert-scale data.">
 
 
 ## About
@@ -23,7 +23,7 @@ basic_plot = basic(results, series_labels)
 basic_plot.render()
 basic_plot.save("Example-Graph-1.png")
 ```
-![Example 1 Horizontal Stacked Barchart created using this library.](https://github.com/14henderson/Python-Stacked-Barplots/blob/main/stackedbarplots/tests/readmefigures/Example-Graph-1.png?raw=true)
+<img src="https://github.com/14henderson/Python-Stacked-Barplots/blob/main/stackedbarplots/tests/readmefigures/Example-Graph-1.png?raw=true" width=50% alt="Example 1 Horizontal Stacked Barchart created using this library.">
 A centered horizontal stacked bar chart can easily be drawn from the same data by calling centered(). See code snippet below for simple example use.
 ```Python
 results = {"Category 1": [10, 5, 3, 11], "Category 2": [4, 2, 9, 12], "Category 3": [11, 12, 3, 4]}
@@ -32,7 +32,7 @@ center_plot = centered(results, series_labels)
 center_plot.render()
 center_plot.save("Example-Graph-2.png")
 ```
-![Example 2 Horizontal Stacked Barchart created using this library.](https://github.com/14henderson/Python-Stacked-Barplots/blob/main/stackedbarplots/tests/readmefigures/Example-Graph-2.png?raw=true)
+<img src="https://github.com/14henderson/Python-Stacked-Barplots/blob/main/stackedbarplots/tests/readmefigures/Example-Graph-2.png?raw=true" width=50% alt="Example 2 Horizontal Stacked Barchart created using this library.">
 Custom style settings from the StackedBarplot object can easily be changed. See following code snippet below for simple example use.
 ```Python
 center_plot = centered(results, series_labels)
