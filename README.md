@@ -19,7 +19,7 @@ Python-Stacked-Barplots follows a simple pipeline for use. See code snippet belo
 2. Apply style changes to the plot where appropriate,
 3. Call render() on your StackedBarplot object to render the plot, and either save() or show() to save or display it (or both).
 
-### Basic Plot
+#### Basic Plot
 
 ```Python
 results = {"Category 1": [10, 5, 3, 11], "Category 2": [4, 2, 9, 12], "Category 3": [11, 12, 3, 4]}
@@ -31,10 +31,10 @@ basic_plot.save("Example-Graph-1.png")
 ```
 
 <p align="center">
-    <img src="https://github.com/14henderson/Python-Stacked-Barplots/blob/main/stackedbarplots/tests/readmefigures/Example-Graph-1.png?raw=true" width=50% alt="Example 1 Horizontal Stacked Barchart created using this library.">
+    <img src="https://github.com/14henderson/Python-Stacked-Barplots/blob/main/stackedbarplots/tests/readmefigures/Example-Graph-1.png?raw=true" width=60% alt="Example 1 Horizontal Stacked Barchart created using this library.">
 </p>
 
-### Centered Plot
+#### Centered Plot
 
 A centered horizontal stacked bar chart can easily be drawn from the same data by calling centered(). See code snippet below for simple example use.
 
@@ -47,10 +47,10 @@ center_plot.save("Example-Graph-2.png")
 ```
 
 <p align="center">
-    <img src="https://github.com/14henderson/Python-Stacked-Barplots/blob/main/stackedbarplots/tests/readmefigures/Example-Graph-2.png?raw=true" width=50% alt="Example 2 Horizontal Stacked Barchart created using this library.">
+    <img src="https://github.com/14henderson/Python-Stacked-Barplots/blob/main/stackedbarplots/tests/readmefigures/Example-Graph-2.png?raw=true" width=60% alt="Example 2 Horizontal Stacked Barchart created using this library.">
 </p>
 
-### Custom-Styled Plot
+#### Custom-Styled Plot
 
 Custom style settings from the StackedBarplot object can easily be changed. See following code snippet below for simple example use.
 
@@ -71,7 +71,7 @@ custom_plot.show()
 ```
 
 <p align="center">
-    <img src="https://github.com/14henderson/Python-Stacked-Barplots/blob/main/stackedbarplots/tests/readmefigures/Example-Graph-3.png?raw=true" width=50% alt="Example 3 Horizontal Stacked Barchart created using this library.">
+    <img src="https://github.com/14henderson/Python-Stacked-Barplots/blob/main/stackedbarplots/tests/readmefigures/Example-Graph-3.png?raw=true" width=60% alt="Example 3 Horizontal Stacked Barchart created using this library.">
 </p>
 
 ## Technical implementation
