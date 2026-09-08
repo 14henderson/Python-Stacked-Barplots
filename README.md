@@ -22,10 +22,12 @@ Python-Stacked-Barplots follows a simple pipeline for use. See code snippet belo
 #### Basic Plot
 
 ```Python
+import stackedbarplots
+
 results = {"Category 1": [10, 5, 3, 11], "Category 2": [4, 2, 9, 12], "Category 3": [11, 12, 3, 4]}
 series_labels = ["Series 1", "Series 2", "Series 3", "Series 4"]
+basic_plot = stackedbarplots.basic(results, series_labels)
 
-basic_plot = basic(results, series_labels)
 basic_plot.render()
 basic_plot.save("Example-Graph-1.png")
 ```
@@ -39,9 +41,12 @@ basic_plot.save("Example-Graph-1.png")
 A centered horizontal stacked bar chart can easily be drawn from the same data by calling centered(). See code snippet below for simple example use.
 
 ```Python
+import stackedbarplots
+
 results = {"Category 1": [10, 5, 3, 11], "Category 2": [4, 2, 9, 12], "Category 3": [11, 12, 3, 4]}
 series_labels = ["Series 1", "Series 2", "Series 3", "Series 4"]
-center_plot = centered(results, series_labels)
+center_plot = stackedbarplots.centered(results, series_labels)
+
 center_plot.render()
 center_plot.save("Example-Graph-2.png")
 ```
@@ -55,17 +60,16 @@ center_plot.save("Example-Graph-2.png")
 Custom style settings from the StackedBarplot object can easily be changed. See following code snippet below for simple example use.
 
 ```Python
-center_plot = centered(results, series_labels)
-center_plot.render()
-center_plot.show()
+import stackedbarplots
 
-custom_colours = ColourGradient()
+custom_colours = stackedbarplots.ColourGradient()
 custom_colours.gradient(len(series_labels), (200, 100, 150), (100, 150, 200))
-custom_plot = basic(results, series_labels, title="Custom Plot", bar_colours=custom_colours)
-custom_plot.set_legend_style(show=True, fontsize=8)
-custom_plot.set_bar_labels_style(barvalueformat="{0}%", align="left", padding=.5)
+custom_plot = stackedbarplots.basic(results, series_labels, title="Custom Plot", bar_colours=custom_colours)
+custom_plot.set_legend_style(show=True, font_size=8)
+custom_plot.set_bar_labels_style(bar_value_format="{0}%", align="left", padding=.5)
 custom_plot.set_axis_style(step=5)
 custom_plot.set_bar_style(bar_height=.5)
+
 custom_plot.render()
 custom_plot.show()
 ```
@@ -78,10 +82,12 @@ custom_plot.show()
 
 ```Python
 #dataset taken from https://github.com/owid/covid-19-data
-custom_colour = ColourGradient()
+import stackedbarplots
+
+custom_colour = stackedbarplots.ColourGradient()
 custom_colour.set_colour_gradient_list([(227, 108, 85), (101, 219, 133)])
 
-basic_plot = centered(dataset, ["Total COVID-19 Deaths Per Million People in 2021", "Total COVID-19 Tests Per 1,000 People in 2021"], fig_size=(10, 8))
+basic_plot = stackedbarplots.centered(dataset, ["Total COVID-19 Deaths Per Million People in 2021", "Total COVID-19 Tests Per 1,000 People in 2021"], fig_size=(10, 8))
 
 basic_plot.set_bar_style(bar_gradient=custom_colour, ordered="descending")
 basic_plot.set_bar_labels_style(bar_value_format="{0:.0f}", font_size=8, align="left", padd_thresh=1000, end_thresh_padd=True, padding=100)
