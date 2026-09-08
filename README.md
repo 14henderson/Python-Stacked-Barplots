@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="https://github.com/14henderson/Python-Stacked-Barplots/blob/main/stackedbarplots/tests/readmefigures/Likert-example-graph.png?raw=true" width=100% alt="Example Horizontal Stacked Barchart created using this library, showing Likert-scale data.">
+    <img src="https://github.com/14henderson/Python-Stacked-Barplots/blob/main/stackedbarplots/readmefigures/Likert-example-graph.png?raw=true" width=100% alt="Example Horizontal Stacked Barchart created using this library, showing Likert-scale data.">
 </p>
 
 ## About
@@ -33,7 +33,7 @@ basic_plot.save("Example-Graph-1.png")
 ```
 
 <p align="center">
-    <img src="https://github.com/14henderson/Python-Stacked-Barplots/blob/main/stackedbarplots/tests/readmefigures/Example-Graph-1.png?raw=true" width=60% alt="Example 1 Horizontal Stacked Barchart created using this library.">
+    <img src="https://github.com/14henderson/Python-Stacked-Barplots/blob/main/stackedbarplots/readmefigures/Example-Graph-1.png?raw=true" width=60% alt="Example 1 Horizontal Stacked Barchart created using this library.">
 </p>
 
 #### Centered Plot
@@ -52,7 +52,7 @@ center_plot.save("Example-Graph-2.png")
 ```
 
 <p align="center">
-    <img src="https://github.com/14henderson/Python-Stacked-Barplots/blob/main/stackedbarplots/tests/readmefigures/Example-Graph-2.png?raw=true" width=60% alt="Example 2 Horizontal Stacked Barchart created using this library.">
+    <img src="https://github.com/14henderson/Python-Stacked-Barplots/blob/main/stackedbarplots/readmefigures/Example-Graph-2.png?raw=true" width=60% alt="Example 2 Horizontal Stacked Barchart created using this library.">
 </p>
 
 #### Simple Custom-Styled Plot
@@ -75,7 +75,7 @@ custom_plot.show()
 ```
 
 <p align="center">
-    <img src="https://github.com/14henderson/Python-Stacked-Barplots/blob/main/stackedbarplots/tests/readmefigures/Example-Graph-3.png?raw=true" width=60% alt="Example 3 Horizontal Stacked Barchart created using this library.">
+    <img src="https://github.com/14henderson/Python-Stacked-Barplots/blob/main/stackedbarplots/readmefigures/Example-Graph-3.png?raw=true" width=60% alt="Example 3 Horizontal Stacked Barchart created using this library.">
 </p>
 
 #### Advanced Custom-Style Plot
@@ -104,7 +104,7 @@ basic_plot.save("COVID-Deaths-EU-Tests-Fig.png")
 ```
 
 <p align="center">
-    <img src="https://github.com/14henderson/Python-Stacked-Barplots/blob/main/stackedbarplots/tests/readmefigures/COVID-Deaths-Tests-Fig.png?raw=true" width=90% alt="Example 4 Horizontal Stacked Barchart created using this library.">
+    <img src="https://github.com/14henderson/Python-Stacked-Barplots/blob/main/stackedbarplots/readmefigures/COVID-Deaths-Tests-Fig.png?raw=true" width=90% alt="Example 4 Horizontal Stacked Barchart created using this library.">
 </p>
 
 
