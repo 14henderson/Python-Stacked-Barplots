@@ -461,7 +461,6 @@ class StackedBarplot:
     def set_legend_style(self,
                        show:bool = None,
                        font_size:int = None,
-                       location:str = None,
                        spacing:float = None,
                        font_colour:str = None,
                        background_colour:str = None,
@@ -476,12 +475,12 @@ class StackedBarplot:
             show: A boolean flag for whether the legend should be shown, irrespective
                 of other legend style configurations. 
             fontsize: Series headings' font size in points or as a string (e.g., 'large').
-            location: WORK IN PROGRESS
             spacing: Spacing between series headings, in font-size units.
             fontcolour: The color of the text in the legend.
             backgroundcolour: The legend's background color.
             bordercolour: The legend's background patch edge color.
-            placement: WORK IN PROGRESS
+            placement: String representing where around the figure the legend should be
+                displayed. {"right-vertical", "left-vertical", "below-horizontal", "above-horizontal"}.
             markershape: Marker style string. {'*': 'star', '+': 'plus', 's':'square', 
                 'o':circle'}. For a full list of marker styles see https://matplotlib.org/stable/api/_as_gen/matplotlib.lines.Line2D.html.
             transform: Allows the user to make minor adjustments to the legend's placement
@@ -490,7 +489,6 @@ class StackedBarplot:
         #TODO: finalise method argument documentation relating to legend placement.
         if show is not None: self.style.legend["show"] = show
         if font_size is not None: self.style.legend["fontsize"] = font_size
-        if location is not None: self.style.legend["location"] = location
         if spacing is not None: self.style.legend["spacing"] = spacing
         if font_colour is not None: self.style.legend["fontcolour"] = font_colour
         if background_colour is not None: self.style.legend["backgroundcolour"] = background_colour
@@ -660,7 +658,6 @@ class StackedPlotStyle:
         self.legend = {
             "show": DEFAULT_LEGEND_STYLE.show,
             "fontsize": DEFAULT_LEGEND_STYLE.font_size,
-            "location": DEFAULT_LEGEND_STYLE.location,
             "spacing": DEFAULT_LEGEND_STYLE.label_spacing,
             "fontcolour": DEFAULT_LEGEND_STYLE.font_colour,
             "backgroundcolour": DEFAULT_LEGEND_STYLE.background_colour,

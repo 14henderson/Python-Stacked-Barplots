@@ -131,7 +131,6 @@ class DEFAULT_LEGEND_STYLE:
     show:bool = False
     font_size:int = 12
     label_spacing:float = 0.5
-    location:str = "upper left" #Which corner of the legend box is the anchor
     font_colour = "black"
     marker_shape:str = "s" #see for different marker shapes https://matplotlib.org/stable/api/_as_gen/matplotlib.lines.Line2D.html
     border_colour = "#ededed"

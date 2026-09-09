@@ -56,7 +56,7 @@ def basic(
         data_label_format:str = DEFAULT_BAR_FONT.format,
         data_label_align:str = DEFAULT_BAR_FONT.align,
         bar_colours:ColourGradient = None,
-        legend_loc:str = None,
+        legend_placement:str = None,
         x_axis_lim:tuple[int, int] = None,
         x_axis_step:int = None,
         bar_height:float = 0.8
@@ -82,7 +82,8 @@ def basic(
                 (https://docs.python.org/3/library/string.html#format-specification-mini-language).
         barvaluealign: Alignment of data labels within bars. Can be 'left', 'center', or 'right'. 
         barcolours: List of colour tuples, matching the number of series in each category.
-        legendloc: WORK IN PROGRESS
+        legend_placement: String representing where around the figure the legend should be
+                displayed. {"right-vertical", "left-vertical", "below-horizontal", "above-horizontal"}.
         xaxislim:Left and right xlim in data coordinates, as a tuple.
         xaxisstep: Intevals at which x axis ticks should be displayed.
         barheight: The height of each bar as a fraction. Selection 1 results on 
@@ -104,7 +105,7 @@ def basic(
 
     if x_axis_lim is not None: local_style.axis["xlim"] = x_axis_lim
     if x_axis_step is not None: local_style.axis["step"] = x_axis_step
-    if legend_loc is not None: local_style.legend["location"] = legend_loc
+    if legend_placement is not None: local_style.legend["placement"] = legend_placement
 
     local_style.legend["fontsize"] = font_size
     local_style.fig["size"] = fig_size
@@ -128,7 +129,7 @@ def centered(
         data_label_format:str = DEFAULT_BAR_FONT.format,
         data_label_align:str = DEFAULT_BAR_FONT.align,
         bar_colours:ColourGradient = None,
-        legend_loc:str = None,
+        legend_placement:str = None,
         x_axis_lim:tuple[int, int] = None,
         x_axis_step:int = None,
         bar_height:float = 0.8
@@ -154,7 +155,8 @@ def centered(
                 (https://docs.python.org/3/library/string.html#format-specification-mini-language).
         barvaluealign: Alignment of data labels within bars. Can be 'left', 'center', or 'right'. 
         barcolours: List of colour tuples, matching the number of series in each category.
-        legendloc: WORK IN PROGRESS
+        legend_placement: String representing where around the figure the legend should be
+                        displayed. {"right-vertical", "left-vertical", "below-horizontal", "above-horizontal"}.
         xaxislim:Left and right xlim in data coordinates, as a tuple.
         xaxisstep: Intevals at which x axis ticks should be displayed.
         barheight: The height of each bar as a fraction. Selection 1 results on 
@@ -176,7 +178,7 @@ def centered(
 
     if x_axis_lim is not None: local_style.axis["xlim"] = x_axis_lim
     if x_axis_step is not None: local_style.axis["step"] = x_axis_step
-    if legend_loc is not None: local_style.legend["location"] = legend_loc
+    if legend_placement is not None: local_style.legend["placement"] = legend_placement
 
     local_style.legend["fontsize"] = font_size
     local_style.fig["size"] = fig_size
