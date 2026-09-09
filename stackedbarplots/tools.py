@@ -99,8 +99,10 @@ class ColourGradient():
             for i in range(series_length):
                 if i < series_length//2:
                     series_colours.append(tuple([start+col_step1[j]*i for j, start in enumerate(start_colour)]))
-                else:
-                    series_colours.append(tuple([center+col_step2[j]*(i-(series_length//2)) for j, center in enumerate(center_colour)]))
+                elif i == series_length//2 and series_length %2 == 1:
+                    series_colours.append(center_colour)
+                elif i >= series_length//2:
+                    series_colours.append(tuple([end-col_step2[j]*((series_length-1)-i) for j, end in enumerate(end_colour)]))
         self.colour_gradient_list = series_colours
 
 
