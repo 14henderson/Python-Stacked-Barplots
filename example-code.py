@@ -10,9 +10,9 @@ basic_plot.show()
 
 
 #Example Centered Plot
-results2 = {"Category 1": [10, 5, 3, 11, 5], "Category 2": [4, 2, 9, 12, 3], "Category 3": [11, 12, 3, 4, 2]}
-series_labels2 = ["Series 1", "Series 2", "Series 3", "Series 4", "Series 5"]
-center_plot = stackedbarplots.centered(results2, series_labels2)
+results_2 = {"Category 1": [10, 5, 3, 11, 5], "Category 2": [4, 2, 9, 12, 3], "Category 3": [11, 12, 3, 4, 2]}
+series_labels_2 = ["Series 1", "Series 2", "Series 3", "Series 4", "Series 5"]
+center_plot = stackedbarplots.centered(results_2, series_labels_2)
 center_plot.render()
 center_plot.show()
 
