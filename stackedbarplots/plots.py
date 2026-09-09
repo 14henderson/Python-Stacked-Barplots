@@ -71,22 +71,22 @@ def basic(
         series_labels: Required list of string headings for chart series, to be (optionally) be 
             displayed on legend.
         title: The title of the plot.
-        figsize: Tuple of integers representing the width and height of the figure.
-        fontsize: Figure font size in points or as a string (e.g., 'large'). Font size for 
+        fig_size: Tuple of integers representing the width and height of the figure.
+        font_size: Figure font size in points or as a string (e.g., 'large'). Font size for 
             individual figure elemetns may be changed with set_style_ methods.
-        fontcolour: Figure font colour. Font colour for individual plot elements may be changed 
+        font_colour: Figure font colour. Font colour for individual plot elements may be changed 
             with set_style_ methods.
-        barvalueformat: format()-style format string for data labels. Default '{0}'. Format
+        data_label_format: format()-style format string for data labels. Default '{0}'. Format
                 string can also round to (e.g., 1) decimal place(s) with '{0:.1}'. A suffix can
                 be added using (for example) '{0}%'. See Python documentation for more inforamtion 
                 (https://docs.python.org/3/library/string.html#format-specification-mini-language).
-        barvaluealign: Alignment of data labels within bars. Can be 'left', 'center', or 'right'. 
-        barcolours: List of colour tuples, matching the number of series in each category.
+        data_label_align: Alignment of data labels within bars. Can be 'left', 'center', or 'right'. 
+        bar_colours: List of colour tuples, matching the number of series in each category.
         legend_placement: String representing where around the figure the legend should be
-                displayed. {"right-vertical", "left-vertical", "below-horizontal", "above-horizontal"}.
-        xaxislim:Left and right xlim in data coordinates, as a tuple.
-        xaxisstep: Intevals at which x axis ticks should be displayed.
-        barheight: The height of each bar as a fraction. Selection 1 results on 
+                        displayed. {"right-vertical", "left-vertical", "below-horizontal", "above-horizontal"}.
+        x_axis_lim:Left and right xlim in data coordinates, as a tuple.
+        x_axis_step: Intevals at which x axis ticks should be displayed.
+        bar_height: The height of each bar as a fraction. Selection 1 results on 
                 no whitespace between displayed categories.
 
     Returns:
@@ -145,22 +145,22 @@ def centered(
         series_labels: Required list of string headings for chart series, to be (optionally) be 
             displayed on legend.
         title: The title of the plot.
-        figsize: Tuple of integers representing the width and height of the figure.
-        fontsize: Figure font size in points or as a string (e.g., 'large'). Font size for 
+        fig_size: Tuple of integers representing the width and height of the figure.
+        font_size: Figure font size in points or as a string (e.g., 'large'). Font size for 
             individual figure elemetns may be changed with set_style_ methods.
-        fontcolour: Figure font colour. Font colour for individual plot elements may be changed 
+        font_colour: Figure font colour. Font colour for individual plot elements may be changed 
             with set_style_ methods.
-        barvalueformat: format()-style format string for data labels. Default '{0}'. Format
+        data_label_format: format()-style format string for data labels. Default '{0}'. Format
                 string can also round to (e.g., 1) decimal place(s) with '{0:.1}'. A suffix can
                 be added using (for example) '{0}%'. See Python documentation for more inforamtion 
                 (https://docs.python.org/3/library/string.html#format-specification-mini-language).
-        barvaluealign: Alignment of data labels within bars. Can be 'left', 'center', or 'right'. 
-        barcolours: List of colour tuples, matching the number of series in each category.
+        data_label_align: Alignment of data labels within bars. Can be 'left', 'center', or 'right'. 
+        bar_colours: List of colour tuples, matching the number of series in each category.
         legend_placement: String representing where around the figure the legend should be
                         displayed. {"right-vertical", "left-vertical", "below-horizontal", "above-horizontal"}.
-        xaxislim:Left and right xlim in data coordinates, as a tuple.
-        xaxisstep: Intevals at which x axis ticks should be displayed.
-        barheight: The height of each bar as a fraction. Selection 1 results on 
+        x_axis_lim:Left and right xlim in data coordinates, as a tuple.
+        x_axis_step: Intevals at which x axis ticks should be displayed.
+        bar_height: The height of each bar as a fraction. Selection 1 results on 
                 no whitespace between displayed categories.
 
     Returns:

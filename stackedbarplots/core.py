@@ -313,19 +313,19 @@ class StackedBarplot:
         """Update StackedBarplot bar text style configuration.
 
         Args:
-            fontsize: Data label font size in points or as a string (e.g., 'large').
-            fontcolour: The colour of data labels.
-            fontcolourinvert: Boolean flag for if font colour should be inverted for
+            font_size: Data label font size in points or as a string (e.g., 'large').
+            font_colour: The colour of data labels.
+            font_colour_invert: Boolean flag for if font colour should be inverted for
                 data labels displayed on bars with low luminence.
-            barvalueformat: format()-style format string for data labels. Default '{0}'. Format
+            bar_value_format: format()-style format string for data labels. Default '{0}'. Format
                 string can also round to (e.g., 1) decimal place(s) with '{0:.1}'. A suffix can
                 be added using (for example) '{0}%'. See Python documentation for more inforamtion 
                 (https://docs.python.org/3/library/string.html#format-specification-mini-language).
-            displaythresh: Tuple of floats representing optional minimum and maximum display
+            display_thresh: Tuple of floats representing optional minimum and maximum display
                 thresholds. Data labels below minimum or above maximum thresholds will not be displayed.
-            paddthresh: Threshold for whether data labels on start or end bars of categories should
+            padd_thresh: Threshold for whether data labels on start or end bars of categories should
                 be moved for better clarity (see parameter endthreshpadd).
-            endthreshpadd: Boolean value indicating whether, for data values for start or end bars, 
+            end_thresh_padd: Boolean value indicating whether, for data values for start or end bars, 
                 if the data value is below paddthresh, is should be moved outside of the bar for better
                 clarity. 
             align: Alignment of data labels within bars. Can be 'left', 'center', or 'right'. 
@@ -393,10 +393,10 @@ class StackedBarplot:
         """Update StackedBarplot axis title style configuration.
 
         Args:
-            xlabel: X axis label. None (default) will result in no label being displayed.
-            ylabel: Y axis label. None (default) will result in no label being displayed.
-            axislabelfontsize: Axes label font size in points or as a string (e.g., 'large').
-            axislabelfontcolour: Axes font colour.
+            x_label: X axis label. None (default) will result in no label being displayed.
+            y_label: Y axis label. None (default) will result in no label being displayed.
+            axis_label_font_size: Axes label font size in points or as a string (e.g., 'large').
+            axis_label_font_colour: Axes font colour.
         """
         if x_label is not None: self.style.axis_title["xlabel"] = x_label
         if y_label is not None: self.style.axis_title["ylabel"] = y_label
@@ -423,12 +423,12 @@ class StackedBarplot:
 
         Args:
             title: The title of the plot.
-            titlefontsize: Plot title font size in points or as a string (e.g., 'large').
-            titlecolour: The colour of the plot title.
-            fontfamily: The font family for all text used in the plot. User must select from
+            title_font_size: Plot title font size in points or as a string (e.g., 'large').
+            title_colour: The colour of the plot title.
+            font_family: The font family for all text used in the plot. User must select from
                 a list of font families (installed on user's machine).
-            figsize: Tuple of integers representing the width and height of the figure.
-            spinedisplay: Tuple of booleans representing the four figure spines. Ordered as (left, top, right, bottom).
+            fig_size: Tuple of integers representing the width and height of the figure.
+            spine_display: Tuple of booleans representing the four figure spines. Ordered as (left, top, right, bottom).
         """
         if title is not None: self.style.fig["title"] = title
         if title_font_size is not None: self.style.fig["titlefontsize"] = title_font_size
@@ -458,7 +458,7 @@ class StackedBarplot:
         Args:
             show: A boolean flag for whether the vertical line should be shown,
                 irrespectiev of other vertical line style configurations.
-            linestyle: Set the linestyle of the line. Is {'-', '--', '-.', ':', '', ...}.
+            line_style: Set the linestyle of the line. Is {'-', '--', '-.', ':', '', ...}.
             colour: The colour of the line.
             alpha: The alpha value of the line.
         """
@@ -491,14 +491,14 @@ class StackedBarplot:
         Args:
             show: A boolean flag for whether the legend should be shown, irrespective
                 of other legend style configurations. 
-            fontsize: Series headings' font size in points or as a string (e.g., 'large').
+            font_size: Series headings' font size in points or as a string (e.g., 'large').
             spacing: Spacing between series headings, in font-size units.
-            fontcolour: The color of the text in the legend.
-            backgroundcolour: The legend's background color.
-            bordercolour: The legend's background patch edge color.
+            font_colour: The color of the text in the legend.
+            background_colour: The legend's background color.
+            border_colour: The legend's background patch edge color.
             placement: String representing where around the figure the legend should be
                 displayed. {"right-vertical", "left-vertical", "below-horizontal", "above-horizontal"}.
-            markershape: Marker style string. {'*': 'star', '+': 'plus', 's':'square', 
+            marker_shape: Marker style string. {'*': 'star', '+': 'plus', 's':'square', 
                 'o':circle'}. For a full list of marker styles see https://matplotlib.org/stable/api/_as_gen/matplotlib.lines.Line2D.html.
             transform: Allows the user to make minor adjustments to the legend's placement
                 after placement choice. Must be tuple of length 2 representing a transform in X and Y axis. 
@@ -539,7 +539,7 @@ class StackedBarplot:
             step: Intevals at which x axis ticks should be displayed. Custom x_lim definition
                 is a requirement for step.
             x_font_size: X axis tick label font size in points or as a string (e.g., 'large').
-            y_font)size: Y axis tick label font size in points or as a string (e.g., 'large').
+            y_font_size: Y axis tick label font size in points or as a string (e.g., 'large').
             x_axis_format: format()-style format string for x axis ticks. Default '{0}'. Format
                 string can also round to (e.g., 1) decimal place(s) with '{0:.1}'. A suffix can
                 be added using (for example) '{0}%'. See Python documentation for more inforamtion 
@@ -580,7 +580,13 @@ class StackedBarplot:
             plt.close(self.fig)
 
 
-    def save(self, filename:str, transparent:bool=None, dpi='figure', bbox_inches='tight', pad_inches=0.1, fig_format:str="png"):
+    def save(self,
+             filename:str,
+             transparent:bool=None,
+             dpi='figure',
+             bbox_inches='tight',
+             pad_inches=0.1,
+             fig_format:str="png"):
         """Saves rendered figure to file.
 
         See https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.savefig.html for
@@ -594,7 +600,7 @@ class StackedBarplot:
                 If 'tight', try to figure out the tight bbox of the figure.
             pad_inches: Amount of padding in inches around the figure when bbox_inches is 
                 'tight'.
-            format: The file format, e.g. 'png', 'pdf', 'svg', ... The behavior when this is 
+            fig_format: The file format, e.g. 'png', 'pdf', 'svg', ... The behavior when this is 
                 unset is documented under fname.
 
         """
