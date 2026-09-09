@@ -4,7 +4,7 @@
 
 ## About
 
-> Are you a social scientist working with Likert-scale data in Python? 
+> Are you a social scientist working with Likert-scale data in Python?
 > Do you wish there was an easier way to create horizontal stacked barcharts without having to write 100s of lines of matplotlib code?
 > Do you just need an easy way to create horizontal stacked barcharts in Python?
 > Me too! **Python-Stacked-Barplots is here to help!**
@@ -107,9 +107,8 @@ basic_plot.save("COVID-Deaths-EU-Tests-Fig.png")
     <img src="https://github.com/14henderson/Python-Stacked-Barplots/blob/main/readmefigures/COVID-Deaths-Tests-Fig.png?raw=true" width=90% alt="Example 4 Horizontal Stacked Barchart created using this library.">
 </p>
 
-
 ## Technical implementation
-* Written in Python 3.14.
+* Written in Python 3.14. Tested and runs on version 3.10 minimum.
 * Written in pure python and minimal dependencies.
 * Open to collaboration: create new and accessible style configurations easily.
 * Written with Pylint following (where sensible) the Google-style documentation.
