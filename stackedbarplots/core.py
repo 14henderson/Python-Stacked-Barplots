@@ -2,10 +2,9 @@
 """Core module pertaining to stacked-barplots Python library.
 
 Core module contains definition for class StackedBarplot, which defines
-the properties and behaviours of plots created from stacked-barplots.py, and 
-the class StackedPlotStyle, which holds specific style properties for each 
-StackedBarplot object. The StackedBarplot and StackedPlotStyle classes maintain
-a one-to-one relationship.
+the properties and behaviours of plots created from stacked-barplots.py.
+The StackedBarplot and StackedPlotStyle (defined in defaults.ph) classes 
+maintain a one-to-one relationship.
 """
 
 import os
@@ -20,11 +19,8 @@ from .defaults import *
 
 
 __all__ = [
-    "StackedBarplot", "StackedPlotStyle"
+    "StackedBarplot"
 ]
-
-type results_type = dict[str, list[float]]
-type series_labels_type = list[str]
 
 class StackedBarplot:
     """StackedBarplot object represents horizontal stacked barchart with given style.
@@ -48,7 +44,7 @@ class StackedBarplot:
         style: Instance of class StackedPlotStyle, containing chart style settings.
         bar_colours: Instance of class ColourGradient, containing chart bar colours.
     """
-    def __init__(self, data:results_type, series_labels:series_labels_type):
+    def __init__(self, data:dict[str, list[float]], series_labels:list[str]):
         """Initializes the instance based on chart data and series labels.
 
         Args:
@@ -56,6 +52,12 @@ class StackedBarplot:
             series_labels: List of string headings for series used in chart.
             
         """
+        if not isinstance(data, dict): 
+            raise ValueError("Argument data must be a dictionary of category headings and associated category integer or float data.")
+        if not isinstance(series_labels, list):
+            raise ValueError("Argument series_labels must be list of strings.")
+        if len(list(data.values())[0]) != len(series_labels):
+            raise ValueError("Length of data in each category must equal total number of series labels provided.")
         self.data = list(data.values())
         self.series_labels = series_labels
         self.category_headings = list(data.keys())
@@ -78,6 +80,7 @@ class StackedBarplot:
         Args:
             style: Given StackedBarplot object that should be applied to the StackedBarplot plot.
         """
+        if not isinstance(style, StackedPlotStyle): raise ValueError("Argument style must be of type StackedPlotStyle.")
         self.style = style
 
         #Bar colours must be generated after the data is provided, as the number of colours must match the number of categories
@@ -88,8 +91,7 @@ class StackedBarplot:
         """Internal method. Renders bars and category headings according to stored style configuration."""
         self.fig, self.ax = plt.subplots(figsize=(
             self.style.fig["size"][0],
-            self.style.fig["size"][1]
-            ))
+            self.style.fig["size"][1]))
 
         middle_index = len(self.data[0]) // 2
 
@@ -128,7 +130,7 @@ class StackedBarplot:
                     raise NotImplementedError("Right-aligned bars not yet implemented")
                 else:
                     raise ValueError("Invalid alignment value, must be 'left', 'center', or 'right'")
-            rects = self.ax.barh(self.category_headings,
+            self.ax.barh(self.category_headings,
                                  widths,
                                  left=starts,
                                  height=self.style.bar.get("barheight"),
@@ -205,8 +207,7 @@ class StackedBarplot:
                     ha=ha, va=va,
                     fontsize=self.style.bar_font.get("fontsize"),
                     color=fontcolour,
-                    fontfamily=self.style.bar_font.get("fontfamily")
-                    )
+                    fontfamily=self.style.bar_font.get("fontfamily"))
                 self.textbarvarartists.append(textartist)
 
         self.ax.invert_yaxis() #Required for some reason?
@@ -257,7 +258,7 @@ class StackedBarplot:
         bbox_to_anchor[0] += self.style.legend.get("transform")[0]
         bbox_to_anchor[1] += self.style.legend.get("transform")[1]
 
-        leg = self.ax.legend(handles=self.style.legend["markers"],
+        self.ax.legend(handles=self.style.legend["markers"],
                        ncol=ncol,
                        bbox_to_anchor=bbox_to_anchor,
                        loc=DEFAULT_LEGEND_STYLE.placement_options[self.style.legend.get("placement")][0],
@@ -267,13 +268,13 @@ class StackedBarplot:
                        facecolor=self.style.legend.get("backgroundcolour"),
                        edgecolor = self.style.legend.get("bordercolour"),
                        framealpha=1,
-                       shadow=False
-        )
+                       shadow=False)
 
     def _plot_vert_line(self):
         """Internal method. Renders a vertical plot line according to stored style configuration."""
-        if len(self.series_labels) %2 == 0: z = 2
+        if self.style.vert_line.get("order") == "front": z = 2
         else: z = 0
+
         self.ax.axvline(0,
                         linestyle=self.style.vert_line.get("linestyle"),
                         color=self.style.vert_line.get("colour"),
@@ -354,8 +355,7 @@ class StackedBarplot:
                     bar_height:int = None,
                     align:str = None,
                     ordered:str = None,
-                    bar_gradient:ColourGradient = None
-                    ):
+                    bar_gradient:ColourGradient = None):
         """Update StackedBarplot bar style configuration.
 
         Args:
@@ -377,7 +377,9 @@ class StackedBarplot:
             if ordered not in ["ascending", "descending"]:
                 raise ValueError("Argument ordered must be either None, \"ascending\", or \"descending\".")
             self.style.fig["ordered"] = ordered
-        if bar_gradient is not None: self.bar_colours = bar_gradient
+        if bar_gradient is not None:
+            if not isinstance(bar_gradient, ColourGradient): raise ValueError("Argument bar_gradient must be of type ColourGradient.")
+            self.bar_colours = bar_gradient
         self.unrendered_changes = True
 
 
@@ -417,8 +419,7 @@ class StackedBarplot:
                     title_colour:str = None,
                     font_family:str = None,
                     fig_size:tuple[int, int] = None,
-                    spine_display:tuple[bool, bool, bool, bool] = None
-                    ):
+                    spine_display:tuple[bool, bool, bool, bool] = None):
         """Update StackedBarplot general figure style configuration.
 
         Args:
@@ -452,7 +453,8 @@ class StackedBarplot:
                     show:bool = None,
                     line_style:str = None,
                     colour:str = None,
-                    alpha:float = None):
+                    alpha:float = None,
+                    order:str = None):
         """Update StackedBarplot central vertical line style configuration.
 
         Args:
@@ -461,6 +463,8 @@ class StackedBarplot:
             line_style: Set the linestyle of the line. Is {'-', '--', '-.', ':', '', ...}.
             colour: The colour of the line.
             alpha: The alpha value of the line.
+            order: Whether the vertical line is desplayed in front or behind the plot. Is
+                {"front", "behind"}.
         """
         if show is not None: self.style.vert_line["show"] = show
         if line_style is not None: self.style.vert_line["linestyle"] = line_style
@@ -469,6 +473,10 @@ class StackedBarplot:
             if alpha < 0 or alpha > 1:
                 raise ValueError("Argument alpha must be a float between 0 and 1.")
             self.style.vert_line["alpha"] = alpha
+        if order is not None:
+            if order not in ["front", "behind"]:
+                raise ValueError("Argument order must be a string with value of either \"front\" or \"behind\".")
+            self.style.vert_line["order"] = order
         self.unrendered_changes = True
 
     def get_legend_style(self) -> dict:
@@ -484,8 +492,7 @@ class StackedBarplot:
                        border_colour:str = None,
                        placement:str = None,
                        marker_shape:str = None,
-                       transform:tuple[float, float] = None
-                       ):
+                       transform:tuple[float, float] = None):
         """Update StackedBarplot legend style configuration.
 
         Args:
@@ -632,8 +639,7 @@ class StackedBarplot:
                 marker=self.style.legend.get("markershape"),
                 linestyle='None',
                 markersize=10,
-                label=cat
-            ))
+                label=cat))
 
     #TODO: Assess necessity of clear_bar_text() method.
     def clear_bar_text(self):
@@ -643,90 +649,3 @@ class StackedBarplot:
             #del self.textbarvarartists[i]
         self.fig.canvas.draw()
         self.textbarvarartists = []
-
-
-#TODO: Convert class attributes and dictionary keys to snake_case.
-class StackedPlotStyle:
-    """StackedPlotStyle objects represent the style configuration for a StackedBarplot plot.
-
-    This class categorises plot style configuration variables into different dictionary
-    variables which are stored as attributes. 
-
-    Attributes:
-        bar_font: Style configurations for bar textual annotations.
-        bar: Style configurations for bar design and alignment.
-        legend: Style configurations for plot legend.
-        fig: Style configurations for general figure style.
-        axis_title: Style configurations for axis labels.
-        vert_line: Style configurations for central vertical line.
-        axis: Style configurations for axis scale font and values
-    """
-    def __init__(self):
-        """Initializes the instance based on default values loaded from defaults.py."""
-
-        self.bar_font = {
-            "fontsize": DEFAULT_BAR_FONT.size,
-            "fontcolour": DEFAULT_BAR_FONT.colour,
-            "fontformat": DEFAULT_BAR_FONT.format,
-            "fontalign": DEFAULT_BAR_FONT.align,
-            "fontpadd": DEFAULT_BAR_FONT.padding,
-            "fontcolourinvert": DEFAULT_BAR_FONT.colour_invert,
-            "fontdisplaythresh": DEFAULT_BAR_FONT.display_thresh,
-            "fontpaddthresh": DEFAULT_BAR_FONT.padding_thresh,
-            "fontendthreshpadd": DEFAULT_BAR_FONT.end_thresh_padd
-        }
-
-        self.bar = {
-            "height": DEFAULT_BAR_STYLE.height,
-            "align": DEFAULT_BAR_STYLE.align,
-            "startcolour": DEFAULT_BAR_STYLE.start_colour,
-            "endcolour": DEFAULT_BAR_STYLE.end_colour,
-            "midcolour": DEFAULT_BAR_STYLE.mid_colour
-        }
-
-        self.legend = {
-            "show": DEFAULT_LEGEND_STYLE.show,
-            "fontsize": DEFAULT_LEGEND_STYLE.font_size,
-            "spacing": DEFAULT_LEGEND_STYLE.label_spacing,
-            "fontcolour": DEFAULT_LEGEND_STYLE.font_colour,
-            "backgroundcolour": DEFAULT_LEGEND_STYLE.background_colour,
-            "bordercolour": DEFAULT_LEGEND_STYLE.border_colour,
-            "placement": DEFAULT_LEGEND_STYLE.placement,
-            "markershape": DEFAULT_LEGEND_STYLE.marker_shape,
-            "markers": [],
-            "transform": DEFAULT_LEGEND_STYLE.placement_transform
-        }
-
-        self.fig = {
-            "title": DEFAULT_FIG_STYLE.title,
-            "titlefontsize": DEFAULT_FIG_STYLE.title_font_size,
-            "titlecolour": DEFAULT_FIG_STYLE.title_colour,
-            "fontfamily": DEFAULT_FIG_STYLE.font_family,
-            "size": DEFAULT_FIG_STYLE.size,
-            "backgroundcolour": DEFAULT_FIG_STYLE.background_colour,
-            "ordered": DEFAULT_FIG_STYLE.ordered,
-            "spinedisplay": DEFAULT_FIG_STYLE.spine_display
-        }
-
-        self.axis_title = {
-            "xlabel": DEFAULT_AXIS_TITLE_STYLE.x_label,
-            "ylabel": DEFAULT_AXIS_TITLE_STYLE.y_label,
-            "axislabelfontsize": DEFAULT_AXIS_TITLE_STYLE.axis_label_font_size,
-            "axislabelfontcolour": DEFAULT_AXIS_TITLE_STYLE.axis_label_font_colour
-        }
-
-        self.vert_line = {
-            "show": DEFAULT_VERTLINE_STYLE.show,
-            "linestyle": DEFAULT_VERTLINE_STYLE.line_style,
-            "colour": DEFAULT_VERTLINE_STYLE.colour,
-            "alpha": DEFAULT_VERTLINE_STYLE.alpha
-        }
-
-        self.axis = {
-            "xlim": DEFAULT_AXIS_STYLE.x_lim,
-            "step": DEFAULT_AXIS_STYLE.step,
-            "xfontsize": DEFAULT_AXIS_STYLE.x_font_size,
-            "yfontsize": DEFAULT_AXIS_STYLE.y_font_size,
-            "xaxisformat": DEFAULT_AXIS_STYLE.x_axis_format,
-            "xaxisshow": DEFAULT_AXIS_STYLE.x_axis_show
-        }

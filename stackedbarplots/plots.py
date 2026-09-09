@@ -38,7 +38,7 @@ Typical usage example:
 
 from .defaults import DEFAULT_BAR_FONT
 from .tools import *
-from .core import results_type, series_labels_type, StackedBarplot, StackedPlotStyle
+from .core import StackedBarplot, StackedPlotStyle
 
 
 __all__ = [
@@ -47,8 +47,8 @@ __all__ = [
 
 
 def basic(
-        data:results_type,
-        series_labels:series_labels_type,
+        data:dict[str, list[float]],
+        series_labels:list[str],
         title:str = None,
         fig_size:tuple[int, int] = (10, 5),
         font_size:int = DEFAULT_BAR_FONT.size,
@@ -121,8 +121,8 @@ def basic(
     return plot
 
 def centered(
-        data:results_type,
-        series_labels:series_labels_type,
+        data:dict[str, list[float]],
+        series_labels:list[str],
         title:str = None,
         fig_size:tuple[int, int] = (10, 5),
         font_size:int = DEFAULT_BAR_FONT.size,

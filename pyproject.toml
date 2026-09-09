@@ -10,7 +10,10 @@ authors = [
 ]
 description = ""
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.1"
+dependencies = [
+  "matplotlib >= 3.10.9"
+]
 classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
