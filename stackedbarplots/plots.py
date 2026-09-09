@@ -50,7 +50,7 @@ def basic(
         data:results_type,
         series_labels:series_labels_type,
         title:str = None,
-        fig_size:list[int, int] = [10, 5],
+        fig_size:tuple[int, int] = (10, 5),
         font_size:int = DEFAULT_BAR_FONT.size,
         font_colour:str = DEFAULT_BAR_FONT.colour,
         data_label_format:str = DEFAULT_BAR_FONT.format,
@@ -95,27 +95,28 @@ def basic(
     
     """
     local_style = StackedPlotStyle()
-    local_style.fig["title"] = title
-    local_style.bar_font["fontsize"] = font_size
-    local_style.bar_font["fontcolour"] = font_colour
-    local_style.bar_font["fontformat"] = data_label_format
-    local_style.bar_font["fontalign"] = data_label_align
-    local_style.bar_font["endthreshpadd"] = True
-    local_style.bar_font["paddthresh"] = 4
-
-    if x_axis_lim is not None: local_style.axis["xlim"] = x_axis_lim
-    if x_axis_step is not None: local_style.axis["step"] = x_axis_step
-    if legend_placement is not None: local_style.legend["placement"] = legend_placement
-
-    local_style.legend["fontsize"] = font_size
-    local_style.fig["size"] = fig_size
-    local_style.bar["align"] = "left"
-    local_style.bar["barheight"] = bar_height
-    local_style.fig["spinedisplay"] = (False, False, False, True)
-
     plot = StackedBarplot(data, series_labels)
     plot.set_style(local_style)
+
+    plot.set_axis_style(x_lim=x_axis_lim, step=x_axis_step)
+    plot.set_bar_style(align="left", bar_height=bar_height)
     if bar_colours is not None: plot.set_bar_style(bar_gradient=bar_colours)
+
+    plot.set_fig_style(title=title,
+                       fig_size=fig_size,
+                       spine_display=(False, False, False, True))
+
+    plot.set_bar_labels_style(font_size=font_size,
+                              font_colour=font_colour,
+                              bar_value_format=data_label_format,
+                              align=data_label_align,
+                              end_thresh_padd=True,
+                              padd_thresh=4)
+
+    if legend_placement is not None:
+        plot.set_legend_style(show=True,
+                              placement=legend_placement,
+                              font_size=font_size)
 
     return plot
 
@@ -123,7 +124,7 @@ def centered(
         data:results_type,
         series_labels:series_labels_type,
         title:str = None,
-        fig_size:list[int, int] = [10, 5],
+        fig_size:tuple[int, int] = (10, 5),
         font_size:int = DEFAULT_BAR_FONT.size,
         font_colour:str = DEFAULT_BAR_FONT.colour,
         data_label_format:str = DEFAULT_BAR_FONT.format,
@@ -168,28 +169,29 @@ def centered(
         
     """
     local_style = StackedPlotStyle()
-    local_style.fig["title"] = title
-    local_style.bar_font["fontsize"] = font_size
-    local_style.bar_font["fontcolour"] = font_colour
-    local_style.bar_font["fontformat"] = data_label_format
-    local_style.bar_font["fontalign"] = data_label_align
-    local_style.bar_font["endthreshpadd"] = True
-    local_style.bar_font["paddthresh"] = 4
-
-    if x_axis_lim is not None: local_style.axis["xlim"] = x_axis_lim
-    if x_axis_step is not None: local_style.axis["step"] = x_axis_step
-    if legend_placement is not None: local_style.legend["placement"] = legend_placement
-
-    local_style.legend["fontsize"] = font_size
-    local_style.fig["size"] = fig_size
-    local_style.bar["align"] = "center"
-    local_style.bar["barheight"] = bar_height
-    local_style.vert_line["show"] = True
-    local_style.fig["spinedisplay"] = (False, False, False, True)
-
     plot = StackedBarplot(data, series_labels)
     plot.set_style(local_style)
+
+    plot.set_axis_style(x_lim=x_axis_lim, step=x_axis_step)
+    plot.set_bar_style(align="center", bar_height=bar_height)
     if bar_colours is not None: plot.set_bar_style(bar_gradient=bar_colours)
+    plot.set_vert_line_style(show=True)
+
+    plot.set_fig_style(title=title,
+                       fig_size=fig_size, 
+                       spine_display=(False, False, False, True))
+
+    plot.set_bar_labels_style(font_size=font_size,
+                              font_colour=font_colour,
+                              bar_value_format=data_label_format,
+                              align=data_label_align,
+                              end_thresh_padd=True,
+                              padd_thresh=4)
+
+    if legend_placement is not None:
+        plot.set_legend_style(show=True,
+                              placement=legend_placement,
+                              font_size=font_size)
 
     return plot
 

@@ -86,8 +86,17 @@ class ColourGradient():
                 is a required parameter. If defined, the created gradient will converge 
                 from start_colour and end_colour on to center_colour.
         """
+        if series_length < 1: raise ValueError("Argument series_length must be an integer of minimum value 1.")
+        if not isinstance(start_colour, tuple) or len(start_colour) != 3:
+            raise ValueError("Argument start_colour must be tuple of three integers between 0 and 255.")
+        if not isinstance(end_colour, tuple) or len(end_colour) != 3:
+            raise ValueError("Argument end_colour must be tuple of three integers between 0 and 255.")
+        if center_colour is not None:
+            if not isinstance(center_colour, tuple) or len(center_colour) != 3:
+                raise ValueError("Argument center_colour must be tuple of three integers between 0 and 255.")
         if series_length %2 != 0 and center_colour is None:
             raise ValueError("If total number of colours is odd, a center colour must be provided")
+
         series_colours = []
         if center_colour is None:
             col_step = [(end-start)/(series_length-1.0) for start, end in zip(start_colour, end_colour)]
@@ -121,6 +130,12 @@ class ColourGradient():
             end_intensity: The intended intensity of the ending bar in each category.
                 Value given as integer between 0 and 255.
             """
+        if series_length < 1: raise ValueError("Argument series_length must be an integer of minimum value 1.")
+        if start_intensity < 0 or start_intensity > 1:
+            raise ValueError("Argument start_intensity must be a float with value between 0 and 1.")
+        if end_intensity < 0 or end_intensity > 1:
+            raise ValueError("Argument end_intensity must be a float with value between 0 and 1.")
+
         col_step = (end_intensity-start_intensity)/(series_length-1.0)
         self.colour_gradient_list = [((start_intensity+col_step*i, start_intensity+col_step*i, start_intensity+col_step*i)) for i in range(series_length)]
 

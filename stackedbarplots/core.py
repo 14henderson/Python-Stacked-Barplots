@@ -338,7 +338,10 @@ class StackedBarplot:
         if display_thresh is not None: self.style.bar_font["fontdisplaythresh"] = display_thresh
         if padd_thresh is not None: self.style.bar_font["fontpaddthresh"] = padd_thresh
         if end_thresh_padd is not None: self.style.bar_font["fontendthreshpadd"] = end_thresh_padd
-        if align is not None: self.style.bar_font["fontalign"] = align
+        if align is not None:
+            if align not in ["left", "center", "right"]:
+                raise ValueError("Argument align must be either \"left\", \"center\", or \"right\".")
+            self.style.bar_font["fontalign"] = align
         if padding is not None: self.style.bar_font["fontpadd"] = padding
         self.unrendered_changes = True
 
@@ -366,8 +369,14 @@ class StackedBarplot:
                 series in each category.
         """
         if bar_height is not None: self.style.bar["barheight"] = bar_height
-        if align is not None: self.style.bar["align"] = align
-        if ordered is not None: self.style.fig["ordered"] = ordered
+        if align is not None:
+            if align not in ["left", "center"]:
+                raise ValueError("Argument align must be either None, \"left\", or \"center\".")
+            self.style.bar["align"] = align
+        if ordered is not None:
+            if ordered not in ["ascending", "descending"]:
+                raise ValueError("Argument ordered must be either None, \"ascending\", or \"descending\".")
+            self.style.fig["ordered"] = ordered
         if bar_gradient is not None: self.bar_colours = bar_gradient
         self.unrendered_changes = True
 
@@ -425,9 +434,14 @@ class StackedBarplot:
         if title_font_size is not None: self.style.fig["titlefontsize"] = title_font_size
         if title_colour is not None: self.style.fig["titlecolour"] = title_colour
         if font_family is not None: self.style.fig["fontfamily"] = font_family
-        if fig_size is not None: self.style.fig["size"] = fig_size
-        if spine_display is not None: self.style.fig["spinedisplay"] = spine_display
-
+        if fig_size is not None:
+            if not isinstance(fig_size, tuple) or len(fig_size) != 2:
+                raise ValueError("Argument fig_size must be a tuple of two integers representing the width and height of the figure.")
+            self.style.fig["size"] = fig_size
+        if spine_display is not None:
+            if not isinstance(spine_display, tuple) or len(spine_display) != 4:
+                raise ValueError("Argument spine_display must be a tuple of four boolean values representing the four figure spines.")
+            self.style.fig["spinedisplay"] = spine_display
         self.unrendered_changes = True
 
     def get_vert_line_style(self) -> dict:
@@ -451,7 +465,10 @@ class StackedBarplot:
         if show is not None: self.style.vert_line["show"] = show
         if line_style is not None: self.style.vert_line["linestyle"] = line_style
         if colour is not None: self.style.vert_line["colour"] = colour
-        if alpha is not None: self.style.vert_line["alpha"] = alpha
+        if alpha is not None:
+            if alpha < 0 or alpha > 1:
+                raise ValueError("Argument alpha must be a float between 0 and 1.")
+            self.style.vert_line["alpha"] = alpha
         self.unrendered_changes = True
 
     def get_legend_style(self) -> dict:
@@ -484,7 +501,7 @@ class StackedBarplot:
             markershape: Marker style string. {'*': 'star', '+': 'plus', 's':'square', 
                 'o':circle'}. For a full list of marker styles see https://matplotlib.org/stable/api/_as_gen/matplotlib.lines.Line2D.html.
             transform: Allows the user to make minor adjustments to the legend's placement
-                after placement choice.  
+                after placement choice. Must be tuple of length 2 representing a transform in X and Y axis. 
         """
         #TODO: finalise method argument documentation relating to legend placement.
         if show is not None: self.style.legend["show"] = show
@@ -493,9 +510,15 @@ class StackedBarplot:
         if font_colour is not None: self.style.legend["fontcolour"] = font_colour
         if background_colour is not None: self.style.legend["backgroundcolour"] = background_colour
         if border_colour is not None: self.style.legend["bordercolour"] = border_colour
-        if placement is not None: self.style.legend["placement"] = placement
+        if placement is not None:
+            if placement not in ["right-vertical", "left-vertical", "below-horizontal", "above-horizontal"]:
+                raise ValueError("Placement must be either \"right-vertical\", \"left-vertical\", \"below-horizontal\", \"above-horizontal\".")
+            self.style.legend["placement"] = placement
         if marker_shape is not None: self.style.legend["markershape"] = marker_shape
-        if transform is not None: self.style.legend["transform"] = transform
+        if transform is not None:
+            if not isinstance(transform, tuple) and len(transform) != 2:
+                raise ValueError("Argument transform must be tuple of length two representing transform in X and Y axis.")
+            self.style.legend["transform"] = transform
         self.unrendered_changes = True
 
     def get_axis_style(self) -> dict:
@@ -582,7 +605,7 @@ class StackedBarplot:
         path = os.path.dirname(os.path.abspath(__file__))
         self.fig.savefig(os.path.join(path, filename),
                          transparent=transparent,
-                         dpi=dpi, 
+                         dpi=dpi,
                          bbox_inches=bbox_inches,
                          pad_inches=pad_inches,
                          format=fig_format)
