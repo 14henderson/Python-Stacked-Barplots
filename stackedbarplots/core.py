@@ -52,6 +52,12 @@ class StackedBarplot:
             series_labels: List of string headings for series used in chart.
             
         """
+        if not isinstance(data, dict): 
+            raise ValueError("Argument data must be a dictionary of category headings and associated category integer or float data.")
+        if not isinstance(series_labels, list):
+            raise ValueError("Argument series_labels must be list of strings.")
+        if len(list(data.values())[0]) != len(series_labels):
+            raise ValueError("Length of data in each category must equal total number of series labels provided.")
         self.data = list(data.values())
         self.series_labels = series_labels
         self.category_headings = list(data.keys())
@@ -74,6 +80,7 @@ class StackedBarplot:
         Args:
             style: Given StackedBarplot object that should be applied to the StackedBarplot plot.
         """
+        if not isinstance(style, StackedPlotStyle): raise ValueError("Argument style must be of type StackedPlotStyle.")
         self.style = style
 
         #Bar colours must be generated after the data is provided, as the number of colours must match the number of categories
@@ -84,8 +91,7 @@ class StackedBarplot:
         """Internal method. Renders bars and category headings according to stored style configuration."""
         self.fig, self.ax = plt.subplots(figsize=(
             self.style.fig["size"][0],
-            self.style.fig["size"][1]
-            ))
+            self.style.fig["size"][1]))
 
         middle_index = len(self.data[0]) // 2
 
@@ -201,8 +207,7 @@ class StackedBarplot:
                     ha=ha, va=va,
                     fontsize=self.style.bar_font.get("fontsize"),
                     color=fontcolour,
-                    fontfamily=self.style.bar_font.get("fontfamily")
-                    )
+                    fontfamily=self.style.bar_font.get("fontfamily"))
                 self.textbarvarartists.append(textartist)
 
         self.ax.invert_yaxis() #Required for some reason?
@@ -263,8 +268,7 @@ class StackedBarplot:
                        facecolor=self.style.legend.get("backgroundcolour"),
                        edgecolor = self.style.legend.get("bordercolour"),
                        framealpha=1,
-                       shadow=False
-        )
+                       shadow=False)
 
     def _plot_vert_line(self):
         """Internal method. Renders a vertical plot line according to stored style configuration."""
@@ -351,8 +355,7 @@ class StackedBarplot:
                     bar_height:int = None,
                     align:str = None,
                     ordered:str = None,
-                    bar_gradient:ColourGradient = None
-                    ):
+                    bar_gradient:ColourGradient = None):
         """Update StackedBarplot bar style configuration.
 
         Args:
@@ -374,7 +377,9 @@ class StackedBarplot:
             if ordered not in ["ascending", "descending"]:
                 raise ValueError("Argument ordered must be either None, \"ascending\", or \"descending\".")
             self.style.fig["ordered"] = ordered
-        if bar_gradient is not None: self.bar_colours = bar_gradient
+        if bar_gradient is not None:
+            if not isinstance(bar_gradient, ColourGradient): raise ValueError("Argument bar_gradient must be of type ColourGradient.")
+            self.bar_colours = bar_gradient
         self.unrendered_changes = True
 
 
@@ -414,8 +419,7 @@ class StackedBarplot:
                     title_colour:str = None,
                     font_family:str = None,
                     fig_size:tuple[int, int] = None,
-                    spine_display:tuple[bool, bool, bool, bool] = None
-                    ):
+                    spine_display:tuple[bool, bool, bool, bool] = None):
         """Update StackedBarplot general figure style configuration.
 
         Args:
@@ -488,8 +492,7 @@ class StackedBarplot:
                        border_colour:str = None,
                        placement:str = None,
                        marker_shape:str = None,
-                       transform:tuple[float, float] = None
-                       ):
+                       transform:tuple[float, float] = None):
         """Update StackedBarplot legend style configuration.
 
         Args:
@@ -636,8 +639,7 @@ class StackedBarplot:
                 marker=self.style.legend.get("markershape"),
                 linestyle='None',
                 markersize=10,
-                label=cat
-            ))
+                label=cat))
 
     #TODO: Assess necessity of clear_bar_text() method.
     def clear_bar_text(self):

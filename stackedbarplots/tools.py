@@ -67,8 +67,7 @@ class ColourGradient():
                 series_length:int,
                 start_colour:tuple[int, int, int],
                 end_colour:tuple[int, int, int],
-                center_colour:tuple[int, int, int] = None
-                ):
+                center_colour:tuple[int, int, int] = None):
         """Creates and stores a list of RGB colours in gradient matching length of 
         series
         
@@ -113,8 +112,7 @@ class ColourGradient():
     def grayscale_gradient(self,
                            series_length:int,
                            start_intensity:int = 0.3,
-                           end_intensity:int = 0.9
-                           ):
+                           end_intensity:int = 0.9):
         """Creates and stores a list of RGB colours in a grayscale gradient matching 
         length of given series.
         
