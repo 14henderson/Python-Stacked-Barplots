@@ -99,7 +99,7 @@ class DEFAULT_AXIS_STYLE:
     step:int = None
     x_font_size:int = 12
     y_font_size:int = 12
-    x_axis_format:str = "{0}"
+    x_axis_format:str = "{0:.0f}"
     x_axis_show:bool = True
 
 
