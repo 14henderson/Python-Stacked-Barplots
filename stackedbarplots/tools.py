@@ -22,11 +22,6 @@ Typical usage example:
 
 import copy
 
-type colour_type = list[tuple[int, int, int]]
-type norm_colour_type = list[tuple[float, float, float]]
-
-
-
 def cumu1d(data:list[float]) -> list[float]:
     """Return the cumulative sum of the elements along one axis."""
     cumu_data = copy.deepcopy(data)
@@ -58,12 +53,12 @@ class ColourGradient():
         """Initializes the ColourGradient instance."""
         self.colour_gradient_list = []
 
-    def get_normalised_gradient_list(self) -> norm_colour_type:
+    def get_normalised_gradient_list(self) -> list[tuple[float, float, float]]:
         """Returns stored colour gradient list matching data shape. RGB values are returned as fractions."""
         norm = [(col[0]/255.0, col[1]/255.0, col[2]/255.0) for col in self.colour_gradient_list]
         return norm
 
-    def get_gradient_list(self) -> colour_type:
+    def get_gradient_list(self) -> list[tuple[int, int, int]]:
         """Returns stored colour gradient list matching data shape.."""
         return self.colour_gradient_list
         #TODO: if it doesn't exist, throw error? Use default?
@@ -139,7 +134,7 @@ class ColourGradient():
         col_step = (end_intensity-start_intensity)/(series_length-1.0)
         self.colour_gradient_list = [((start_intensity+col_step*i, start_intensity+col_step*i, start_intensity+col_step*i)) for i in range(series_length)]
 
-    def set_colour_gradient_list(self, new_colour_gradient_list:colour_type):
+    def set_colour_gradient_list(self, new_colour_gradient_list:list[tuple[int, int, int]]):
         """Allows the user to define a custom colour gradient list, instead of using
         a predefined gradient method.
         

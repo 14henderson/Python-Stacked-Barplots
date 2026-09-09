@@ -2,10 +2,9 @@
 """Core module pertaining to stacked-barplots Python library.
 
 Core module contains definition for class StackedBarplot, which defines
-the properties and behaviours of plots created from stacked-barplots.py, and 
-the class StackedPlotStyle, which holds specific style properties for each 
-StackedBarplot object. The StackedBarplot and StackedPlotStyle classes maintain
-a one-to-one relationship.
+the properties and behaviours of plots created from stacked-barplots.py.
+The StackedBarplot and StackedPlotStyle (defined in defaults.ph) classes 
+maintain a one-to-one relationship.
 """
 
 import os
@@ -20,11 +19,8 @@ from .defaults import *
 
 
 __all__ = [
-    "StackedBarplot", "StackedPlotStyle"
+    "StackedBarplot"
 ]
-
-type results_type = dict[str, list[float]]
-type series_labels_type = list[str]
 
 class StackedBarplot:
     """StackedBarplot object represents horizontal stacked barchart with given style.
@@ -48,7 +44,7 @@ class StackedBarplot:
         style: Instance of class StackedPlotStyle, containing chart style settings.
         bar_colours: Instance of class ColourGradient, containing chart bar colours.
     """
-    def __init__(self, data:results_type, series_labels:series_labels_type):
+    def __init__(self, data:dict[str, list[float]], series_labels:list[str]):
         """Initializes the instance based on chart data and series labels.
 
         Args:
@@ -651,91 +647,3 @@ class StackedBarplot:
             #del self.textbarvarartists[i]
         self.fig.canvas.draw()
         self.textbarvarartists = []
-
-
-#TODO: Convert class attributes and dictionary keys to snake_case.
-class StackedPlotStyle:
-    """StackedPlotStyle objects represent the style configuration for a StackedBarplot plot.
-
-    This class categorises plot style configuration variables into different dictionary
-    variables which are stored as attributes. 
-
-    Attributes:
-        bar_font: Style configurations for bar textual annotations.
-        bar: Style configurations for bar design and alignment.
-        legend: Style configurations for plot legend.
-        fig: Style configurations for general figure style.
-        axis_title: Style configurations for axis labels.
-        vert_line: Style configurations for central vertical line.
-        axis: Style configurations for axis scale font and values
-    """
-    def __init__(self):
-        """Initializes the instance based on default values loaded from defaults.py."""
-
-        self.bar_font = {
-            "fontsize": DEFAULT_BAR_FONT.size,
-            "fontcolour": DEFAULT_BAR_FONT.colour,
-            "fontformat": DEFAULT_BAR_FONT.format,
-            "fontalign": DEFAULT_BAR_FONT.align,
-            "fontpadd": DEFAULT_BAR_FONT.padding,
-            "fontcolourinvert": DEFAULT_BAR_FONT.colour_invert,
-            "fontdisplaythresh": DEFAULT_BAR_FONT.display_thresh,
-            "fontpaddthresh": DEFAULT_BAR_FONT.padding_thresh,
-            "fontendthreshpadd": DEFAULT_BAR_FONT.end_thresh_padd
-        }
-
-        self.bar = {
-            "height": DEFAULT_BAR_STYLE.height,
-            "align": DEFAULT_BAR_STYLE.align,
-            "startcolour": DEFAULT_BAR_STYLE.start_colour,
-            "endcolour": DEFAULT_BAR_STYLE.end_colour,
-            "midcolour": DEFAULT_BAR_STYLE.mid_colour
-        }
-
-        self.legend = {
-            "show": DEFAULT_LEGEND_STYLE.show,
-            "fontsize": DEFAULT_LEGEND_STYLE.font_size,
-            "spacing": DEFAULT_LEGEND_STYLE.label_spacing,
-            "fontcolour": DEFAULT_LEGEND_STYLE.font_colour,
-            "backgroundcolour": DEFAULT_LEGEND_STYLE.background_colour,
-            "bordercolour": DEFAULT_LEGEND_STYLE.border_colour,
-            "placement": DEFAULT_LEGEND_STYLE.placement,
-            "markershape": DEFAULT_LEGEND_STYLE.marker_shape,
-            "markers": [],
-            "transform": DEFAULT_LEGEND_STYLE.placement_transform
-        }
-
-        self.fig = {
-            "title": DEFAULT_FIG_STYLE.title,
-            "titlefontsize": DEFAULT_FIG_STYLE.title_font_size,
-            "titlecolour": DEFAULT_FIG_STYLE.title_colour,
-            "fontfamily": DEFAULT_FIG_STYLE.font_family,
-            "size": DEFAULT_FIG_STYLE.size,
-            "backgroundcolour": DEFAULT_FIG_STYLE.background_colour,
-            "ordered": DEFAULT_FIG_STYLE.ordered,
-            "spinedisplay": DEFAULT_FIG_STYLE.spine_display
-        }
-
-        self.axis_title = {
-            "xlabel": DEFAULT_AXIS_TITLE_STYLE.x_label,
-            "ylabel": DEFAULT_AXIS_TITLE_STYLE.y_label,
-            "axislabelfontsize": DEFAULT_AXIS_TITLE_STYLE.axis_label_font_size,
-            "axislabelfontcolour": DEFAULT_AXIS_TITLE_STYLE.axis_label_font_colour
-        }
-
-        self.vert_line = {
-            "show": DEFAULT_VERTLINE_STYLE.show,
-            "linestyle": DEFAULT_VERTLINE_STYLE.line_style,
-            "colour": DEFAULT_VERTLINE_STYLE.colour,
-            "alpha": DEFAULT_VERTLINE_STYLE.alpha,
-            "order": DEFAULT_VERTLINE_STYLE.order
-        }
-
-        self.axis = {
-            "xlim": DEFAULT_AXIS_STYLE.x_lim,
-            "step": DEFAULT_AXIS_STYLE.step,
-            "xfontsize": DEFAULT_AXIS_STYLE.x_font_size,
-            "yfontsize": DEFAULT_AXIS_STYLE.y_font_size,
-            "xaxisformat": DEFAULT_AXIS_STYLE.x_axis_format,
-            "xaxisshow": DEFAULT_AXIS_STYLE.x_axis_show
-        }
