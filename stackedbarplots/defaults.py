@@ -156,3 +156,4 @@ class DEFAULT_VERTLINE_STYLE:
     line_style:str = "-"
     colour = "black"
     alpha:float = 1
+    order:str = "front"

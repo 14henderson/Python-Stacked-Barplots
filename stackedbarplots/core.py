@@ -128,7 +128,7 @@ class StackedBarplot:
                     raise NotImplementedError("Right-aligned bars not yet implemented")
                 else:
                     raise ValueError("Invalid alignment value, must be 'left', 'center', or 'right'")
-            rects = self.ax.barh(self.category_headings,
+            self.ax.barh(self.category_headings,
                                  widths,
                                  left=starts,
                                  height=self.style.bar.get("barheight"),
@@ -257,7 +257,7 @@ class StackedBarplot:
         bbox_to_anchor[0] += self.style.legend.get("transform")[0]
         bbox_to_anchor[1] += self.style.legend.get("transform")[1]
 
-        leg = self.ax.legend(handles=self.style.legend["markers"],
+        self.ax.legend(handles=self.style.legend["markers"],
                        ncol=ncol,
                        bbox_to_anchor=bbox_to_anchor,
                        loc=DEFAULT_LEGEND_STYLE.placement_options[self.style.legend.get("placement")][0],
@@ -272,8 +272,9 @@ class StackedBarplot:
 
     def _plot_vert_line(self):
         """Internal method. Renders a vertical plot line according to stored style configuration."""
-        if len(self.series_labels) %2 == 0: z = 2
+        if self.style.vert_line.get("order") == "front": z = 2
         else: z = 0
+
         self.ax.axvline(0,
                         linestyle=self.style.vert_line.get("linestyle"),
                         color=self.style.vert_line.get("colour"),
@@ -452,7 +453,8 @@ class StackedBarplot:
                     show:bool = None,
                     line_style:str = None,
                     colour:str = None,
-                    alpha:float = None):
+                    alpha:float = None,
+                    order:str = None):
         """Update StackedBarplot central vertical line style configuration.
 
         Args:
@@ -461,6 +463,8 @@ class StackedBarplot:
             line_style: Set the linestyle of the line. Is {'-', '--', '-.', ':', '', ...}.
             colour: The colour of the line.
             alpha: The alpha value of the line.
+            order: Whether the vertical line is desplayed in front or behind the plot. Is
+                {"front", "behind"}.
         """
         if show is not None: self.style.vert_line["show"] = show
         if line_style is not None: self.style.vert_line["linestyle"] = line_style
@@ -469,6 +473,10 @@ class StackedBarplot:
             if alpha < 0 or alpha > 1:
                 raise ValueError("Argument alpha must be a float between 0 and 1.")
             self.style.vert_line["alpha"] = alpha
+        if order is not None:
+            if order not in ["front", "behind"]:
+                raise ValueError("Argument order must be a string with value of either \"front\" or \"behind\".")
+            self.style.vert_line["order"] = order
         self.unrendered_changes = True
 
     def get_legend_style(self) -> dict:
@@ -719,7 +727,8 @@ class StackedPlotStyle:
             "show": DEFAULT_VERTLINE_STYLE.show,
             "linestyle": DEFAULT_VERTLINE_STYLE.line_style,
             "colour": DEFAULT_VERTLINE_STYLE.colour,
-            "alpha": DEFAULT_VERTLINE_STYLE.alpha
+            "alpha": DEFAULT_VERTLINE_STYLE.alpha,
+            "order": DEFAULT_VERTLINE_STYLE.order
         }
 
         self.axis = {
