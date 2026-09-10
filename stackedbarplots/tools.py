@@ -23,7 +23,9 @@ Typical usage example:
 import copy
 
 def cumu1d(data:list[float]) -> list[float]:
-    """Return the cumulative sum of the elements along one axis."""
+    """Return the cumulative sum of the elements along one axis. Be aware that this 
+    method may not represent floating point arithmetic precisely, having the same
+    limitations as Python itself. For more information on this, see https://docs.python.org/3/tutorial/floatingpoint.html."""
     cumu_data = copy.deepcopy(data)
     for x in range(len(cumu_data)):
         if x == 0:
@@ -88,24 +90,30 @@ class ColourGradient():
         if center_colour is not None:
             if not isinstance(center_colour, tuple) or len(center_colour) != 3:
                 raise ValueError("Argument center_colour must be tuple of three integers between 0 and 255.")
+            if any(i > 255 or i < 0 for i in center_colour):
+                raise ValueError("Argument center_colour must contain integers between 0 and 255.")
         if series_length %2 != 0 and center_colour is None:
             raise ValueError("If total number of colours is odd, a center colour must be provided")
+        if any(i > 255 or i < 0 for i in start_colour):
+            raise ValueError("Argument start_colour must contain integers between 0 and 255.")
+        if any(i > 255 or i < 0 for i in end_colour):
+            raise ValueError("Argument end_colour must contain integers between 0 and 255.")
 
         series_colours = []
         if center_colour is None:
             col_step = [(end-start)/(series_length-1.0) for start, end in zip(start_colour, end_colour)]
             for i in range(series_length):
-                series_colours.append(tuple([start+col_step[j]*i for j, start in enumerate(start_colour)]))
+                series_colours.append(tuple([int(start+col_step[j]*i) for j, start in enumerate(start_colour)]))
         else:
             col_step1 = [(center-start)/(series_length//2.0) for start, center in zip(start_colour, center_colour)]
             col_step2 = [(end-center)/(series_length//2.0) for end, center in zip(end_colour, center_colour)]
             for i in range(series_length):
                 if i < series_length//2:
-                    series_colours.append(tuple([start+col_step1[j]*i for j, start in enumerate(start_colour)]))
+                    series_colours.append(tuple([int(start+col_step1[j]*i) for j, start in enumerate(start_colour)]))
                 elif i == series_length//2 and series_length %2 == 1:
                     series_colours.append(center_colour)
                 elif i >= series_length//2:
-                    series_colours.append(tuple([end-col_step2[j]*((series_length-1)-i) for j, end in enumerate(end_colour)]))
+                    series_colours.append(tuple([int(end-col_step2[j]*((series_length-1)-i)) for j, end in enumerate(end_colour)]))
         self.colour_gradient_list = series_colours
 
 
