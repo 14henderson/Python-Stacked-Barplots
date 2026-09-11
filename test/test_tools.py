@@ -1,6 +1,6 @@
 # pylint: disable=multiple-statements,too-many-positional-arguments,redefined-outer-name,missing-function-docstring,missing-class-docstring,line-too-long,disable=consider-using-enumerate
 
-import stackedbarplots, unittest
+import unittest
 from stackedbarplots.tools import cumu1d, cumu2d, ColourGradient
 
 class TestCumu1d(unittest.TestCase):
