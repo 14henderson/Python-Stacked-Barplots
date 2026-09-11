@@ -17,14 +17,14 @@ Typical usage example:
 #TODO: Convert variable names to snake_case
 
 __all__ = [
-    "StackedPlotStyle", "DEFAULT_BAR_FONT", "DEFAULT_BAR_STYLE", "DEFAULT_FIG_STYLE", 
+    "StackedPlotStyle", "DEFAULT_BAR_FONT_STYLE", "DEFAULT_BAR_STYLE", "DEFAULT_FIG_STYLE", 
     "DEFAULT_AXIS_STYLE", "DEFAULT_AXIS_TITLE_STYLE", "DEFAULT_LEGEND_STYLE", 
     "DEFAULT_VERTLINE_STYLE"
 ]
 
 
 
-class DEFAULT_BAR_FONT:
+class DEFAULT_BAR_FONT_STYLE:
     """Default style class for bar textual annotations.
     
     Default style settings for stacked barchart relating to 
@@ -181,15 +181,15 @@ class StackedPlotStyle:
         """Initializes the instance based on default values loaded from defaults.py."""
 
         self.bar_font = {
-            "fontsize": DEFAULT_BAR_FONT.size,
-            "fontcolour": DEFAULT_BAR_FONT.colour,
-            "fontformat": DEFAULT_BAR_FONT.format,
-            "fontalign": DEFAULT_BAR_FONT.align,
-            "fontpadd": DEFAULT_BAR_FONT.padding,
-            "fontcolourinvert": DEFAULT_BAR_FONT.colour_invert,
-            "fontdisplaythresh": DEFAULT_BAR_FONT.display_thresh,
-            "fontpaddthresh": DEFAULT_BAR_FONT.padding_thresh,
-            "fontendthreshpadd": DEFAULT_BAR_FONT.end_thresh_padd
+            "fontsize": DEFAULT_BAR_FONT_STYLE.size,
+            "fontcolour": DEFAULT_BAR_FONT_STYLE.colour,
+            "fontformat": DEFAULT_BAR_FONT_STYLE.format,
+            "fontalign": DEFAULT_BAR_FONT_STYLE.align,
+            "fontpadd": DEFAULT_BAR_FONT_STYLE.padding,
+            "fontcolourinvert": DEFAULT_BAR_FONT_STYLE.colour_invert,
+            "fontdisplaythresh": DEFAULT_BAR_FONT_STYLE.display_thresh,
+            "fontpaddthresh": DEFAULT_BAR_FONT_STYLE.padding_thresh,
+            "fontendthreshpadd": DEFAULT_BAR_FONT_STYLE.end_thresh_padd
         }
 
         self.bar = {
