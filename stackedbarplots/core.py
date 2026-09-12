@@ -208,7 +208,7 @@ class StackedBarplot:
                     ha=ha, va=va,
                     fontsize=self.style.bar_font.get("fontsize"),
                     color=fontcolour,
-                    fontfamily=self.style.bar_font.get("fontfamily"))
+                    fontfamily=self.style.fig.get("fontfamily"))
                 self.textbarvarartists.append(textartist)
 
         self.ax.invert_yaxis() #Required for some reason?
