@@ -73,7 +73,7 @@ class DEFAULT_FIG_STYLE:
     related settings), figure font family, background colour, spine display, 
     and whether the bars are ordered are defined here."""
 
-    size:tuple[int, int] = None
+    size:tuple[int, int] = (10, 5)
     title:str = None
     title_font_size:int = 12
     title_colour = "black"

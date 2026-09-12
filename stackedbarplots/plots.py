@@ -36,7 +36,7 @@ Typical usage example:
 """
 
 
-from .defaults import DEFAULT_BAR_FONT_STYLE
+from .defaults import DEFAULT_BAR_FONT_STYLE, DEFAULT_FIG_STYLE, DEFAULT_BAR_STYLE
 from .tools import *
 from .core import StackedBarplot, StackedPlotStyle
 
@@ -50,7 +50,7 @@ def basic(
         data:dict[str, list[float]],
         series_labels:list[str],
         title:str = None,
-        fig_size:tuple[int, int] = (10, 5),
+        fig_size:tuple[int, int] = DEFAULT_FIG_STYLE.size,
         font_size:int = DEFAULT_BAR_FONT_STYLE.size,
         font_colour:str = DEFAULT_BAR_FONT_STYLE.colour,
         data_label_format:str = DEFAULT_BAR_FONT_STYLE.format,
@@ -59,7 +59,7 @@ def basic(
         legend_placement:str = None,
         x_axis_lim:tuple[int, int] = None,
         x_axis_step:int = None,
-        bar_height:float = 0.8
+        bar_height:float = DEFAULT_BAR_STYLE.height
         ) -> StackedBarplot:
     """
     Draw a simple left-aligned horizontal stacked bar chart.
@@ -124,7 +124,7 @@ def centered(
         data:dict[str, list[float]],
         series_labels:list[str],
         title:str = None,
-        fig_size:tuple[int, int] = (10, 5),
+        fig_size:tuple[int, int] = DEFAULT_FIG_STYLE.size,
         font_size:int = DEFAULT_BAR_FONT_STYLE.size,
         font_colour:str = DEFAULT_BAR_FONT_STYLE.colour,
         data_label_format:str = DEFAULT_BAR_FONT_STYLE.format,
@@ -133,7 +133,7 @@ def centered(
         legend_placement:str = None,
         x_axis_lim:tuple[int, int] = None,
         x_axis_step:int = None,
-        bar_height:float = 0.8
+        bar_height:float = DEFAULT_BAR_STYLE.height
         ) -> StackedBarplot:
     """
     Draw a simple center-aligned horizontal stacked bar chart with central dividing line.

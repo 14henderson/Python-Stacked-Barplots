@@ -58,6 +58,7 @@ class StackedBarplot:
             raise ValueError("Argument series_labels must be list of strings.")
         if len(list(data.values())[0]) != len(series_labels):
             raise ValueError("Length of data in each category must equal total number of series labels provided.")
+
         self.data = list(data.values())
         self.series_labels = series_labels
         self.category_headings = list(data.keys())
@@ -133,7 +134,7 @@ class StackedBarplot:
             self.ax.barh(self.category_headings,
                                  widths,
                                  left=starts,
-                                 height=self.style.bar.get("barheight"),
+                                 height=self.style.bar.get("height"),
                                  color = colour,
                                  label=colname,
                                  zorder=1)
@@ -368,7 +369,7 @@ class StackedBarplot:
             bar_gradient: ColourGradient object, containing colours matching the number of 
                 series in each category.
         """
-        if bar_height is not None: self.style.bar["barheight"] = bar_height
+        if bar_height is not None: self.style.bar["height"] = bar_height
         if align is not None:
             if align not in ["left", "center"]:
                 raise ValueError("Argument align must be either None, \"left\", or \"center\".")
