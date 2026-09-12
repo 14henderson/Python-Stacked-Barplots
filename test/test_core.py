@@ -41,8 +41,6 @@ class CoreClassTest(unittest.TestCase):
         test_plot.bar_colours.get_gradient_list()
         test_plot.bar_colours.get_normalised_gradient_list()
 
-        raise ValueError("This is a test error!.")
-
     def test_plot_bars(self):
         #With even number of series
         results = {"Category 1": [10, 5, 3, 11], "Category 2": [4, 2, 9, 12], "Category 3": [11, 12, 3, 4]}
@@ -69,7 +67,7 @@ class CoreClassTest(unittest.TestCase):
                 test_plot.render()
 
         #Test other misc settings
-        test_plot.style.fig["fontfamily"] = "Arial"
+        test_plot.style.fig["fontfamily"] = "monospace"
         test_plot.render()
 
         test_plot.style.fig["backgroundcolour"] = "Green"
@@ -108,7 +106,7 @@ class CoreClassTest(unittest.TestCase):
         test_plot.render()
         test_plot.style.bar_font["fontformat"] = "{0:.4f}%"
         test_plot.render()
-        test_plot.style.bar_font["fontfamily"] = "Arial"
+        test_plot.style.bar_font["fontfamily"] = "monospace"
         test_plot.render()
 
         for fontsize in [0, 10, 30]:
@@ -260,11 +258,11 @@ class CoreStyleTest(unittest.TestCase):
         series_labels = ["Series 1", "Series 2", "Series 3", "Series 4"]
         test_plot = StackedBarplot(data=results, series_labels=series_labels)
 
-        test_plot.set_fig_style(title="Test Title", 
-                                title_font_size=20, 
-                                title_colour="green", 
-                                font_family="Arial", 
-                                fig_size=(20, 20), 
+        test_plot.set_fig_style(title="Test Title",
+                                title_font_size=20,
+                                title_colour="green",
+                                font_family="monospace",
+                                fig_size=(20, 20),
                                 spine_display=(False, True, False, True))
         test_plot.render()
         plt.close(test_plot.fig)
