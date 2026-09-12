@@ -75,22 +75,137 @@ class CoreClassTest(unittest.TestCase):
         test_plot.style.vert_line["show"] = True
         test_plot.render()
 
+        test_plot.style.fig["size"] = (10, 5)
+        test_plot.render()
+        test_plot.style.fig["size"] = (10, 10)
+        test_plot.render()
+        test_plot.style.fig["size"] = (5, 10)
+        test_plot.render()
+
         plt.close(test_plot.fig)
         del test_plot
 
     def test_plot_bar_labels(self):
-        pass
+        #Mostly testing for crashes rather than unit testing assert statements.
+        #TODO: Test if these style settings are actually changing the figure
+
+        results = {"Category 1": [10, 5, 3, 11], "Category 2": [4, 2, 9, 12], "Category 3": [11, 12, 3, 4]}
+        series_labels = ["Series 1", "Series 2", "Series 3", "Series 4"]
+        test_plot = StackedBarplot(data=results, series_labels=series_labels)
+
+        for alignment in ["left", "center", "right"]:
+            for endpadd in [True, False]:
+                test_plot.style.bar_font["align"] = alignment
+                test_plot.style.bar_font["end_thresh_padd"] = endpadd
+                test_plot.render()
+
+        test_plot.style.bar_font["fontformat"] = "{0}"
+        test_plot.render()
+        test_plot.style.bar_font["fontformat"] = "{0:.0f}"
+        test_plot.render()
+        test_plot.style.bar_font["fontformat"] = "{0:.4f}%"
+        test_plot.render()
+        test_plot.style.bar_font["fontfamily"] = "Arial"
+        test_plot.render()
+
+        for fontsize in [0, 10, 30]:
+            test_plot.style.bar_font["fontsize"] = fontsize
+            test_plot.render()
+        for paddthresh in [0, 5, 10]:
+            test_plot.style.bar_font["fontpaddthresh"] = paddthresh
+            test_plot.render()
+        for padd in [0, 5, 10]:
+            test_plot.style.bar_font["padding"] = padd
+            test_plot.render()
+        for thresh in [(None, None), (5, None), (None, 10), (3, 11)]:
+            test_plot.style.bar_font["fontdisplaythresh"] = thresh
+            test_plot.render()
+        for flag in [True, False]:
+            test_plot.style.bar_font["fontcolourinvert"] = flag
+            test_plot.render()
+
+        plt.close(test_plot.fig)
+        del test_plot
+
 
     def test_plot_axes(self):
-        pass
+        results = {"Category 1": [10, 5, 3, 11], "Category 2": [4, 2, 9, 12], "Category 3": [11, 12, 3, 4]}
+        series_labels = ["Series 1", "Series 2", "Series 3", "Series 4"]
+        test_plot = StackedBarplot(data=results, series_labels=series_labels)
+
+        test_plot.style.axis["xaxisformat"] = "{0}"
+        test_plot.render()
+        test_plot.style.axis["xaxisformat"] = "{0:.0f}"
+        test_plot.render()
+        test_plot.style.axis["xaxisformat"] = "{0:.4f}%"
+        test_plot.render()
+
+        for show in [True, False]:
+            for lim_tup in [(-20, 0), (-20, 20), (0, 20)]:
+                test_plot.style.axis["xaxisshow"] = show
+                test_plot.style.axis["xlim"] = lim_tup
+                test_plot.render()
+
+        for x_show in [True, False]:
+            for y_show in [True, False]:
+                test_plot.style.axis_title["xlabel"] = x_show
+                test_plot.style.axis_title["ylabel"] = y_show
+                test_plot.render()
+
+        test_plot.style.fig["title"] = "Test Title"
+        test_plot.render()
+
+        for spinedisplay in [(False, False, False, False),
+                             (True, True, False, False),
+                             (False, False, True, True),
+                             (True, True, True, True)]:
+            test_plot.style.fig["spinedisplay"] = spinedisplay
+            test_plot.render()
 
     def test_plot_legend(self):
-        pass
+        #fontsize; fontcolour; backgroundcolour; bordercolour;
+        results = {"Category 1": [10, 5, 3, 11], "Category 2": [4, 2, 9, 12], "Category 3": [11, 12, 3, 4]}
+        series_labels = ["Series 1", "Series 2", "Series 3", "Series 4"]
+        test_plot = StackedBarplot(data=results, series_labels=series_labels)
+
+        for show in [True, False]:
+            test_plot.style.legend["show"] = show
+
+            for placement in ["right-vertical", "left-vertical", "below-horizontal", "above-horizontal"]:
+                test_plot.style.legend["placement"] = placement
+                test_plot.render()
+
+            for marker in ["s", "o", "v", "^", "<", ">"]:
+                test_plot.style.legend["markershape"] = marker
+                test_plot.render()
+
+            for padd in [0, .1, .25, .5, 1]:
+                test_plot.style.legend["spacing"] = padd
+                test_plot.render()
+
+            for trans in [(0, 0), (.1, 0), (0, .1), (.1, .1)]:
+                test_plot.style.legend["transform"] = trans
+                test_plot.render()
 
     def test_plot_vert_line(self):
-        pass
+        results = {"Category 1": [10, 5, 3, 11], "Category 2": [4, 2, 9, 12], "Category 3": [11, 12, 3, 4]}
+        series_labels = ["Series 1", "Series 2", "Series 3", "Series 4"]
+        test_plot = StackedBarplot(data=results, series_labels=series_labels)
 
+        for show in [True, False]:
+            test_plot.style.vert_line["show"] = show
 
+            for line_style in ["-", ":" , "--", "-.", ""]:
+                test_plot.style.vert_line["linestyle"] = line_style
+                test_plot.render()
+
+            for alpha in [0, .5, 1]:
+                test_plot.style.vert_line["alpha"] = alpha
+                test_plot.render()
+
+            for order in ["front", "behind"]:
+                test_plot.style.vert_line["order"] = order
+                test_plot.render()
 
 class CoreStyleTest(unittest.TestCase):
     """Unit tests for StackedBarplot class in core.py.
