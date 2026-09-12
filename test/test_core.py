@@ -41,6 +41,8 @@ class CoreClassTest(unittest.TestCase):
         test_plot.bar_colours.get_gradient_list()
         test_plot.bar_colours.get_normalised_gradient_list()
 
+        raise ValueError("This is a test error!.")
+
     def test_plot_bars(self):
         #With even number of series
         results = {"Category 1": [10, 5, 3, 11], "Category 2": [4, 2, 9, 12], "Category 3": [11, 12, 3, 4]}
