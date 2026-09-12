@@ -273,11 +273,11 @@ class CoreStyleTest(unittest.TestCase):
         series_labels = ["Series 1", "Series 2", "Series 3", "Series 4"]
         test_plot = StackedBarplot(data=results, series_labels=series_labels)
 
-        test_plot.set_axis_style(x_lim=(-10, 50), 
-                                 step=5, 
-                                 x_font_size=10, 
-                                 y_font_size=10, 
-                                 x_axis_format="{0:.0}%", 
+        test_plot.set_axis_style(x_lim=(-10, 50),
+                                 step=5,
+                                 x_font_size=10,
+                                 y_font_size=10,
+                                 x_axis_format="{0:.0f}%",
                                  x_axis_show=True)
         test_plot.render()
         plt.close(test_plot.fig)
