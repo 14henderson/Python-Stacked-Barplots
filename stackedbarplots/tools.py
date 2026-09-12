@@ -119,8 +119,8 @@ class ColourGradient():
 
     def grayscale_gradient(self,
                            series_length:int,
-                           start_intensity:int = 0.3,
-                           end_intensity:int = 0.9):
+                           start_intensity:int = 100,
+                           end_intensity:int = 200):
         """Creates and stores a list of RGB colours in a grayscale gradient matching 
         length of given series.
         
@@ -132,10 +132,10 @@ class ColourGradient():
                 Value given as integer between 0 and 255.
             """
         if series_length < 1: raise ValueError("Argument series_length must be an integer of minimum value 1.")
-        if start_intensity < 0 or start_intensity > 1:
-            raise ValueError("Argument start_intensity must be a float with value between 0 and 1.")
-        if end_intensity < 0 or end_intensity > 1:
-            raise ValueError("Argument end_intensity must be a float with value between 0 and 1.")
+        if start_intensity < 0 or start_intensity > 255:
+            raise ValueError("Argument start_intensity must be a float with value between 0 and 255.")
+        if end_intensity < 0 or end_intensity > 255:
+            raise ValueError("Argument end_intensity must be a float with value between 0 and 255.")
 
         col_step = (end_intensity-start_intensity)/(series_length-1.0)
         self.colour_gradient_list = [((start_intensity+col_step*i, start_intensity+col_step*i, start_intensity+col_step*i)) for i in range(series_length)]
