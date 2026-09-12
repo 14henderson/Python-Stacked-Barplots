@@ -252,7 +252,7 @@ class StackedBarplot:
 
     def _plot_legend(self):
         """Internal method. Renders a plot legend according to stored style configuration."""
-        if"horizontal" in self.style.legend.get("placement"): ncol = len(self.series_labels)
+        if "horizontal" in self.style.legend.get("placement"): ncol = len(self.series_labels)
         else: ncol = 1
 
         bbox_to_anchor = list(DEFAULT_LEGEND_STYLE.placement_options[self.style.legend.get("placement")][1])
@@ -274,7 +274,8 @@ class StackedBarplot:
     def _plot_vert_line(self):
         """Internal method. Renders a vertical plot line according to stored style configuration."""
         if self.style.vert_line.get("order") == "front": z = 2
-        else: z = 0
+        elif self.style.vert_line.get("order") == "behind": z = 0
+        else: raise ValueError("Vertical line order must be either 'front' or 'behind'.")
 
         self.ax.axvline(0,
                         linestyle=self.style.vert_line.get("linestyle"),
@@ -301,7 +302,7 @@ class StackedBarplot:
         """Returns dictionary containing style configuration for chart bar labels."""
         return self.style.bar_font
 
-    #TODO: Start and end bar data label movement is implicit in whether paddthresh is None, thus endthreshpadd is redundant. 
+    #TODO: Start and end bar data label movement is implicit in whether paddthresh is None, thus endthreshpadd is redundant.
     def set_bar_labels_style(self,
                 font_size:int=None,
                 font_colour:str = None,
