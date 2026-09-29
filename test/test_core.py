@@ -259,13 +259,28 @@ class CoreStyleTest(unittest.TestCase):
         series_labels = ["Series 1", "Series 2", "Series 3", "Series 4"]
         test_plot = StackedBarplot(data=results, series_labels=series_labels)
 
-        test_plot.set_fig_style(title="Test Title",
-                                title_font_size=20,
-                                title_colour="green",
-                                font_family="monospace",
+        title="Test Title"
+        title_font_size=20
+        title_colour="green"
+        font_family="monospace"
+        spine_display=(False, True, False, True)
+
+        test_plot.set_fig_style(title=title,
+                                title_font_size=title_font_size,
+                                title_colour=title_colour,
+                                font_family=font_family,
                                 fig_size=(20, 20),
-                                spine_display=(False, True, False, True))
+                                spine_display=spine_display)
         test_plot.render()
+        self.assertEqual(test_plot.ax.title.get_text(), title)
+        self.assertEqual(test_plot.ax.title.get_fontsize(), title_font_size)
+        self.assertEqual(test_plot.ax.title.get_color(), title_colour)
+        self.assertEqual(test_plot.ax.title.get_fontfamily()[0], font_family)
+        self.assertEqual(test_plot.ax.spines['left'].get_visible(), spine_display[0])
+        self.assertEqual(test_plot.ax.spines['top'].get_visible(), spine_display[1])
+        self.assertEqual(test_plot.ax.spines['right'].get_visible(), spine_display[2])
+        self.assertEqual(test_plot.ax.spines['bottom'].get_visible(), spine_display[3])
+
         plt.close(test_plot.fig)
         del test_plot
 
