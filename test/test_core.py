@@ -228,14 +228,14 @@ class CoreStyleTest(unittest.TestCase):
         series_labels = ["Series 1", "Series 2", "Series 3", "Series 4"]
         test_plot = StackedBarplot(data=results, series_labels=series_labels)
 
-        test_plot.set_bar_labels_style(font_size=20, 
-                                       font_colour="red", 
-                                       font_colour_invert=True, 
-                                       bar_value_format="{0:.1f}%", 
-                                       display_thresh=(2, 10), 
-                                       padd_thresh=4, 
-                                       end_thresh_padd=True, 
-                                       align="right", 
+        test_plot.set_bar_labels_style(font_size=20,
+                                       font_colour="red",
+                                       font_colour_invert=True,
+                                       bar_value_format="{0:.1f}%",
+                                       display_thresh=(2, 10),
+                                       padd_thresh=4,
+                                       end_thresh_padd=True,
+                                       align="right",
                                        padding=4)
         test_plot.render()
         plt.close(test_plot.fig)

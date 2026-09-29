@@ -27,5 +27,3 @@ class PlotsMethodTest(unittest.TestCase):
         center_plot.render()
         plt.close(center_plot.fig)
         del center_plot
-
-
