@@ -274,13 +274,30 @@ class CoreStyleTest(unittest.TestCase):
         series_labels = ["Series 1", "Series 2", "Series 3", "Series 4"]
         test_plot = StackedBarplot(data=results, series_labels=series_labels)
 
-        test_plot.set_axis_style(x_lim=(-10, 50),
-                                 step=5,
-                                 x_font_size=10,
-                                 y_font_size=10,
-                                 x_axis_format="{0:.0f}%",
+        x_lim = (-10, 50)
+        step = 5
+        x_font_size = 10
+        y_font_size=15
+
+        num_ticks = ((x_lim[1] - x_lim[0])/step) + 1 #1 added for end tick
+
+        test_plot.set_axis_style(x_lim=x_lim,
+                                 step=step,
+                                 x_font_size=x_font_size,
+                                 y_font_size=y_font_size,
+                                 x_axis_format="{0:.0f}@",
                                  x_axis_show=True)
         test_plot.render()
+
+        x_ticks = test_plot.ax.get_xticklabels()
+        self.assertEqual(num_ticks, len(x_ticks))
+        self.assertEqual(x_ticks[0].get_text()[-1], "@")
+        self.assertEqual(x_ticks[0].get_fontsize(), x_font_size)
+
+        y_ticks = test_plot.ax.get_yticklabels()
+        self.assertEqual(len(results.keys()), len(y_ticks))
+        self.assertEqual(y_ticks[0].get_fontsize(), y_font_size)
+
         plt.close(test_plot.fig)
         del test_plot
 
