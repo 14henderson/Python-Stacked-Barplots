@@ -22,10 +22,12 @@ class PlotsMethodTest(unittest.TestCase):
         #Check correct number of rects
         axis_objs = basic_plot.ax.get_children()
         axis_rects = list(filter(lambda actor: isinstance(actor, matplotlib.patches.Rectangle), axis_objs))
-        self.assertGreaterEqual(len(axis_rects), len(series_labels)*len(results.keys())) #Axis may have extra rects
+        self.assertGreaterEqual(len(axis_rects), len(series_labels)*len(results.keys()),
+                                "Error in bar plotting. Stacked barchart figure as more rects than data requires.")
 
         plt.close(basic_plot.fig)
         del basic_plot
+
 
     def test_centered(self):
         results_2 = {"Category 1": [10, 5, 3, 11, 5], "Category 2": [4, 2, 9, 12, 3], "Category 3": [11, 12, 3, 4, 2]}
@@ -36,10 +38,8 @@ class PlotsMethodTest(unittest.TestCase):
         #Check correct number of rects
         axis_objs = center_plot.ax.get_children()
         axis_rects = list(filter(lambda actor: isinstance(actor, matplotlib.patches.Rectangle), axis_objs))
-        self.assertGreaterEqual(len(axis_rects), len(series_labels_2)*len(results_2.keys())) #Axis may have extra rects
+        self.assertGreaterEqual(len(axis_rects), len(series_labels_2)*len(results_2.keys()),
+                                "Error in bar plotting. Stacked barchart figure as more rects than data requires.")
 
         plt.close(center_plot.fig)
         del center_plot
-
-
-#TODO: Test number of bars are correct

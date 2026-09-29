@@ -12,7 +12,9 @@ class CoreClassTest(unittest.TestCase):
     """Unit tests for StackedBarplot class in core.py.
     Unit tests in this class focus on the general
     functionality of StackedBarplot, including pipeline
-    plotting operations."""
+    plotting operations. Intended to test runtime errors
+    (logic errors related to style tested in CoreStyleTest)."""
+
 
     def test_set_style(self):
         style_obj = StackedPlotStyle()
@@ -30,17 +32,25 @@ class CoreClassTest(unittest.TestCase):
         test_plot = StackedBarplot(data=results, series_labels=series_labels)
         test_plot.set_style(style_obj)
 
-        self.assertEqual(style_obj.bar_font["fontsize"], test_plot.style.bar_font["fontsize"])
-        self.assertEqual(style_obj.bar["height"], test_plot.style.bar["height"])
-        self.assertEqual(style_obj.legend["show"], test_plot.style.legend["show"])
-        self.assertEqual(style_obj.fig["title"], test_plot.style.fig["title"])
-        self.assertEqual(style_obj.axis_title["xlabel"], test_plot.style.axis_title["xlabel"])
-        self.assertEqual(style_obj.vert_line["show"], test_plot.style.vert_line["show"])
-        self.assertEqual(style_obj.axis["step"], test_plot.style.axis["step"])
+        self.assertEqual(style_obj.bar_font["fontsize"], test_plot.style.bar_font["fontsize"],
+                         "Error: Fontsize attribute from StackedPlotStyle object not applied to StackedBarplot on set_style().")
+        self.assertEqual(style_obj.bar["height"], test_plot.style.bar["height"],
+                         "Error: Height attribute from StackedPlotStyle object not applied to StackedBarplot on set_style().")
+        self.assertEqual(style_obj.legend["show"], test_plot.style.legend["show"],
+                         "Error: Legend show attribute from StackedPlotStyle object not applied to StackedBarplot on set_style().")
+        self.assertEqual(style_obj.fig["title"], test_plot.style.fig["title"],
+                         "Error: Title attribute from StackedPlotStyle object not applied to StackedBarplot on set_style().")
+        self.assertEqual(style_obj.axis_title["xlabel"], test_plot.style.axis_title["xlabel"],
+                         "Error: XLabel attribute from StackedPlotStyle object not applied to StackedBarplot on set_style().")
+        self.assertEqual(style_obj.vert_line["show"], test_plot.style.vert_line["show"],
+                         "Error: Verticle line show attribute from StackedPlotStyle object not applied to StackedBarplot on set_style().")
+        self.assertEqual(style_obj.axis["step"], test_plot.style.axis["step"],
+                         "Error: Step attribute from StackedPlotStyle object not applied to StackedBarplot on set_style().")
 
         #Make sure gradient has been generated and doesn't throw an error when called
         test_plot.bar_colours.get_gradient_list()
         test_plot.bar_colours.get_normalised_gradient_list()
+
 
     def test_plot_bars(self):
         #With even number of series
@@ -87,10 +97,8 @@ class CoreClassTest(unittest.TestCase):
         plt.close(test_plot.fig)
         del test_plot
 
-    def test_plot_bar_labels(self):
-        #Mostly testing for crashes rather than unit testing assert statements.
-        #TODO: Test if these style settings are actually changing the figure
 
+    def test_plot_bar_labels(self):
         results = {"Category 1": [10, 5, 3, 11], "Category 2": [4, 2, 9, 12], "Category 3": [11, 12, 3, 4]}
         series_labels = ["Series 1", "Series 2", "Series 3", "Series 4"]
         test_plot = StackedBarplot(data=results, series_labels=series_labels)
@@ -166,6 +174,7 @@ class CoreClassTest(unittest.TestCase):
         plt.close(test_plot.fig)
         del test_plot
 
+
     def test_plot_legend(self):
         #fontsize; fontcolour; backgroundcolour; bordercolour;
         results = {"Category 1": [10, 5, 3, 11], "Category 2": [4, 2, 9, 12], "Category 3": [11, 12, 3, 4]}
@@ -193,6 +202,7 @@ class CoreClassTest(unittest.TestCase):
         plt.close(test_plot.fig)
         del test_plot
 
+
     def test_plot_vert_line(self):
         results = {"Category 1": [10, 5, 3, 11], "Category 2": [4, 2, 9, 12], "Category 3": [11, 12, 3, 4]}
         series_labels = ["Series 1", "Series 2", "Series 3", "Series 4"]
@@ -216,13 +226,16 @@ class CoreClassTest(unittest.TestCase):
         plt.close(test_plot.fig)
         del test_plot
 
+
+
+
 class CoreStyleTest(unittest.TestCase):
     """Unit tests for StackedBarplot class in core.py.
     Unit tests in this class focus on the functional 
     plotting of different figure elements that the 
-    user is able to modify. These are basic in nature
-    and only call each set_style method with example
-    data."""
+    user is able to modify, and whether they are plotted
+    in the figure axis. Focusses on logic errors, rather
+    than runtime errors."""
 
     def test_style_bar_font(self):
         results = {"Category 1": [10, 5, 3, 11], "Category 2": [4, 2, 9, 12], "Category 3": [11, 12, 3, 4]}
@@ -257,12 +270,15 @@ class CoreStyleTest(unittest.TestCase):
         def filter_to_thresh(x): return not (x <= display_thresh[0] or x >= display_thresh[1])
         threshed_chart_data = list(filter(filter_to_thresh, chart_data))
 
-        self.assertEqual(len(threshed_chart_data), len(axis_data_labels))
-        self.assertEqual(axis_data_labels[0].get_text()[-1], "@")
+        self.assertEqual(len(threshed_chart_data), len(axis_data_labels),
+                         "Error in display_thresh for shart data labels. Some labels showing/not showing against set threshold.")
+        self.assertEqual(axis_data_labels[0].get_text()[-1], "@",
+                         "Error in data label format; format style not being followed")
         #TODO: unit test for fontcolour, fontsize, fontcolourinvert, paddthresh, align, padding
 
         plt.close(test_plot.fig)
         del test_plot
+
 
     def test_style_bar(self):
         results = {"Category 1": [10, 5, 3, 11], "Category 2": [4, 2, 9, 12], "Category 3": [11, 12, 3, 4]}
@@ -283,11 +299,14 @@ class CoreStyleTest(unittest.TestCase):
 
         axis_objs = test_plot.ax.get_children()
         axis_rects = list(filter(lambda actor: isinstance(actor, matplotlib.patches.Rectangle), axis_objs))
-        self.assertEqual(axis_rects[0].get_height(), height)
-        self.assertEqual(axis_rects[0].get_x(), 0) #If left-aligned, rects start at 0
+        self.assertEqual(axis_rects[0].get_height(), height,
+                         "Attribute bar_height not being applied.")
+        self.assertEqual(axis_rects[0].get_x(), 0,
+                         "Attribute align not being applied (rects not starting at x=0 on left-align).")
 
         plt.close(test_plot.fig)
         del test_plot
+
 
     def test_style_fig(self):
         results = {"Category 1": [10, 5, 3, 11], "Category 2": [4, 2, 9, 12], "Category 3": [11, 12, 3, 4]}
@@ -307,17 +326,26 @@ class CoreStyleTest(unittest.TestCase):
                                 fig_size=(20, 20),
                                 spine_display=spine_display)
         test_plot.render()
-        self.assertEqual(test_plot.ax.title.get_text(), title)
-        self.assertEqual(test_plot.ax.title.get_fontsize(), title_font_size)
-        self.assertEqual(test_plot.ax.title.get_color(), title_colour)
-        self.assertEqual(test_plot.ax.title.get_fontfamily()[0], font_family)
-        self.assertEqual(test_plot.ax.spines['left'].get_visible(), spine_display[0])
-        self.assertEqual(test_plot.ax.spines['top'].get_visible(), spine_display[1])
-        self.assertEqual(test_plot.ax.spines['right'].get_visible(), spine_display[2])
-        self.assertEqual(test_plot.ax.spines['bottom'].get_visible(), spine_display[3])
+        self.assertEqual(test_plot.ax.title.get_text(), title,
+                         "Attribute title not being applied.")
+        self.assertEqual(test_plot.ax.title.get_fontsize(), title_font_size,
+                         "Attribute font_size not being applied.")
+        self.assertEqual(test_plot.ax.title.get_color(), title_colour,
+                         "Attribute title_colour not being applied.")
+        self.assertEqual(test_plot.ax.title.get_fontfamily()[0], font_family,
+                         "Attribute font_family not being applied.")
+        self.assertEqual(test_plot.ax.spines['left'].get_visible(), spine_display[0],
+                         "Left spine showing/not showing against defined style.")
+        self.assertEqual(test_plot.ax.spines['top'].get_visible(), spine_display[1],
+                         "Left spine showing/not showing against defined style.")
+        self.assertEqual(test_plot.ax.spines['right'].get_visible(), spine_display[2],
+                         "Left spine showing/not showing against defined style.")
+        self.assertEqual(test_plot.ax.spines['bottom'].get_visible(), spine_display[3],
+                         "Left spine showing/not showing against defined style.")
 
         plt.close(test_plot.fig)
         del test_plot
+
 
     def test_style_axis(self):
         results = {"Category 1": [10, 5, 3, 11], "Category 2": [4, 2, 9, 12], "Category 3": [11, 12, 3, 4]}
@@ -340,16 +368,17 @@ class CoreStyleTest(unittest.TestCase):
         test_plot.render()
 
         x_ticks = test_plot.ax.get_xticklabels()
-        self.assertEqual(num_ticks, len(x_ticks))
-        self.assertEqual(x_ticks[0].get_text()[-1], "@")
-        self.assertEqual(x_ticks[0].get_fontsize(), x_font_size)
+        self.assertEqual(num_ticks, len(x_ticks), "Attributes x_lim and step not being applied.")
+        self.assertEqual(x_ticks[0].get_text()[-1], "@", "Error in x_tick format; format not being followed.")
+        self.assertEqual(x_ticks[0].get_fontsize(), x_font_size, "x_tick fontsize not being applied.")
 
         y_ticks = test_plot.ax.get_yticklabels()
-        self.assertEqual(len(results.keys()), len(y_ticks))
-        self.assertEqual(y_ticks[0].get_fontsize(), y_font_size)
+        self.assertEqual(len(results.keys()), len(y_ticks), "Incongruent number of Y-axis ticks.")
+        self.assertEqual(y_ticks[0].get_fontsize(), y_font_size, "y_tick fontsize not being applied.")
 
         plt.close(test_plot.fig)
         del test_plot
+
 
     def test_style_axis_title(self):
         results = {"Category 1": [10, 5, 3, 11], "Category 2": [4, 2, 9, 12], "Category 3": [11, 12, 3, 4]}
@@ -368,14 +397,15 @@ class CoreStyleTest(unittest.TestCase):
         axis_objs = test_plot.ax.get_children()
         for child in axis_objs:
             if isinstance(child, matplotlib.axis.XAxis):
-                self.assertEqual(child.get_children()[0].get_text(), x_label)
-                self.assertEqual(child.get_children()[0].get_color(), label_colour)
+                self.assertEqual(child.get_children()[0].get_text(), x_label, "X Axis title text not being applied.")
+                self.assertEqual(child.get_children()[0].get_color(), label_colour, "X Axis title text colour not being applied.")
             elif isinstance(child, matplotlib.axis.YAxis):
-                self.assertEqual(child.get_children()[0].get_text(), y_label)
-                self.assertEqual(child.get_children()[0].get_color(), label_colour)
+                self.assertEqual(child.get_children()[0].get_text(), y_label, "Y Axis title text not being applied.")
+                self.assertEqual(child.get_children()[0].get_color(), label_colour, "Y Axis title text colour not being applied.")
 
         plt.close(test_plot.fig)
         del test_plot
+
 
     def test_style_legend(self):
         results = {"Category 1": [10, 5, 3, 11], "Category 2": [4, 2, 9, 12], "Category 3": [11, 12, 3, 4]}
@@ -401,17 +431,18 @@ class CoreStyleTest(unittest.TestCase):
                 legend_present = True
                 legend_actor = child
                 break
-        self.assertEqual(legend_present, True)
+        self.assertEqual(legend_present, True, "Legend showing/not showing against set plot style.")
 
         #Check that legend config matches data
-        self.assertEqual(len(series_labels), len(legend_actor.get_texts()))
+        self.assertEqual(len(series_labels), len(legend_actor.get_texts()), "Number of legend series labels inconsistent with supplied data.")
         for legend_text_actor, series_label in zip(legend_actor.get_texts(), series_labels):
-            self.assertEqual(legend_text_actor.get_text(), series_label)
+            self.assertEqual(legend_text_actor.get_text(), series_label, "Legend series label inconsistent with supplied series label.")
 
         plt.close(test_plot.fig)
         del test_plot
 
-    def test_style_vertline(self):
+
+    def test_style_vert_line(self):
         results = {"Category 1": [10, 5, 3, 11], "Category 2": [4, 2, 9, 12], "Category 3": [11, 12, 3, 4]}
         series_labels = ["Series 1", "Series 2", "Series 3", "Series 4"]
         test_plot = StackedBarplot(data=results, series_labels=series_labels)
@@ -425,12 +456,12 @@ class CoreStyleTest(unittest.TestCase):
 
         #Search for Line2D artist in figure axis
         axis_objs = test_plot.ax.get_children()
-        vertline_present = False
+        vert_line_present = False
         for child in axis_objs:
             if isinstance(child, matplotlib.lines.Line2D):
-                vertline_present = True
+                vert_line_present = True
                 break
-        self.assertEqual(vertline_present, True)
+        self.assertEqual(vert_line_present, True, "Vertical line showing/not showing against set style.")
 
         plt.close(test_plot.fig)
         del test_plot
