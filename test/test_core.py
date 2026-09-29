@@ -1,6 +1,7 @@
 # pylint: disable=multiple-statements,too-many-positional-arguments,redefined-outer-name,missing-function-docstring,missing-class-docstring,line-too-long,disable=consider-using-enumerate
 
 import unittest
+import matplotlib
 import matplotlib.pyplot as plt
 
 from stackedbarplots.core import StackedBarplot
@@ -324,5 +325,15 @@ class CoreStyleTest(unittest.TestCase):
                                       alpha=.5,
                                       order="front")
         test_plot.render()
+
+        #Search for Line2D artist in figure axis
+        axis_objs = test_plot.ax.get_children()
+        vertline_present = False
+        for child in axis_objs:
+            if isinstance(child, matplotlib.lines.Line2D):
+                vertline_present = True
+                break
+        self.assertEqual(vertline_present, True)
+
         plt.close(test_plot.fig)
         del test_plot
