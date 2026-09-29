@@ -289,10 +289,24 @@ class CoreStyleTest(unittest.TestCase):
         series_labels = ["Series 1", "Series 2", "Series 3", "Series 4"]
         test_plot = StackedBarplot(data=results, series_labels=series_labels)
 
-        test_plot.set_axis_title_style(x_label="Example x axis label",
-                                       y_label="Example y axis label",
-                                       axis_label_font_colour="yellow")
+        x_label = "Example x axis label"
+        y_label = "Example y axis label"
+        label_colour = "yellow"
+
+        test_plot.set_axis_title_style(x_label=x_label,
+                                       y_label=y_label,
+                                       axis_label_font_colour=label_colour)
         test_plot.render()
+
+        axis_objs = test_plot.ax.get_children()
+        for child in axis_objs:
+            if isinstance(child, matplotlib.axis.XAxis):
+                self.assertEqual(child.get_children()[0].get_text(), x_label)
+                self.assertEqual(child.get_children()[0].get_color(), label_colour)
+            elif isinstance(child, matplotlib.axis.YAxis):
+                self.assertEqual(child.get_children()[0].get_text(), y_label)
+                self.assertEqual(child.get_children()[0].get_color(), label_colour)
+
         plt.close(test_plot.fig)
         del test_plot
 
