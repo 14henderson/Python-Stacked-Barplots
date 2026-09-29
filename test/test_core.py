@@ -249,8 +249,21 @@ class CoreStyleTest(unittest.TestCase):
 
         custom_colours = ColourGradient()
         custom_colours.gradient(len(series_labels), (200, 100, 150), (100, 150, 200))
-        test_plot.set_bar_style(bar_height=.5, align="left", ordered="ascending", bar_gradient=custom_colours)
+
+        height = .5
+        align = "left"
+
+        test_plot.set_bar_style(bar_height=height,
+                                align=align,
+                                ordered="descending",
+                                bar_gradient=custom_colours)
         test_plot.render()
+
+        axis_objs = test_plot.ax.get_children()
+        axis_rects = list(filter(lambda actor: isinstance(actor, matplotlib.patches.Rectangle), axis_objs))
+        self.assertEqual(axis_rects[0].get_height(), height)
+        self.assertEqual(axis_rects[0].get_x(), 0) #If left-aligned, rects start at 0
+
         plt.close(test_plot.fig)
         del test_plot
 
