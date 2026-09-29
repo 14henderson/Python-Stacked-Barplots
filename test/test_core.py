@@ -311,6 +311,22 @@ class CoreStyleTest(unittest.TestCase):
                                    marker_shape="o",
                                    transform=(.1, -.1))
         test_plot.render()
+
+        #Search for legend artist in figure axis
+        axis_objs = test_plot.ax.get_children()
+        legend_present = False
+        for child in axis_objs:
+            if isinstance(child, matplotlib.legend.Legend):
+                legend_present = True
+                legend_actor = child
+                break
+        self.assertEqual(legend_present, True)
+
+        #Check that legend config matches data
+        self.assertEqual(len(series_labels), len(legend_actor.get_texts()))
+        for legend_text_actor, series_label in zip(legend_actor.get_texts(), series_labels):
+            self.assertEqual(legend_text_actor.get_text(), series_label)
+
         plt.close(test_plot.fig)
         del test_plot
 
