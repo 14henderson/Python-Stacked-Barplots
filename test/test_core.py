@@ -229,16 +229,38 @@ class CoreStyleTest(unittest.TestCase):
         series_labels = ["Series 1", "Series 2", "Series 3", "Series 4"]
         test_plot = StackedBarplot(data=results, series_labels=series_labels)
 
+        display_thresh = (2, 10)
+        font_colour="red"
+        padding = 4
+
         test_plot.set_bar_labels_style(font_size=20,
-                                       font_colour="red",
+                                       font_colour=font_colour,
                                        font_colour_invert=True,
-                                       bar_value_format="{0:.1f}%",
-                                       display_thresh=(2, 10),
+                                       bar_value_format="{0:.1f}@",
+                                       display_thresh=display_thresh,
                                        padd_thresh=4,
                                        end_thresh_padd=True,
                                        align="right",
-                                       padding=4)
+                                       padding=padding)
         test_plot.render()
+
+        #Filter to only showing Annotation actors
+        axis_objs = test_plot.ax.get_children()
+        def data_label_filter(x):
+            if isinstance(x, matplotlib.text.Annotation) and x.get_text() != "": return True
+            else: return False
+        axis_data_labels = list(filter(data_label_filter, axis_objs))
+
+        #Filter chart data by display threshold
+        chart_data = []
+        for cat_data in results.values(): chart_data += cat_data
+        def filter_to_thresh(x): return not (x <= display_thresh[0] or x >= display_thresh[1])
+        threshed_chart_data = list(filter(filter_to_thresh, chart_data))
+
+        self.assertEqual(len(threshed_chart_data), len(axis_data_labels))
+        self.assertEqual(axis_data_labels[0].get_text()[-1], "@")
+        #TODO: unit test for fontcolour, fontsize, fontcolourinvert, paddthresh, align, padding
+
         plt.close(test_plot.fig)
         del test_plot
 
