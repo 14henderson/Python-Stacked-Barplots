@@ -18,10 +18,10 @@ Typical usage example:
     basic_plot.render()
     basic_plot.show()
 
-    #Example Centered Plot
-    center_plot = stackedbarplots.centered(results, series_labels)
-    center_plot.render()
-    center_plot.show()
+    #Example Centred Plot
+    centre_plot = stackedbarplots.centred(results, series_labels)
+    centre_plot.render()
+    centre_plot.show()
 
     #Example Custom Plot
     custom_colours = stackedbarplots.ColourGradient()
@@ -42,7 +42,7 @@ from .core import StackedBarplot, StackedPlotStyle
 
 
 __all__ = [
-    "basic", "centered"
+    "basic", "centred", "normalised", "normalised_centred"
 ]
 
 
@@ -80,7 +80,7 @@ def basic(
                 string can also round to (e.g., 1) decimal place(s) with '{0:.1}'. A suffix can
                 be added using (for example) '{0}%'. See Python documentation for more inforamtion 
                 (https://docs.python.org/3/library/string.html#format-specification-mini-language).
-        data_label_align: Alignment of data labels within bars. Can be 'left', 'center', or 'right'. 
+        data_label_align: Alignment of data labels within bars. Can be 'left', 'centre', or 'right'. 
         bar_colours: List of colour tuples, matching the number of series in each category.
         legend_placement: String representing where around the figure the legend should be
                         displayed. {"right-vertical", "left-vertical", "below-horizontal", "above-horizontal"}.
@@ -120,7 +120,7 @@ def basic(
 
     return plot
 
-def centered(
+def centred(
         data:dict[str, list[float]],
         series_labels:list[str],
         title:str = None,
@@ -136,7 +136,7 @@ def centered(
         bar_height:float = DEFAULT_BAR_STYLE.height
         ) -> StackedBarplot:
     """
-    Draw a simple center-aligned horizontal stacked bar chart with central dividing line.
+    Draw a simple centre-aligned horizontal stacked bar chart with central dividing line.
 
     Args:
         data: Dictionary of category headings and associated category integer or float 
@@ -154,7 +154,7 @@ def centered(
                 string can also round to (e.g., 1) decimal place(s) with '{0:.1}'. A suffix can
                 be added using (for example) '{0}%'. See Python documentation for more inforamtion 
                 (https://docs.python.org/3/library/string.html#format-specification-mini-language).
-        data_label_align: Alignment of data labels within bars. Can be 'left', 'center', or 'right'. 
+        data_label_align: Alignment of data labels within bars. Can be 'left', 'centre', or 'right'. 
         bar_colours: List of colour tuples, matching the number of series in each category.
         legend_placement: String representing where around the figure the legend should be
                         displayed. {"right-vertical", "left-vertical", "below-horizontal", "above-horizontal"}.
@@ -173,7 +173,7 @@ def centered(
     plot.set_style(local_style)
 
     plot.set_axis_style(x_lim=x_axis_lim, step=x_axis_step)
-    plot.set_bar_style(align="center", bar_height=bar_height)
+    plot.set_bar_style(align="centre", bar_height=bar_height)
     if bar_colours is not None: plot.set_bar_style(bar_gradient=bar_colours)
     plot.set_vert_line_style(show=True)
 
@@ -231,7 +231,7 @@ def normalised(
                 string can also round to (e.g., 1) decimal place(s) with '{0:.1}'. A suffix can
                 be added using (for example) '{0}%'. See Python documentation for more inforamtion 
                 (https://docs.python.org/3/library/string.html#format-specification-mini-language).
-        data_label_align: Alignment of data labels within bars. Can be 'left', 'center', or 'right'. 
+        data_label_align: Alignment of data labels within bars. Can be 'left', 'centre', or 'right'. 
         bar_colours: List of colour tuples, matching the number of series in each category.
         legend_placement: String representing where around the figure the legend should be
                         displayed. {"right-vertical", "left-vertical", "below-horizontal", "above-horizontal"}.
@@ -276,7 +276,7 @@ def normalised(
 
     return plot
 
-def normalised_centered(
+def normalised_centred(
         data:dict[str, list[float]],
         series_labels:list[str],
         title:str = None,
@@ -292,7 +292,7 @@ def normalised_centered(
         bar_height:float = DEFAULT_BAR_STYLE.height
         ) -> StackedBarplot:
     """
-    Draw a simple normalised, centered horizontal stacked bar chart with data values given as percentages.
+    Draw a simple normalised, centred horizontal stacked bar chart with data values given as percentages.
 
     Args:
         data: Dictionary of category headings and associated category integer or float 
@@ -310,7 +310,7 @@ def normalised_centered(
                 string can also round to (e.g., 1) decimal place(s) with '{0:.1}'. A suffix can
                 be added using (for example) '{0}%'. See Python documentation for more inforamtion 
                 (https://docs.python.org/3/library/string.html#format-specification-mini-language).
-        data_label_align: Alignment of data labels within bars. Can be 'left', 'center', or 'right'. 
+        data_label_align: Alignment of data labels within bars. Can be 'left', 'centre', or 'right'. 
         bar_colours: List of colour tuples, matching the number of series in each category.
         legend_placement: String representing where around the figure the legend should be
                         displayed. {"right-vertical", "left-vertical", "below-horizontal", "above-horizontal"}.
@@ -334,7 +334,7 @@ def normalised_centered(
     plot.set_style(local_style)
 
     plot.set_axis_style(x_lim=x_axis_lim, step=x_axis_step, x_axis_format="{0}%")
-    plot.set_bar_style(align="center", bar_height=bar_height)
+    plot.set_bar_style(align="centre", bar_height=bar_height)
     if bar_colours is not None: plot.set_bar_style(bar_gradient=bar_colours)
     plot.set_vert_line_style(show=True)
 

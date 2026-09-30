@@ -59,7 +59,7 @@ class CoreClassTest(unittest.TestCase):
 
         test_plot = StackedBarplot(data=results, series_labels=series_labels)
 
-        for alignment in ["left", "center"]:
+        for alignment in ["left", "centre"]:
             for order in ["unordered", "ascending", "descending"]:
                 test_plot.style.bar["align"] = alignment
                 test_plot.style.fig["ordered"] = order
@@ -71,7 +71,7 @@ class CoreClassTest(unittest.TestCase):
 
         test_plot = StackedBarplot(data=results, series_labels=series_labels)
 
-        for alignment in ["left", "center"]:
+        for alignment in ["left", "centre"]:
             for order in ["unordered", "ascending", "descending"]:
                 test_plot.style.bar["align"] = alignment
                 test_plot.style.fig["ordered"] = order
@@ -103,7 +103,7 @@ class CoreClassTest(unittest.TestCase):
         series_labels = ["Series 1", "Series 2", "Series 3", "Series 4"]
         test_plot = StackedBarplot(data=results, series_labels=series_labels)
 
-        for alignment in ["left", "center", "right"]:
+        for alignment in ["left", "centre", "right"]:
             for endpadd in [True, False]:
                 test_plot.style.bar_font["align"] = alignment
                 test_plot.style.bar_font["end_thresh_padd"] = endpadd

@@ -4,11 +4,11 @@ import unittest
 import matplotlib
 import matplotlib.pyplot as plt
 
-from stackedbarplots.plots import basic, centered, normalised, normalised_centered
+from stackedbarplots.plots import basic, centred, normalised, normalised_centred
 
 class PlotsMethodTest(unittest.TestCase):
-    """Very basic unit tests for basic(), centered(),
-    normalised(), and normalised_centered() methods in 
+    """Very basic unit tests for basic(), centred(),
+    normalised(), and normalised_centred() methods in 
     plots.py. Unit tests in this class focus on general 
     functionality, rather than asserting that style 
     settings are correctly implemented."""
@@ -30,20 +30,20 @@ class PlotsMethodTest(unittest.TestCase):
         del basic_plot
 
 
-    def test_centered(self):
+    def test_centred(self):
         results_2 = {"Category 1": [10, 5, 3, 11, 5], "Category 2": [4, 2, 9, 12, 3], "Category 3": [11, 12, 3, 4, 2]}
         series_labels_2 = ["Series 1", "Series 2", "Series 3", "Series 4", "Series 5"]
-        center_plot = centered(results_2, series_labels_2)
-        center_plot.render()
+        centre_plot = centred(results_2, series_labels_2)
+        centre_plot.render()
 
         #Check correct number of rects
-        axis_objs = center_plot.ax.get_children()
+        axis_objs = centre_plot.ax.get_children()
         axis_rects = list(filter(lambda actor: isinstance(actor, matplotlib.patches.Rectangle), axis_objs))
         self.assertGreaterEqual(len(axis_rects), len(series_labels_2)*len(results_2.keys()),
                                 "Error in bar plotting. Stacked barchart figure as more rects than data requires.")
 
-        plt.close(center_plot.fig)
-        del center_plot
+        plt.close(centre_plot.fig)
+        del centre_plot
 
 
     def test_normalised(self):
@@ -69,7 +69,7 @@ class PlotsMethodTest(unittest.TestCase):
         del norm_plot
 
 
-    def test_normalised_centered(self):
+    def test_normalised_centred(self):
         norm_results_1 = {"Category 1": [10, 5, 3, 11], "Category 2": [4, 2, 9, 12]}
         norm_results_2 = {"Category 1": [10, 5], "Category 2": [4, 2], "Category 3": [11, 12]}
         norm_results_3 = {"Category 1": [10, 5, 3, 11, 5, 1, 3], "Category 2": [4, 2, 9, 12, 4, 4, 2], "Category 3": [11, 12, 3, 4, 5, 10, 2]}
@@ -78,7 +78,7 @@ class PlotsMethodTest(unittest.TestCase):
         norm_series_labels_3 = ["Series 1", "Series 2", "Series 3", "Series 4", "Series 5", "Series 6", "Series 7"]
 
         for data, labels in zip([norm_results_1, norm_results_2, norm_results_3], [norm_series_labels_1, norm_series_labels_2, norm_series_labels_3]):
-            norm_plot = normalised_centered(data, labels)
+            norm_plot = normalised_centred(data, labels)
 
             #Check data has been correctly normalised
             for (cat_lab, cat_data), norm_data in zip(data.items(), norm_plot.data):

@@ -69,7 +69,7 @@ class ColourGradient():
                 series_length:int,
                 start_colour:tuple[int, int, int],
                 end_colour:tuple[int, int, int],
-                center_colour:tuple[int, int, int] = None):
+                centre_colour:tuple[int, int, int] = None):
         """Creates and stores a list of RGB colours in gradient matching length of 
         series
         
@@ -77,41 +77,41 @@ class ColourGradient():
             series_length: The length of the series used in the chart.
             start_colour: The intended RGB colour of the starting bar in each category.
             end_colour: The intended RGB colour of the end bar in each category.
-            center_colour: The intended RGB colour of the central bar in each category.
+            centre_colour: The intended RGB colour of the central bar in each category.
                 This argument is optional, unless the series_length is optional, when it
                 is a required parameter. If defined, the created gradient will converge 
-                from start_colour and end_colour on to center_colour.
+                from start_colour and end_colour on to centre_colour.
         """
         if series_length < 1: raise ValueError("Argument series_length must be an integer of minimum value 1.")
         if not isinstance(start_colour, tuple) or len(start_colour) != 3:
             raise ValueError("Argument start_colour must be tuple of three integers between 0 and 255.")
         if not isinstance(end_colour, tuple) or len(end_colour) != 3:
             raise ValueError("Argument end_colour must be tuple of three integers between 0 and 255.")
-        if center_colour is not None:
-            if not isinstance(center_colour, tuple) or len(center_colour) != 3:
-                raise ValueError("Argument center_colour must be tuple of three integers between 0 and 255.")
-            if any(i > 255 or i < 0 for i in center_colour):
-                raise ValueError("Argument center_colour must contain integers between 0 and 255.")
-        if series_length %2 != 0 and center_colour is None:
-            raise ValueError("If total number of colours is odd, a center colour must be provided")
+        if centre_colour is not None:
+            if not isinstance(centre_colour, tuple) or len(centre_colour) != 3:
+                raise ValueError("Argument centre_colour must be tuple of three integers between 0 and 255.")
+            if any(i > 255 or i < 0 for i in centre_colour):
+                raise ValueError("Argument centre_colour must contain integers between 0 and 255.")
+        if series_length %2 != 0 and centre_colour is None:
+            raise ValueError("If total number of colours is odd, a centre colour must be provided")
         if any(i > 255 or i < 0 for i in start_colour):
             raise ValueError("Argument start_colour must contain integers between 0 and 255.")
         if any(i > 255 or i < 0 for i in end_colour):
             raise ValueError("Argument end_colour must contain integers between 0 and 255.")
 
         series_colours = []
-        if center_colour is None:
+        if centre_colour is None:
             col_step = [(end-start)/(series_length-1.0) for start, end in zip(start_colour, end_colour)]
             for i in range(series_length):
                 series_colours.append(tuple([int(start+col_step[j]*i) for j, start in enumerate(start_colour)]))
         else:
-            col_step1 = [(center-start)/(series_length//2.0) for start, center in zip(start_colour, center_colour)]
-            col_step2 = [(end-center)/(series_length//2.0) for end, center in zip(end_colour, center_colour)]
+            col_step1 = [(centre-start)/(series_length//2.0) for start, centre in zip(start_colour, centre_colour)]
+            col_step2 = [(end-centre)/(series_length//2.0) for end, centre in zip(end_colour, centre_colour)]
             for i in range(series_length):
                 if i < series_length//2:
                     series_colours.append(tuple([int(start+col_step1[j]*i) for j, start in enumerate(start_colour)]))
                 elif i == series_length//2 and series_length %2 == 1:
-                    series_colours.append(center_colour)
+                    series_colours.append(centre_colour)
                 elif i >= series_length//2:
                     series_colours.append(tuple([int(end-col_step2[j]*((series_length-1)-i)) for j, end in enumerate(end_colour)]))
         self.colour_gradient_list = series_colours
