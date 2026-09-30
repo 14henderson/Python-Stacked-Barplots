@@ -254,7 +254,7 @@ def normalised(
     plot = StackedBarplot(norm_data, series_labels)
     plot.set_style(local_style)
 
-    plot.set_axis_style(x_lim=x_axis_lim, step=x_axis_step)
+    plot.set_axis_style(x_lim=x_axis_lim, step=x_axis_step, x_axis_format="{0}%")
     plot.set_bar_style(align="left", bar_height=bar_height)
     if bar_colours is not None: plot.set_bar_style(bar_gradient=bar_colours)
 
