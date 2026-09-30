@@ -23,6 +23,16 @@ Typical usage example:
     centre_plot.render()
     centre_plot.show()
 
+    #Example Normalised Plot
+    norm_plot = stackedbarplots.normalised(results, series_labels)
+    norm_plot.render()
+    norm_plot.show()
+
+    #Example Normalised Centred Plot
+    norm_plot = stackedbarplots.normalised_centred(results, series_labels)
+    norm_plot.render()
+    norm_plot.show()    
+
     #Example Custom Plot
     custom_colours = stackedbarplots.ColourGradient()
     custom_colours.gradient(len(series_labels), (200, 100, 150), (100, 150, 200))
