@@ -222,9 +222,10 @@ class StackedBarplot:
                 self.ax.set_xlim(self.style.axis.get("xlim")[0], self.style.axis.get("xlim")[1])
                 if self.style.axis.get("step") is not None:
                     self.ax.set_xticks([i for i in range(self.style.axis.get("xlim")[0], self.style.axis.get("xlim")[1]+1, self.style.axis.get("step"))])
-
-
-            self.ax.xaxis.set_major_formatter(lambda x, pos: self.style.axis.get("xaxisformat").format(x))
+            if self.style.axis.get("xaxisabs"):
+                self.ax.xaxis.set_major_formatter(lambda x, pos: self.style.axis.get("xaxisformat").format(abs(x))) #Absolute x ticks
+            else:
+                self.ax.xaxis.set_major_formatter(lambda x, pos: self.style.axis.get("xaxisformat").format(x))
             self.ax.tick_params(axis='x', labelsize=int(self.style.axis.get("xfontsize")), labelfontfamily=self.style.fig.get("fontfamily"))
 
         self.ax.tick_params(axis='y', labelsize=int(self.style.axis.get("yfontsize")), labelfontfamily=self.style.fig.get("fontfamily"))
@@ -540,7 +541,8 @@ class StackedBarplot:
                        x_font_size:int = None,
                        y_font_size:int = None,
                        x_axis_format:str = None,
-                       x_axis_show:bool = None):
+                       x_axis_show:bool = None,
+                       x_axis_abs:bool = None):
         """Update StackedBarplot axis style configuration.
 
         Args:
@@ -554,6 +556,7 @@ class StackedBarplot:
                 be added using (for example) '{0}%'. See Python documentation for more inforamtion 
                 (https://docs.python.org/3/library/string.html#format-specification-mini-language).
             x_axis_show: Boolean flag for if the x axis should show (default True).
+            x_axis_abs: Boolean flag for if negative X axis ticks should remain positive (default False).
         """
         if x_lim is not None: self.style.axis["xlim"] = x_lim
         if step is not None: self.style.axis["step"] = step
@@ -561,6 +564,7 @@ class StackedBarplot:
         if y_font_size is not None: self.style.axis["yfontsize"] = y_font_size
         if x_axis_format is not None: self.style.axis["xaxisformat"] = x_axis_format
         if x_axis_show is not None: self.style.axis["xaxisshow"] = x_axis_show
+        if x_axis_abs is not None: self.style.axis["xaxisabs"] = x_axis_abs
         self.unrendered_changes = True
 
 

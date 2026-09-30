@@ -101,6 +101,7 @@ class DEFAULT_AXIS_STYLE:
     y_font_size:int = 12
     x_axis_format:str = "{0:.0f}"
     x_axis_show:bool = True
+    x_axis_abs:bool = False
 
 
 class DEFAULT_AXIS_TITLE_STYLE:
@@ -245,5 +246,6 @@ class StackedPlotStyle:
             "xfontsize": DEFAULT_AXIS_STYLE.x_font_size,
             "yfontsize": DEFAULT_AXIS_STYLE.y_font_size,
             "xaxisformat": DEFAULT_AXIS_STYLE.x_axis_format,
-            "xaxisshow": DEFAULT_AXIS_STYLE.x_axis_show
+            "xaxisshow": DEFAULT_AXIS_STYLE.x_axis_show,
+            "xaxisabs": DEFAULT_AXIS_STYLE.x_axis_abs
         }

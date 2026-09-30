@@ -220,6 +220,7 @@ def normalised(
         legend_placement:str = None,
         x_axis_lim:tuple[int, int] = (0, 100),
         x_axis_step:int = 10,
+        x_axis_abs = True,
         bar_height:float = DEFAULT_BAR_STYLE.height
         ) -> StackedBarplot:
     """
@@ -247,6 +248,7 @@ def normalised(
                         displayed. {"right-vertical", "left-vertical", "below-horizontal", "above-horizontal"}.
         x_axis_lim:Left and right xlim in data coordinates, as a tuple.
         x_axis_step: Intevals at which x axis ticks should be displayed.
+        x_axis_abs: Boolean flag for if absolute value of X axis ticks shold be displayed.
         bar_height: The height of each bar as a fraction. Selection 1 results on 
                 no whitespace between displayed categories.
 
@@ -264,7 +266,11 @@ def normalised(
     plot = StackedBarplot(norm_data, series_labels)
     plot.set_style(local_style)
 
-    plot.set_axis_style(x_lim=x_axis_lim, step=x_axis_step, x_axis_format="{0}%")
+    plot.set_axis_style(x_lim=x_axis_lim, 
+                        step=x_axis_step, 
+                        x_axis_format="{0}%",
+                        x_axis_abs=x_axis_abs)
+
     plot.set_bar_style(align="left", bar_height=bar_height)
     if bar_colours is not None: plot.set_bar_style(bar_gradient=bar_colours)
 
@@ -299,6 +305,7 @@ def normalised_centred(
         legend_placement:str = None,
         x_axis_lim:tuple[int, int] = None,
         x_axis_step:int = 10,
+        x_axis_abs = True,
         bar_height:float = DEFAULT_BAR_STYLE.height
         ) -> StackedBarplot:
     """
@@ -326,6 +333,7 @@ def normalised_centred(
                         displayed. {"right-vertical", "left-vertical", "below-horizontal", "above-horizontal"}.
         x_axis_lim:Left and right xlim in data coordinates, as a tuple.
         x_axis_step: Intevals at which x axis ticks should be displayed.
+        x_axis_abs: Boolean flag for if absolute value of X axis ticks shold be displayed.
         bar_height: The height of each bar as a fraction. Selection 1 results on 
                 no whitespace between displayed categories.
 
@@ -343,7 +351,11 @@ def normalised_centred(
     plot = StackedBarplot(norm_data, series_labels)
     plot.set_style(local_style)
 
-    plot.set_axis_style(x_lim=x_axis_lim, step=x_axis_step, x_axis_format="{0}%")
+    plot.set_axis_style(x_lim=x_axis_lim, 
+                        step=x_axis_step, 
+                        x_axis_format="{0}%",
+                        x_axis_abs=x_axis_abs)
+
     plot.set_bar_style(align="centre", bar_height=bar_height)
     if bar_colours is not None: plot.set_bar_style(bar_gradient=bar_colours)
     plot.set_vert_line_style(show=True)
