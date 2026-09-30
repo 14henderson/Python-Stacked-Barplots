@@ -356,7 +356,7 @@ class CoreStyleTest(unittest.TestCase):
         step = 5
         x_font_size = 10
         y_font_size=15
-        x_axis_abs = False
+        x_axis_abs = True
 
         num_ticks = ((x_lim[1] - x_lim[0])/step) + 1 #1 added for end tick
 
