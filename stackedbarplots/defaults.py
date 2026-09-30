@@ -41,7 +41,7 @@ class DEFAULT_BAR_FONT_STYLE:
     size:int = 12
     colour = "black"
     format:str = "{0:.1f}"
-    align:str = "center"
+    align:str = "centre"
     padding:float = 1.5
     display_thresh:tuple[float, float] = (0, None)
     colour_invert:bool = False
@@ -54,7 +54,7 @@ class DEFAULT_BAR_STYLE:
     
     Default style settings for stacked barchart relating to
     the design of bars themselves. Align defines how to align the
-    figure: [left] stacks bars from 0 on X axis, and [center] aligns bars 
+    figure: [left] stacks bars from 0 on X axis, and [centre] aligns bars 
     centrally on X axis. The start, mid, and end colour are also defined
     here for a colour gradient to be generated."""
 
@@ -149,7 +149,7 @@ class DEFAULT_VERTLINE_STYLE:
     """Default style class for central vertical line.
     
     Default style settings for stacked barchart relating
-    to the style of the vertically plotted line for centered
+    to the style of the vertically plotted line for centred
     charts. Linestyle follows the matplotlib standard 
     (see https://matplotlib.org/stable/gallery/lines_bars_and_markers/linestyles.html)."""
     show:bool = False

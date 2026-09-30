@@ -68,7 +68,7 @@ class TestCumu2d(unittest.TestCase):
 
 class TestColourGradient(unittest.TestCase):
     """Unit tests for method gradient() in class ColourGradient in tools.py, 
-    without passing param center_colour."""
+    without passing param centre_colour."""
 
     def test_create_two_gradient(self):
         col_obj = ColourGradient()
@@ -92,7 +92,7 @@ class TestColourGradient(unittest.TestCase):
 
     def test_create_three_gradient(self):
         """Unit tests for method gradient() in class ColourGradient in tools.py, 
-        passing param center_colour."""
+        passing param centre_colour."""
         col_obj = ColourGradient()
         col_obj.gradient(3, (0, 0, 0), (200, 200, 200), (100, 100, 100))
         self.assertEqual(col_obj.get_gradient_list(), [(0, 0, 0), (100, 100, 100), (200, 200, 200)],

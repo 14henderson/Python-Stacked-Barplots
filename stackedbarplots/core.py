@@ -102,7 +102,7 @@ class StackedBarplot:
             else: toreverse = False
             if self.style.bar.get("align") == "left":
                 self.category_headings, self.data = zip(*sorted(zip(self.category_headings, self.data), key=lambda category: sum(category[1]), reverse=toreverse)) #Making sure the labels get ordered with the data
-            elif self.style.bar.get("align") == "center":
+            elif self.style.bar.get("align") == "centre":
                 if len(self.data[0]) % 2 == 0:
                     self.category_headings, self.data = zip(*sorted(zip(self.category_headings, self.data),key=lambda category: sum(category[1][:middle_index]),reverse=toreverse))
                 else:
@@ -110,7 +110,7 @@ class StackedBarplot:
         data_cum = cumu2d(self.data)
 
         offsets = [0]*len(self.data)
-        if self.style.bar.get("align") == "center":
+        if self.style.bar.get("align") == "centre":
             offsets = []
             for(row_index, row) in enumerate(self.data):
                 if len(self.data[0]) % 2 == 0:
@@ -125,12 +125,12 @@ class StackedBarplot:
             for bar_index, width in enumerate(widths):
                 if self.style.bar.get("align") == "left":
                     starts[bar_index] = starts[bar_index]-widths[bar_index]
-                elif self.style.bar.get("align") == "center":
+                elif self.style.bar.get("align") == "centre":
                     starts[bar_index] = starts[bar_index]-widths[bar_index]-offsets[bar_index]
                 elif self.style.bar.get("align") == "right":
                     raise NotImplementedError("Right-aligned bars not yet implemented")
                 else:
-                    raise ValueError("Invalid alignment value, must be 'left', 'center', or 'right'")
+                    raise ValueError("Invalid alignment value, must be 'left', 'centre', or 'right'")
             self.ax.barh(self.category_headings,
                                  widths,
                                  left=starts,
@@ -182,7 +182,7 @@ class StackedBarplot:
                         x = rect.get_x() + rect.get_width() + self.style.bar_font.get("fontpadd")
 
                 if not topadd: #Normal alignment for all other bars, or if no outside-of-bar threshold is set
-                    if self.style.bar_font.get("fontalign") == "center":
+                    if self.style.bar_font.get("fontalign") == "centre":
                         x = rect.get_x() + rect.get_width() / 2
                     elif self.style.bar_font.get("fontalign") == "left":
                         x = rect.get_x() + self.style.bar_font.get("fontpadd")
@@ -331,7 +331,7 @@ class StackedBarplot:
             end_thresh_padd: Boolean value indicating whether, for data values for start or end bars, 
                 if the data value is below paddthresh, is should be moved outside of the bar for better
                 clarity. 
-            align: Alignment of data labels within bars. Can be 'left', 'center', or 'right'. 
+            align: Alignment of data labels within bars. Can be 'left', 'centre', or 'right'. 
             padding: Padding for data labels moved.
         """
         if font_size is not None: self.style.bar_font["fontsize"] = font_size
@@ -342,8 +342,8 @@ class StackedBarplot:
         if padd_thresh is not None: self.style.bar_font["fontpaddthresh"] = padd_thresh
         if end_thresh_padd is not None: self.style.bar_font["fontendthreshpadd"] = end_thresh_padd
         if align is not None:
-            if align not in ["left", "center", "right"]:
-                raise ValueError("Argument align must be either \"left\", \"center\", or \"right\".")
+            if align not in ["left", "centre", "right"]:
+                raise ValueError("Argument align must be either \"left\", \"centre\", or \"right\".")
             self.style.bar_font["fontalign"] = align
         if padding is not None: self.style.bar_font["fontpadd"] = padding
         self.unrendered_changes = True
@@ -363,7 +363,7 @@ class StackedBarplot:
         Args:
             bar_height: The height of each bar as a fraction. Selection 1 results on 
                 no whitespace between displayed categories.
-            align: The alignment of bars. Must be either 'left' or 'center'.
+            align: The alignment of bars. Must be either 'left' or 'centre'.
             ordered: Whether the displayed categories should be ordered. Must be either 
                 None, 'ascending', or 'descending'. Categories are ordered based on sum of 
                 leftmost bars.
@@ -372,8 +372,8 @@ class StackedBarplot:
         """
         if bar_height is not None: self.style.bar["height"] = bar_height
         if align is not None:
-            if align not in ["left", "center"]:
-                raise ValueError("Argument align must be either None, \"left\", or \"center\".")
+            if align not in ["left", "centre"]:
+                raise ValueError("Argument align must be either None, \"left\", or \"centre\".")
             self.style.bar["align"] = align
         if ordered is not None:
             if ordered not in ["ascending", "descending"]:
