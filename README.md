@@ -9,13 +9,13 @@
 > Do you just need an easy way to create horizontal stacked barcharts in Python?
 > Me too! **Python-Stacked-Barplots is here to help!**
 
-Python-Stacked-Barplots is a Python library that makes it easy to create, customise, save, and diplay **horizontal stacked barcharts**. This library currently supports left-aligned and centered horizontal barplots, but there are future plans to expand this. This library has been written with the intention of being both easy to use, and support a lot of flexibility. 
+Python-Stacked-Barplots is a Python library that makes it easy to create, customise, save, and diplay **horizontal stacked barcharts**. This library currently supports left-aligned and centred horizontal barplots, but there are future plans to expand this. This library has been written with the intention of being both easy to use, and support a lot of flexibility. 
 
 ## Simple Use
 
 Python-Stacked-Barplots follows a simple pipeline for use. See code snippet below for simple example use.
 
-1. Create a StackedBarplot object using one of the base plotting methods (i.e., basic or centered),
+1. Create a StackedBarplot object using one of the base plotting methods (i.e., basic, centred, normalised, normalised_centred),
 2. Apply style changes to the plot where appropriate,
 3. Call render() on your StackedBarplot object to render the plot, and either save() or show() to save or display it (or both).
 
@@ -36,19 +36,19 @@ basic_plot.save("Example-Graph-1.png")
     <img src="https://github.com/14henderson/Python-Stacked-Barplots/blob/main/readmefigures/Example-Graph-1.png?raw=true" width=60% alt="Example 1 Horizontal Stacked Barchart created using this library.">
 </p>
 
-#### Centered Plot
+#### Centred Plot
 
-A centered horizontal stacked bar chart can easily be drawn from the same data by calling centered(). See code snippet below for simple example use.
+A centred horizontal stacked bar chart can easily be drawn from the same data by calling centred(). See code snippet below for simple example use.
 
 ```Python
 import stackedbarplots
 
 results_2 = {"Category 1": [10, 5, 3, 11, 5], "Category 2": [4, 2, 9, 12, 3], "Category 3": [11, 12, 3, 4, 2]}
 series_labels_2 = ["Series 1", "Series 2", "Series 3", "Series 4", "Series 5"]
-center_plot = stackedbarplots.centered(results_2, series_labels_2)
+centre_plot = stackedbarplots.centred(results_2, series_labels_2)
 
-center_plot.render()
-center_plot.save("Example-Graph-2.png")
+centre_plot.render()
+centre_plot.save("Example-Graph-2.png")
 ```
 
 <p align="center">
@@ -87,7 +87,7 @@ import stackedbarplots
 custom_colour = stackedbarplots.ColourGradient()
 custom_colour.set_colour_gradient_list([(227, 108, 85), (101, 219, 133)])
 
-basic_plot = stackedbarplots.centered(dataset, ["Total COVID-19 Deaths Per Million People in 2021", "Total COVID-19 Tests Per 1,000 People in 2021"], fig_size=(10, 8))
+basic_plot = stackedbarplots.centred(dataset, ["Total COVID-19 Deaths Per Million People in 2021", "Total COVID-19 Tests Per 1,000 People in 2021"], fig_size=(10, 8))
 
 basic_plot.set_bar_style(bar_gradient=custom_colour, ordered="descending")
 basic_plot.set_bar_labels_style(bar_value_format="{0:.0f}", font_size=8, align="left", padd_thresh=1000, end_thresh_padd=True, padding=100)
@@ -106,6 +106,13 @@ basic_plot.save("COVID-Deaths-EU-Tests-Fig.png")
 <p align="center">
     <img src="https://github.com/14henderson/Python-Stacked-Barplots/blob/main/readmefigures/COVID-Deaths-Tests-Fig.png?raw=true" width=90% alt="Example 4 Horizontal Stacked Barchart created using this library.">
 </p>
+
+#### Other Plots
+
+As well as the different types of horizontal stacked barcharts highlighted above, this library allows you to make:
+
+> Normalised Plots
+> Normalised and Centred Plots
 
 ## Technical implementation
 * Written in Python 3.14. Tested and runs on version 3.10 minimum.
