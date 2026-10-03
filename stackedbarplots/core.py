@@ -166,7 +166,7 @@ class StackedBarplot():
     def _destroy_fig(self):
         """Destroys the current figure."""
         if self.fig is not None:
-            self.fig.clear()
+            #self.fig.clear()
             plt.close(self.fig)
 
 
@@ -295,8 +295,8 @@ class StackedBarplot():
 
     def _plot_axes(self):
         """Internal method. Renders and applies plot labels/title and axes settings according to stored style configuration."""
-        if not self.get_axis_style()["xaxisshow"]:
-            self.ax.xaxis.set_visible(False)
+        if not self.get_axis_style()["yaxisshow"]: self.ax.yaxis.set_visible(False)
+        if not self.get_axis_style()["xaxisshow"]: self.ax.xaxis.set_visible(False)
         else:
             if self.get_axis_style()["xlim"] is not None:
                 self.ax.set_xlim(self.get_axis_style()["xlim"])
