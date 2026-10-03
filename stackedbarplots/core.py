@@ -54,7 +54,7 @@ class StackedBarplot():
 
         super().__init__() #Initializes the StackedPlotStyle object
 
-        if not isinstance(data, dict): 
+        if not isinstance(data, dict):
             raise ValueError("Argument data must be a dictionary of category headings and associated category integer or float data.")
         if not isinstance(series_labels, list):
             raise ValueError("Argument series_labels must be list of strings.")
@@ -103,12 +103,12 @@ class StackedBarplot():
     def _plot_bars(self):
         """Internal method. Renders bars and category headings according to stored style configuration."""
         self.fig, self.ax = plt.subplots(figsize=self.get_fig_style()["size"])
-    
+
         middle_index = len(self.data[0]) // 2
 
-        if self.get_fig_style()["ordered"] != None:
-            if self.get_fig_style()["ordered"] == "ascending": toreverse = True
-            elif self.get_fig_style()["ordered"] == "descending": toreverse = False
+        if self.get_fig_style()["sorted"] is not None:
+            if self.get_fig_style()["sorted"] == "ascending": toreverse = True
+            elif self.get_fig_style()["sorted"] == "descending": toreverse = False
             else: toreverse = False
             if self.get_bar_style()["align"] == "left":
                 self.category_headings, self.data = zip(*sorted(zip(self.category_headings, self.data), key=lambda category: sum(category[1]), reverse=toreverse)) #Making sure the labels get ordered with the data
@@ -283,9 +283,9 @@ class StackedBarplot():
 
     def _plot_vert_line(self):
         """Internal method. Renders a vertical plot line according to stored style configuration."""
-        if self.get_vert_line_style()["order"] == "front": z = 2
-        elif self.get_vert_line_style()["order"] == "behind": z = 0
-        else: raise ValueError("Vertical line order must be either 'front' or 'behind'.")
+        if self.get_vert_line_style()["zorder"] == "front": z = 2
+        elif self.get_vert_line_style()["zorder"] == "behind": z = 0
+        else: raise ValueError("Vertical line zorder must be either 'front' or 'behind'.")
 
         self.ax.axvline(0,
                         linestyle=self.get_vert_line_style()["linestyle"],
@@ -303,7 +303,7 @@ class StackedBarplot():
         if self.get_legend_style()["show"]:
             self._init_legend_markers()
             self._plot_legend()
-        if self.get_vert_line_style()["show"]: 
+        if self.get_vert_line_style()["show"]:
             self._plot_vert_line()
 
         self.fig.tight_layout()

@@ -61,7 +61,8 @@ class CoreClassTest(unittest.TestCase):
 
         for alignment in ["left", "centre"]:
             for order in [None, "ascending", "descending"]:
-                test_plot.set_bar_style(align=alignment, ordered=order)
+                test_plot.set_bar_style(align=alignment)
+                test_plot.set_fig_style(sorted=order)
                 test_plot.render()
 
         #With odd number of series
@@ -72,7 +73,8 @@ class CoreClassTest(unittest.TestCase):
 
         for alignment in ["left", "centre"]:
             for order in [None, "ascending", "descending"]:
-                test_plot.set_bar_style(align=alignment, ordered=order)
+                test_plot.set_bar_style(align=alignment)
+                test_plot.set_fig_style(sorted=order)
                 test_plot.render()
 
         #Test other misc settings
@@ -215,7 +217,7 @@ class CoreClassTest(unittest.TestCase):
                 test_plot.render()
 
             for order in ["front", "behind"]:
-                test_plot.set_vert_line_style(order=order)
+                test_plot.set_vert_line_style(z_order=order)
                 test_plot.render()
 
         plt.close(test_plot.fig)
@@ -288,8 +290,8 @@ class CoreStyleTest(unittest.TestCase):
 
         test_plot.set_bar_style(bar_height=height,
                                 align=align,
-                                ordered="descending",
                                 bar_gradient=custom_colours)
+        test_plot.set_fig_style(sorted="descending")
         test_plot.render()
 
         axis_objs = test_plot.ax.get_children()
@@ -449,7 +451,7 @@ class CoreStyleTest(unittest.TestCase):
                                       line_style="--",
                                       colour="red",
                                       alpha=.5,
-                                      order="front")
+                                      z_order="front")
         test_plot.render()
 
         #Search for Line2D artist in figure axis

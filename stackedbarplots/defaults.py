@@ -81,7 +81,7 @@ class DEFAULT_FIG_STYLE:
     title_colour = "black"
     font_family:str = "sans-serif"
     background_colour = "#ffffff"
-    ordered:str = "unordered"
+    sorted:str = None
     spine_display:tuple[bool, bool, bool, bool] = (False, False, False, True) #left, top, right, bottom
 
 
@@ -230,7 +230,7 @@ class StackedPlotStyle:
             "fontfamily": DEFAULT_FIG_STYLE.font_family,
             "size": DEFAULT_FIG_STYLE.size,
             "backgroundcolour": DEFAULT_FIG_STYLE.background_colour,
-            "ordered": DEFAULT_FIG_STYLE.ordered,
+            "sorted": DEFAULT_FIG_STYLE.sorted,
             "spinedisplay": DEFAULT_FIG_STYLE.spine_display
         }
         self.__legend_style = {
@@ -329,7 +329,6 @@ class StackedPlotStyle:
     def set_bar_style(self,
                     bar_height:int = None,
                     align:str = None,
-                    ordered:str = None,
                     bar_gradient:ColourGradient = None):
         """Update StackedBarplot bar style configuration.
 
@@ -337,9 +336,6 @@ class StackedPlotStyle:
             bar_height: The height of each bar as a fraction. Selection 1 results on 
                 no whitespace between displayed categories.
             align: The alignment of bars. Must be either 'left' or 'centre'.
-            ordered: Whether the displayed categories should be ordered. Must be either 
-                None, 'ascending', or 'descending'. Categories are ordered based on sum of 
-                leftmost bars.
             bar_gradient: ColourGradient object, containing colours matching the number of 
                 series in each category.
         """
@@ -348,10 +344,6 @@ class StackedPlotStyle:
             if align not in ["left", "centre"]:
                 raise ValueError("Argument align must be either None, \"left\", or \"centre\".")
             self.__bar_style["align"] = align
-        if ordered is not None:
-            if ordered not in ["ascending", "descending"]:
-                raise ValueError("Argument ordered must be either None, \"ascending\", or \"descending\".")
-            self.__fig_style["ordered"] = ordered
         if bar_gradient is not None:
             if not isinstance(bar_gradient, ColourGradient): raise ValueError("Argument bar_gradient must be of type ColourGradient.")
             self.bar_colours = bar_gradient
@@ -415,7 +407,6 @@ class StackedPlotStyle:
         return self.__fig_style
 
 
-    #TODO: Where is ordered param?
     def set_fig_style(self,
                     title:str = None,
                     title_font_size:int = None,
@@ -423,6 +414,7 @@ class StackedPlotStyle:
                     font_family:str = None,
                     fig_size:tuple[int, int] = None,
                     background_colour:str = None,
+                    sorted:str = None,
                     spine_display:tuple[bool, bool, bool, bool] = None):
         """Update StackedBarplot general figure style configuration.
 
@@ -433,6 +425,10 @@ class StackedPlotStyle:
             font_family: The font family for all text used in the plot. User must select from
                 a list of font families (installed on user's machine).
             fig_size: Tuple of integers representing the width and height of the figure.
+            background_colour: The background colour of the figure.
+            sorted: Whether the displayed categories should be ordered. Must be either 
+                None, 'ascending', or 'descending'. Categories are ordered based on sum of
+                leftmost bars.
             spine_display: Tuple of booleans representing the four figure spines. Ordered as (left, top, right, bottom).
         """
         if title is not None: self.__fig_style["title"] = title
@@ -444,6 +440,10 @@ class StackedPlotStyle:
                 raise ValueError("Argument fig_size must be a tuple of two integers representing the width and height of the figure.")
             self.__fig_style["size"] = fig_size
         if background_colour is not None: self.__fig_style["backgroundcolour"] = background_colour
+        if sorted is not None:
+            if sorted not in [None, "ascending", "descending"]:
+                raise ValueError("Argument sorted must be either None, 'ascending', or 'descending'.")
+            self.__fig_style["sorted"] = sorted
         if spine_display is not None:
             if not isinstance(spine_display, tuple) or len(spine_display) != 4:
                 raise ValueError("Argument spine_display must be a tuple of four boolean values representing the four figure spines.")
