@@ -33,14 +33,17 @@ def cumu1d(data:list[float]) -> list[float]:
         cumu_data[x] = cumu_data[x] + cumu_data[x-1]
     return cumu_data
 
-#TODO: Add documentation on why this process is necessary.
+
 def cumu2d(data:list[list[float]]) -> list[list[float]]:
     """Iterates over y axis of 2-d list and returns the cumulative sum of the elements 
-    along each one."""
+    along each one. This method is required to ensure that the data is in the correct format 
+    for plotting, as the StackedBarplot class requires cumulative data to be passed to it."""
     cumu_data = list(copy.deepcopy(data))
     for y in range(len(cumu_data)):
         cumu_data[y] = cumu1d(cumu_data[y])
     return cumu_data
+
+
 
 
 class ColourGradient():
@@ -55,15 +58,20 @@ class ColourGradient():
         """Initializes the ColourGradient instance."""
         self.colour_gradient_list = []
 
+
     def get_normalised_gradient_list(self) -> list[tuple[float, float, float]]:
         """Returns stored colour gradient list matching data shape. RGB values are returned as fractions."""
         norm = [(col[0]/255.0, col[1]/255.0, col[2]/255.0) for col in self.colour_gradient_list]
         return norm
 
+
     def get_gradient_list(self) -> list[tuple[int, int, int]]:
         """Returns stored colour gradient list matching data shape.."""
+        if len(self.colour_gradient_list) == 0:
+            raise ValueError("ColourGradient object has no stored colour gradient list. " \
+            "Use gradient() or grayscale_gradient() to create a colour gradient list first.")
         return self.colour_gradient_list
-        #TODO: if it doesn't exist, throw error? Use default?
+
 
     def gradient(self,
                 series_length:int,

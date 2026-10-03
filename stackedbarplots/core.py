@@ -11,16 +11,17 @@ import os
 import warnings
 import matplotlib.pyplot as plt
 import matplotlib.lines as mlines
-from matplotlib.artist import Artist
 
-
-from .tools import *
-from .defaults import *
+from .tools import cumu2d
+from .defaults import StackedPlotStyle, DEFAULT_LEGEND_STYLE, DEFAULT_BAR_STYLE
 
 
 __all__ = [
     "StackedBarplot"
 ]
+
+
+
 
 class StackedBarplot():
     #TODO: Fix docstring for StackedBarplot class, as it is now outdated and incomplete.
@@ -32,7 +33,6 @@ class StackedBarplot():
     pipeline of this class is instantiation -> configuration of chart style -> 
     calling of render() method -> calling of show() or save() method.
 
-
     Attributes:
         data: Dictionary of category headings and associated category integer or float 
             data. For example, {"Ages": [12, 3, 4, 1], ...}. Order of data list must follow
@@ -43,6 +43,7 @@ class StackedBarplot():
         fig: matplotlib.pyplot.figure object.
         ax: matplotlib.pyplot.axis object.        
     """
+
     def __init__(self, data:dict[str, list[float]], series_labels:list[str]):
         """Initializes the instance based on chart data and series labels.
 
@@ -51,8 +52,6 @@ class StackedBarplot():
             series_labels: List of string headings for series used in chart.
             
         """
-
-        super().__init__() #Initializes the StackedPlotStyle object
 
         if not isinstance(data, dict):
             raise ValueError("Argument data must be a dictionary of category headings and associated category integer or float data.")
@@ -73,12 +72,9 @@ class StackedBarplot():
         self.style_methods = [f for f in dir(StackedPlotStyle) if not f.startswith("_")]
         self.style.bar_colours.grayscale_gradient(len(self.series_labels))
 
-    def __getattr__(self, func_name):
-        """Delegates method calls to StackedPlotStyle object if method is not defined in StackedBarplot.
 
-        Args:
-            func_name: Name of method being called.
-        """
+    def __getattr__(self, func_name):
+        """Internal method; non-callable. Delegates method calls to StackedPlotStyle object if method is not defined in StackedBarplot."""
         def delegated_method(*args, **kwargs):
             if func_name in self.style_methods:
                 return getattr(self.style, func_name)(*args, **kwargs)
@@ -91,13 +87,87 @@ class StackedBarplot():
         """Applies a given StackedPlotStyle object to the current StackedBarplot plot.
         
         Args:
-            style: Given StackedBarplot object that should be applied to the StackedBarplot plot.
+            style: Given StackedPlotStyle object that should be applied to the StackedBarplot plot.
         """
         if not isinstance(style, StackedPlotStyle): raise ValueError("Argument style must be of type StackedPlotStyle.")
         self.style = style
 
         #Bar colours must be generated after the data is provided, as the number of colours must match the number of categories
         self.style.bar_colours.gradient(len(self.series_labels), DEFAULT_BAR_STYLE.start_colour, DEFAULT_BAR_STYLE.end_colour, DEFAULT_BAR_STYLE.mid_colour)
+
+
+    def render(self):
+        """Renders the figure given current data and style configuration."""
+        self._destroy_fig()
+        self._render()
+        self.style.unrendered_changes = False
+
+
+    def show(self):
+        """Displays all figures currently created in the plt environment."""
+
+        if self.style.unrendered_changes:
+            warnings.warn("You are attempting to display the figure before style changes " \
+            "have been rendered. Beware that render() must be called on the StackedBarplot" \
+            "object for any style changes to be displayed.")
+        plt.show()
+
+
+    def save(self,
+             filename:str,
+             transparent:bool=None,
+             dpi='figure',
+             bbox_inches='tight',
+             pad_inches=0.1,
+             fig_format:str="png"):
+        """Saves rendered figure to file.
+
+        See https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.savefig.html for
+        verbose detail of parameters. 
+
+        Args:
+            filename: The path and filename to save figure. Must be relative path.
+            transparent: If True, the Axes patches will all be transparent. 
+            dpi: The resolution in dots per inch. If 'figure', use the figure's dpi value.
+            bbox_inches: Bounding box in inches: only the given portion of the figure is saved. 
+                If 'tight', try to figure out the tight bbox of the figure.
+            pad_inches: Amount of padding in inches around the figure when bbox_inches is 
+                'tight'.
+            fig_format: The file format, e.g. 'png', 'pdf', 'svg', ... The behavior when this is 
+                unset is documented under fname.
+
+        """
+        if self.style.unrendered_changes:
+            warnings.warn("You are attempting to save the figure before style changes " \
+            "have been rendered. Beware that render() must be called on the StackedBarplot" \
+            "object for any style changes to be displayed.")
+        path = os.path.dirname(os.path.abspath(__file__))
+        self.fig.savefig(os.path.join(path, filename),
+                         transparent=transparent,
+                         dpi=dpi,
+                         bbox_inches=bbox_inches,
+                         pad_inches=pad_inches,
+                         format=fig_format)
+
+
+    def _render(self):
+        """Internal method. Internal method for rendering plot following render pipeline."""
+        self._plot_bars()
+        self._plot_bar_labels()
+        self._plot_axes()
+        if self.get_legend_style()["show"]:
+            self._init_legend_markers()
+            self._plot_legend()
+        if self.get_vert_line_style()["show"]:
+            self._plot_vert_line()
+        self.fig.tight_layout()
+
+
+    def _destroy_fig(self):
+        """Destroys the current figure."""
+        if self.fig is not None:
+            self.fig.clear()
+            plt.close(self.fig)
 
 
     def _plot_bars(self):
@@ -210,7 +280,7 @@ class StackedBarplot():
                     else: fontcolour = "black"
                 else: fontcolour = self.get_bar_labels_style()["fontcolour"]
 
-                textartist = self.ax.annotate(
+                self.ax.annotate(
                     text,
                     (x, y),
                     textcoords="offset points",
@@ -221,6 +291,7 @@ class StackedBarplot():
                     fontfamily=self.get_fig_style()["fontfamily"])
 
         self.ax.invert_yaxis() #Required for some reason?
+
 
     def _plot_axes(self):
         """Internal method. Renders and applies plot labels/title and axes settings according to stored style configuration."""
@@ -260,6 +331,7 @@ class StackedBarplot():
                                color=self.get_axis_title_style()["axislabelfontcolour"],
                                fontfamily=self.get_fig_style()["fontfamily"])
 
+
     def _plot_legend(self):
         """Internal method. Renders a plot legend according to stored style configuration."""
         if "horizontal" in self.get_legend_style()["placement"]: ncol = len(self.series_labels)
@@ -281,6 +353,7 @@ class StackedBarplot():
                        framealpha=1,
                        shadow=False)
 
+
     def _plot_vert_line(self):
         """Internal method. Renders a vertical plot line according to stored style configuration."""
         if self.get_vert_line_style()["zorder"] == "front": z = 2
@@ -292,81 +365,6 @@ class StackedBarplot():
                         color=self.get_vert_line_style()["colour"],
                         alpha=self.get_vert_line_style()["alpha"],
                         zorder=z)
-
-
-
-    def _render(self):
-        """Internal method. Internal method for rendering plot following render pipeline."""
-        self._plot_bars()
-        self._plot_bar_labels()
-        self._plot_axes()
-        if self.get_legend_style()["show"]:
-            self._init_legend_markers()
-            self._plot_legend()
-        if self.get_vert_line_style()["show"]:
-            self._plot_vert_line()
-
-        self.fig.tight_layout()
-
-
-
-    def render(self):
-        """Renders the figure given current data and style configuration."""
-        self._destroy_fig()
-        self._render()
-        self.style.unrendered_changes = False
-
-    def show(self):
-        """Displays all figures currently created in the plt environment."""
-
-        if self.style.unrendered_changes:
-            warnings.warn("You are attempting to display the figure before style changes " \
-            "have been rendered. Beware that render() must be called on the StackedBarplot" \
-            "object for any style changes to be displayed.")
-        plt.show()
-
-    def _destroy_fig(self):
-        """Destroys the current figure."""
-        if self.fig is not None:
-            self.fig.clear()
-            plt.close(self.fig)
-
-
-    def save(self,
-             filename:str,
-             transparent:bool=None,
-             dpi='figure',
-             bbox_inches='tight',
-             pad_inches=0.1,
-             fig_format:str="png"):
-        """Saves rendered figure to file.
-
-        See https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.savefig.html for
-        verbose detail of parameters. 
-
-        Args:
-            filename: The path and filename to save figure. Must be relative path.
-            transparent: If True, the Axes patches will all be transparent. 
-            dpi: The resolution in dots per inch. If 'figure', use the figure's dpi value.
-            bbox_inches: Bounding box in inches: only the given portion of the figure is saved. 
-                If 'tight', try to figure out the tight bbox of the figure.
-            pad_inches: Amount of padding in inches around the figure when bbox_inches is 
-                'tight'.
-            fig_format: The file format, e.g. 'png', 'pdf', 'svg', ... The behavior when this is 
-                unset is documented under fname.
-
-        """
-        if self.style.unrendered_changes:
-            warnings.warn("You are attempting to save the figure before style changes " \
-            "have been rendered. Beware that render() must be called on the StackedBarplot" \
-            "object for any style changes to be displayed.")
-        path = os.path.dirname(os.path.abspath(__file__))
-        self.fig.savefig(os.path.join(path, filename),
-                         transparent=transparent,
-                         dpi=dpi,
-                         bbox_inches=bbox_inches,
-                         pad_inches=pad_inches,
-                         format=fig_format)
 
 
     def _init_legend_markers(self):
