@@ -266,8 +266,8 @@ def normalised(
     plot = StackedBarplot(norm_data, series_labels)
     plot.set_style(local_style)
 
-    plot.set_axis_style(x_lim=x_axis_lim, 
-                        step=x_axis_step, 
+    plot.set_axis_style(x_lim=x_axis_lim,
+                        step=x_axis_step,
                         x_axis_format="{0}%",
                         x_axis_abs=x_axis_abs)
 
@@ -351,8 +351,8 @@ def normalised_centred(
     plot = StackedBarplot(norm_data, series_labels)
     plot.set_style(local_style)
 
-    plot.set_axis_style(x_lim=x_axis_lim, 
-                        step=x_axis_step, 
+    plot.set_axis_style(x_lim=x_axis_lim,
+                        step=x_axis_step,
                         x_axis_format="{0}%",
                         x_axis_abs=x_axis_abs)
 
