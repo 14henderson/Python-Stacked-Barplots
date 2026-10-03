@@ -12,6 +12,7 @@ class PlotsMethodTest(unittest.TestCase):
     plots.py. Unit tests in this class focus on general 
     functionality, rather than asserting that style 
     settings are correctly implemented."""
+    show_plots = False
 
     def test_basic(self):
         results = {"Category 1": [10, 5, 3, 11], "Category 2": [4, 2, 9, 12], "Category 3": [11, 12, 3, 4]}
@@ -26,6 +27,7 @@ class PlotsMethodTest(unittest.TestCase):
         self.assertGreaterEqual(len(axis_rects), len(series_labels)*len(results.keys()),
                                 "Error in bar plotting. Stacked barchart figure as more rects than data requires.")
 
+        if self.show_plots: basic_plot.show()
         plt.close(basic_plot.fig)
         del basic_plot
 
@@ -42,6 +44,7 @@ class PlotsMethodTest(unittest.TestCase):
         self.assertGreaterEqual(len(axis_rects), len(series_labels_2)*len(results_2.keys()),
                                 "Error in bar plotting. Stacked barchart figure as more rects than data requires.")
 
+        if self.show_plots: centre_plot.show()
         plt.close(centre_plot.fig)
         del centre_plot
 
@@ -65,6 +68,7 @@ class PlotsMethodTest(unittest.TestCase):
 
         norm_plot.render()
 
+        if self.show_plots: norm_plot.show()
         plt.close(norm_plot.fig)
         del norm_plot
 
@@ -88,5 +92,6 @@ class PlotsMethodTest(unittest.TestCase):
 
         norm_plot.render()
 
+        if self.show_plots: norm_plot.show()
         plt.close(norm_plot.fig)
         del norm_plot
