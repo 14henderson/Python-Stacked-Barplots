@@ -14,6 +14,7 @@ class CoreClassTest(unittest.TestCase):
     functionality of StackedBarplot, including pipeline
     plotting operations. Intended to test runtime errors
     (logic errors related to style tested in CoreStyleTest)."""
+    show_plots = False
 
 
     def test_set_style(self):
@@ -94,6 +95,7 @@ class CoreClassTest(unittest.TestCase):
         test_plot.set_fig_style(fig_size=(5, 10))
         test_plot.render()
 
+        if self.show_plots: test_plot.show()
         plt.close(test_plot.fig)
         del test_plot
 
@@ -133,6 +135,7 @@ class CoreClassTest(unittest.TestCase):
             test_plot.set_bar_labels_style(font_colour_invert=flag)
             test_plot.render()
 
+        if self.show_plots: test_plot.show()
         plt.close(test_plot.fig)
         del test_plot
 
@@ -168,6 +171,8 @@ class CoreClassTest(unittest.TestCase):
                              (True, True, True, True)]:
             test_plot.set_fig_style(spine_display=spine_display)
             test_plot.render()
+
+        if self.show_plots: test_plot.show()
         plt.close(test_plot.fig)
         del test_plot
 
@@ -184,6 +189,7 @@ class CoreClassTest(unittest.TestCase):
             for placement in ["right-vertical", "left-vertical", "below-horizontal", "above-horizontal"]:
                 test_plot.set_legend_style(placement=placement)
                 test_plot.render()
+                if self.show_plots and show: test_plot.show()
 
             for marker in ["s", "o", "v", "^", "<", ">"]:
                 test_plot.set_legend_style(marker_shape=marker)
@@ -196,6 +202,7 @@ class CoreClassTest(unittest.TestCase):
             for trans in [(0, 0), (.1, 0), (0, .1), (.1, .1)]:
                 test_plot.set_legend_style(transform=trans)
                 test_plot.render()
+
         plt.close(test_plot.fig)
         del test_plot
 
@@ -220,6 +227,7 @@ class CoreClassTest(unittest.TestCase):
                 test_plot.set_vert_line_style(z_order=order)
                 test_plot.render()
 
+        if self.show_plots: test_plot.show()
         plt.close(test_plot.fig)
         del test_plot
 
