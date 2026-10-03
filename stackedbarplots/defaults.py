@@ -14,16 +14,15 @@ Typical usage example:
   bar = foo.function_bar()
 """
 
-#TODO: Convert variable names to snake_case
-
-from .tools import *
 import matplotlib.lines as mlines
+from .tools import ColourGradient
 
 __all__ = [
     "StackedPlotStyle", "DEFAULT_BAR_FONT_STYLE", "DEFAULT_BAR_STYLE", "DEFAULT_FIG_STYLE", 
     "DEFAULT_AXIS_STYLE", "DEFAULT_AXIS_TITLE_STYLE", "DEFAULT_LEGEND_STYLE", 
     "DEFAULT_VERTLINE_STYLE"
 ]
+
 
 
 
@@ -161,12 +160,11 @@ class DEFAULT_VERTLINE_STYLE:
     line_style:str = "-"
     colour = "black"
     alpha:float = 1
-    order:str = "front"
+    z_order:str = "front"
 
 
 
 
-#TODO: Convert class attributes and dictionary keys to snake_case.
 class StackedPlotStyle:
     """Represent the style configuration for a StackedBarplot plot, and is inherited by StackedBarplot.
 
@@ -191,6 +189,29 @@ class StackedPlotStyle:
         self.unrendered_changes = True
         self.bar_colours = ColourGradient()
 
+        self.__axis_style = {
+            "xlim": DEFAULT_AXIS_STYLE.x_lim,
+            "step": DEFAULT_AXIS_STYLE.step,
+            "xfontsize": DEFAULT_AXIS_STYLE.x_font_size,
+            "yfontsize": DEFAULT_AXIS_STYLE.y_font_size,
+            "xaxisformat": DEFAULT_AXIS_STYLE.x_axis_format,
+            "xaxisshow": DEFAULT_AXIS_STYLE.x_axis_show,
+            "yaxisshow": DEFAULT_AXIS_STYLE.y_axis_show,
+            "xaxisabs": DEFAULT_AXIS_STYLE.x_axis_abs
+        }
+        self.__axis_title_style = {
+            "xlabel": DEFAULT_AXIS_TITLE_STYLE.x_label,
+            "ylabel": DEFAULT_AXIS_TITLE_STYLE.y_label,
+            "axislabelfontsize": DEFAULT_AXIS_TITLE_STYLE.axis_label_font_size,
+            "axislabelfontcolour": DEFAULT_AXIS_TITLE_STYLE.axis_label_font_colour
+        }
+        self.__bar_style = {
+            "height": DEFAULT_BAR_STYLE.height,
+            "align": DEFAULT_BAR_STYLE.align,
+            "startcolour": DEFAULT_BAR_STYLE.start_colour,
+            "endcolour": DEFAULT_BAR_STYLE.end_colour,
+            "midcolour": DEFAULT_BAR_STYLE.mid_colour
+        }
         self.__bar_font_style = {
             "fontsize": DEFAULT_BAR_FONT_STYLE.size,
             "fontcolour": DEFAULT_BAR_FONT_STYLE.colour,
@@ -202,15 +223,16 @@ class StackedPlotStyle:
             "fontpaddthresh": DEFAULT_BAR_FONT_STYLE.padding_thresh,
             "fontendthreshpadd": DEFAULT_BAR_FONT_STYLE.end_thresh_padd
         }
-
-        self.__bar_style = {
-            "height": DEFAULT_BAR_STYLE.height,
-            "align": DEFAULT_BAR_STYLE.align,
-            "startcolour": DEFAULT_BAR_STYLE.start_colour,
-            "endcolour": DEFAULT_BAR_STYLE.end_colour,
-            "midcolour": DEFAULT_BAR_STYLE.mid_colour
+        self.__fig_style = {
+            "title": DEFAULT_FIG_STYLE.title,
+            "titlefontsize": DEFAULT_FIG_STYLE.title_font_size,
+            "titlecolour": DEFAULT_FIG_STYLE.title_colour,
+            "fontfamily": DEFAULT_FIG_STYLE.font_family,
+            "size": DEFAULT_FIG_STYLE.size,
+            "backgroundcolour": DEFAULT_FIG_STYLE.background_colour,
+            "ordered": DEFAULT_FIG_STYLE.ordered,
+            "spinedisplay": DEFAULT_FIG_STYLE.spine_display
         }
-
         self.__legend_style = {
             "show": DEFAULT_LEGEND_STYLE.show,
             "fontsize": DEFAULT_LEGEND_STYLE.font_size,
@@ -223,48 +245,123 @@ class StackedPlotStyle:
             "markers": [],
             "transform": DEFAULT_LEGEND_STYLE.placement_transform
         }
-
-        self.__fig_style = {
-            "title": DEFAULT_FIG_STYLE.title,
-            "titlefontsize": DEFAULT_FIG_STYLE.title_font_size,
-            "titlecolour": DEFAULT_FIG_STYLE.title_colour,
-            "fontfamily": DEFAULT_FIG_STYLE.font_family,
-            "size": DEFAULT_FIG_STYLE.size,
-            "backgroundcolour": DEFAULT_FIG_STYLE.background_colour,
-            "ordered": DEFAULT_FIG_STYLE.ordered,
-            "spinedisplay": DEFAULT_FIG_STYLE.spine_display
-        }
-
-        self.__axis_title_style = {
-            "xlabel": DEFAULT_AXIS_TITLE_STYLE.x_label,
-            "ylabel": DEFAULT_AXIS_TITLE_STYLE.y_label,
-            "axislabelfontsize": DEFAULT_AXIS_TITLE_STYLE.axis_label_font_size,
-            "axislabelfontcolour": DEFAULT_AXIS_TITLE_STYLE.axis_label_font_colour
-        }
-
         self.__vert_line_style = {
             "show": DEFAULT_VERTLINE_STYLE.show,
             "linestyle": DEFAULT_VERTLINE_STYLE.line_style,
             "colour": DEFAULT_VERTLINE_STYLE.colour,
             "alpha": DEFAULT_VERTLINE_STYLE.alpha,
-            "order": DEFAULT_VERTLINE_STYLE.order
+            "zorder": DEFAULT_VERTLINE_STYLE.z_order
         }
 
-        self.__axis_style = {
-            "xlim": DEFAULT_AXIS_STYLE.x_lim,
-            "step": DEFAULT_AXIS_STYLE.step,
-            "xfontsize": DEFAULT_AXIS_STYLE.x_font_size,
-            "yfontsize": DEFAULT_AXIS_STYLE.y_font_size,
-            "xaxisformat": DEFAULT_AXIS_STYLE.x_axis_format,
-            "xaxisshow": DEFAULT_AXIS_STYLE.x_axis_show,
-            "yaxisshow": DEFAULT_AXIS_STYLE.y_axis_show,
-            "xaxisabs": DEFAULT_AXIS_STYLE.x_axis_abs
-        }
+
+    def get_axis_style(self) -> dict:
+        """Returns dictionary containing style configuration for chart axis."""
+        return self.__axis_style
+
+
+    def set_axis_style(self,
+                        x_lim:tuple[int, int] = None,
+                        step:int = None,
+                        x_font_size:int = None,
+                        y_font_size:int = None,
+                        x_axis_format:str = None,
+                        x_axis_show:bool = None,
+                        y_axis_show:bool = None,
+                        x_axis_abs:bool = None):
+        """Update StackedBarplot axis style configuration.
+
+        Args:
+            x_lim: Left and right xlim in data coordinates, as a tuple.
+            step: Intevals at which x axis ticks should be displayed. Custom x_lim definition
+                is a requirement for step.
+            x_font_size: X axis tick label font size in points or as a string (e.g., 'large').
+            y_font_size: Y axis tick label font size in points or as a string (e.g., 'large').
+            x_axis_format: format()-style format string for x axis ticks. Default '{0}'. Format
+                string can also round to (e.g., 1) decimal place(s) with '{0:.1}'. A suffix can
+                be added using (for example) '{0}%'. See Python documentation for more inforamtion 
+                (https://docs.python.org/3/library/string.html#format-specification-mini-language).
+            x_axis_show: Boolean flag for if the x axis should show (default True).
+            y_axis_show: Boolean flag for if the y axis should show (default True).
+            x_axis_abs: Boolean flag for if negative X axis ticks should remain positive (default False).
+        """
+        if x_lim is not None: self.__axis_style["xlim"] = x_lim
+        if step is not None: self.__axis_style["step"] = step
+        if x_font_size is not None: self.__axis_style["xfontsize"] = x_font_size
+        if y_font_size is not None: self.__axis_style["yfontsize"] = y_font_size
+        if x_axis_format is not None: self.__axis_style["xaxisformat"] = x_axis_format
+        if x_axis_show is not None: self.__axis_style["xaxisshow"] = x_axis_show
+        if y_axis_show is not None: self.__axis_style["yaxisshow"] = y_axis_show
+        if x_axis_abs is not None: self.__axis_style["xaxisabs"] = x_axis_abs
+        self.unrendered_changes = True
+
+
+    def get_axis_title_style(self) -> dict:
+        """Returns dictionary containing style configuration for chart axis labels."""
+        return self.__axis_title_style
+
+
+    def set_axis_title_style(self,
+                            x_label:str = None,
+                            y_label:str = None,
+                            axis_label_font_size:int = None,
+                            axis_label_font_colour:str = None):
+        """Update StackedBarplot axis title style configuration.
+
+        Args:
+            x_label: X axis label. None (default) will result in no label being displayed.
+            y_label: Y axis label. None (default) will result in no label being displayed.
+            axis_label_font_size: Axes label font size in points or as a string (e.g., 'large').
+            axis_label_font_colour: Axes font colour.
+        """
+        if x_label is not None: self.__axis_title_style["xlabel"] = x_label
+        if y_label is not None: self.__axis_title_style["ylabel"] = y_label
+        if axis_label_font_size is not None:
+            self.__axis_title_style["axislabelfontsize"] = axis_label_font_size
+        if axis_label_font_colour is not None:
+            self.__axis_title_style["axislabelfontcolour"] = axis_label_font_colour
+        self.unrendered_changes = True
+
+    def get_bar_style(self) -> dict:
+        """Returns dictionary containing style configuration for chart bars."""
+        return self.__bar_style
+
+
+    def set_bar_style(self,
+                    bar_height:int = None,
+                    align:str = None,
+                    ordered:str = None,
+                    bar_gradient:ColourGradient = None):
+        """Update StackedBarplot bar style configuration.
+
+        Args:
+            bar_height: The height of each bar as a fraction. Selection 1 results on 
+                no whitespace between displayed categories.
+            align: The alignment of bars. Must be either 'left' or 'centre'.
+            ordered: Whether the displayed categories should be ordered. Must be either 
+                None, 'ascending', or 'descending'. Categories are ordered based on sum of 
+                leftmost bars.
+            bar_gradient: ColourGradient object, containing colours matching the number of 
+                series in each category.
+        """
+        if bar_height is not None: self.__bar_style["height"] = bar_height
+        if align is not None:
+            if align not in ["left", "centre"]:
+                raise ValueError("Argument align must be either None, \"left\", or \"centre\".")
+            self.__bar_style["align"] = align
+        if ordered is not None:
+            if ordered not in ["ascending", "descending"]:
+                raise ValueError("Argument ordered must be either None, \"ascending\", or \"descending\".")
+            self.__fig_style["ordered"] = ordered
+        if bar_gradient is not None:
+            if not isinstance(bar_gradient, ColourGradient): raise ValueError("Argument bar_gradient must be of type ColourGradient.")
+            self.bar_colours = bar_gradient
+        self.unrendered_changes = True
 
 
     def get_bar_labels_style(self) -> dict:
         """Returns dictionary containing style configuration for chart bar labels."""
         return self.__bar_font_style
+
 
     #TODO: Start and end bar data label movement is implicit in whether paddthresh is None, thus endthreshpadd is redundant.
     def set_bar_labels_style(self,
@@ -313,73 +410,12 @@ class StackedPlotStyle:
         self.unrendered_changes = True
 
 
-    def get_bar_style(self) -> dict:
-        """Returns dictionary containing style configuration for chart bars."""
-        return self.__bar_style
-
-    def set_bar_style(self,
-                    bar_height:int = None,
-                    align:str = None,
-                    ordered:str = None,
-                    bar_gradient:ColourGradient = None):
-        """Update StackedBarplot bar style configuration.
-
-        Args:
-            bar_height: The height of each bar as a fraction. Selection 1 results on 
-                no whitespace between displayed categories.
-            align: The alignment of bars. Must be either 'left' or 'centre'.
-            ordered: Whether the displayed categories should be ordered. Must be either 
-                None, 'ascending', or 'descending'. Categories are ordered based on sum of 
-                leftmost bars.
-            bar_gradient: ColourGradient object, containing colours matching the number of 
-                series in each category.
-        """
-        if bar_height is not None: self.__bar_style["height"] = bar_height
-        if align is not None:
-            if align not in ["left", "centre"]:
-                raise ValueError("Argument align must be either None, \"left\", or \"centre\".")
-            self.__bar_style["align"] = align
-        if ordered is not None:
-            if ordered not in ["ascending", "descending"]:
-                raise ValueError("Argument ordered must be either None, \"ascending\", or \"descending\".")
-            self.__fig_style["ordered"] = ordered
-        if bar_gradient is not None:
-            if not isinstance(bar_gradient, ColourGradient): raise ValueError("Argument bar_gradient must be of type ColourGradient.")
-            self.bar_colours = bar_gradient
-        self.unrendered_changes = True
-
-
-    def get_axis_title_style(self) -> dict:
-        """Returns dictionary containing style configuration for chart axis labels."""
-        return self.__axis_title_style
-
-    def set_axis_title_style(self,
-                            x_label:str = None,
-                            y_label:str = None,
-                            axis_label_font_size:int = None,
-                            axis_label_font_colour:str = None):
-        """Update StackedBarplot axis title style configuration.
-
-        Args:
-            x_label: X axis label. None (default) will result in no label being displayed.
-            y_label: Y axis label. None (default) will result in no label being displayed.
-            axis_label_font_size: Axes label font size in points or as a string (e.g., 'large').
-            axis_label_font_colour: Axes font colour.
-        """
-        if x_label is not None: self.__axis_title_style["xlabel"] = x_label
-        if y_label is not None: self.__axis_title_style["ylabel"] = y_label
-        if axis_label_font_size is not None:
-            self.__axis_title_style["axislabelfontsize"] = axis_label_font_size
-        if axis_label_font_colour is not None:
-            self.__axis_title_style["axislabelfontcolour"] = axis_label_font_colour
-        self.unrendered_changes = True
-
-
     def get_fig_style(self) -> dict:
         """Returns dictionary containing general style configuration for chart figure."""
         return self.__fig_style
 
-#TODO: Where is ordered param?
+
+    #TODO: Where is ordered param?
     def set_fig_style(self,
                     title:str = None,
                     title_font_size:int = None,
@@ -414,43 +450,11 @@ class StackedPlotStyle:
             self.__fig_style["spinedisplay"] = spine_display
         self.unrendered_changes = True
 
-    def get_vert_line_style(self) -> dict:
-        """Returns dictionary containing style configuration for chart vertical line."""
-        return self.__vert_line_style
-
-    def set_vert_line_style(self,
-                    show:bool = None,
-                    line_style:str = None,
-                    colour:str = None,
-                    alpha:float = None,
-                    order:str = None):
-        """Update StackedBarplot central vertical line style configuration.
-
-        Args:
-            show: A boolean flag for whether the vertical line should be shown,
-                irrespectiev of other vertical line style configurations.
-            line_style: Set the linestyle of the line. Is {'-', '--', '-.', ':', '', ...}.
-            colour: The colour of the line.
-            alpha: The alpha value of the line.
-            order: Whether the vertical line is desplayed in front or behind the plot. Is
-                {"front", "behind"}.
-        """
-        if show is not None: self.__vert_line_style["show"] = show
-        if line_style is not None: self.__vert_line_style["linestyle"] = line_style
-        if colour is not None: self.__vert_line_style["colour"] = colour
-        if alpha is not None:
-            if alpha < 0 or alpha > 1:
-                raise ValueError("Argument alpha must be a float between 0 and 1.")
-            self.__vert_line_style["alpha"] = alpha
-        if order is not None:
-            if order not in ["front", "behind"]:
-                raise ValueError("Argument order must be a string with value of either \"front\" or \"behind\".")
-            self.__vert_line_style["order"] = order
-        self.unrendered_changes = True
 
     def get_legend_style(self) -> dict:
         """Returns dictionary containing style configuration for chart legend."""
         return self.__legend_style
+
 
     def set_legend_markers(self, markers):
         """Update StackedBarplot legend markers.
@@ -461,6 +465,7 @@ class StackedPlotStyle:
         if not isinstance(markers, list) or not all(isinstance(marker, mlines.Line2D) for marker in markers):
             raise ValueError("Argument markers must be a list of matplotlib.lines.Line2D objects.")
         self.__legend_style["markers"] = markers
+
 
     def set_legend_style(self,
                         show:bool = None,
@@ -507,41 +512,38 @@ class StackedPlotStyle:
             self.__legend_style["transform"] = transform
         self.unrendered_changes = True
 
-    def get_axis_style(self) -> dict:
-        """Returns dictionary containing style configuration for chart axis."""
-        return self.__axis_style
 
-    def set_axis_style(self,
-                        x_lim:tuple[int, int] = None,
-                        step:int = None,
-                        x_font_size:int = None,
-                        y_font_size:int = None,
-                        x_axis_format:str = None,
-                        x_axis_show:bool = None,
-                        y_axis_show:bool = None,
-                        x_axis_abs:bool = None):
-        """Update StackedBarplot axis style configuration.
+    def get_vert_line_style(self) -> dict:
+        """Returns dictionary containing style configuration for chart vertical line."""
+        return self.__vert_line_style
+
+
+    def set_vert_line_style(self,
+                    show:bool = None,
+                    line_style:str = None,
+                    colour:str = None,
+                    alpha:float = None,
+                    z_order:str = None):
+        """Update StackedBarplot central vertical line style configuration.
 
         Args:
-            x_lim: Left and right xlim in data coordinates, as a tuple.
-            step: Intevals at which x axis ticks should be displayed. Custom x_lim definition
-                is a requirement for step.
-            x_font_size: X axis tick label font size in points or as a string (e.g., 'large').
-            y_font_size: Y axis tick label font size in points or as a string (e.g., 'large').
-            x_axis_format: format()-style format string for x axis ticks. Default '{0}'. Format
-                string can also round to (e.g., 1) decimal place(s) with '{0:.1}'. A suffix can
-                be added using (for example) '{0}%'. See Python documentation for more inforamtion 
-                (https://docs.python.org/3/library/string.html#format-specification-mini-language).
-            x_axis_show: Boolean flag for if the x axis should show (default True).
-            y_axis_show: Boolean flag for if the y axis should show (default True).
-            x_axis_abs: Boolean flag for if negative X axis ticks should remain positive (default False).
+            show: A boolean flag for whether the vertical line should be shown,
+                irrespectiev of other vertical line style configurations.
+            line_style: Set the linestyle of the line. Is {'-', '--', '-.', ':', '', ...}.
+            colour: The colour of the line.
+            alpha: The alpha value of the line.
+            z_order: Whether the vertical line is displayed in front or behind the plot. Is
+                {"front", "behind"}.
         """
-        if x_lim is not None: self.__axis_style["xlim"] = x_lim
-        if step is not None: self.__axis_style["step"] = step
-        if x_font_size is not None: self.__axis_style["xfontsize"] = x_font_size
-        if y_font_size is not None: self.__axis_style["yfontsize"] = y_font_size
-        if x_axis_format is not None: self.__axis_style["xaxisformat"] = x_axis_format
-        if x_axis_show is not None: self.__axis_style["xaxisshow"] = x_axis_show
-        if y_axis_show is not None: self.__axis_style["yaxisshow"] = y_axis_show
-        if x_axis_abs is not None: self.__axis_style["xaxisabs"] = x_axis_abs
+        if show is not None: self.__vert_line_style["show"] = show
+        if line_style is not None: self.__vert_line_style["linestyle"] = line_style
+        if colour is not None: self.__vert_line_style["colour"] = colour
+        if alpha is not None:
+            if alpha < 0 or alpha > 1:
+                raise ValueError("Argument alpha must be a float between 0 and 1.")
+            self.__vert_line_style["alpha"] = alpha
+        if z_order is not None:
+            if z_order not in ["front", "behind"]:
+                raise ValueError("Argument z_order must be a string with value of either \"front\" or \"behind\".")
+            self.__vert_line_style["zorder"] = z_order
         self.unrendered_changes = True

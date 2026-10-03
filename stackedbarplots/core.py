@@ -314,12 +314,12 @@ class StackedBarplot():
         """Renders the figure given current data and style configuration."""
         self._destroy_fig()
         self._render()
-        self.unrendered_changes = False
+        self.style.unrendered_changes = False
 
     def show(self):
         """Displays all figures currently created in the plt environment."""
 
-        if self.unrendered_changes:
+        if self.style.unrendered_changes:
             warnings.warn("You are attempting to display the figure before style changes " \
             "have been rendered. Beware that render() must be called on the StackedBarplot" \
             "object for any style changes to be displayed.")
@@ -356,7 +356,7 @@ class StackedBarplot():
                 unset is documented under fname.
 
         """
-        if self.unrendered_changes:
+        if self.style.unrendered_changes:
             warnings.warn("You are attempting to save the figure before style changes " \
             "have been rendered. Beware that render() must be called on the StackedBarplot" \
             "object for any style changes to be displayed.")
