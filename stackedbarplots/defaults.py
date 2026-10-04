@@ -25,7 +25,7 @@ __all__ = [
 
 
 
-
+#TODO: Change order of default classes to match order used in StackedPlotStyle class.
 class DEFAULT_BAR_FONT_STYLE:
     """Default style class for bar textual annotations.
     

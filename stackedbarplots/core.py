@@ -24,7 +24,6 @@ __all__ = [
 
 
 class StackedBarplot():
-    #TODO: Fix docstring for StackedBarplot class, as it is now outdated and incomplete.
     """StackedBarplot object represents horizontal stacked barchart with given style.
 
     Each instance of StackedBarplot represents a single active plot. Class methods
@@ -41,7 +40,8 @@ class StackedBarplot():
             on legend.
         category_headings: List of string headings for data categories.
         fig: matplotlib.pyplot.figure object.
-        ax: matplotlib.pyplot.axis object.        
+        ax: matplotlib.pyplot.axis object.
+        style: StackedPlotStyle object representing the style of the current StackedBarplot instance.
     """
 
     def __init__(self, data:dict[str, list[float]], series_labels:list[str]):
