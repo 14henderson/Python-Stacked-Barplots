@@ -299,7 +299,7 @@ class CoreStyleTest(unittest.TestCase):
         test_plot.set_bar_style(bar_height=height,
                                 align=align,
                                 bar_gradient=custom_colours)
-        test_plot.set_fig_style(sorted="descending")
+        test_plot.set_fig_style(sorted="sum-desc")
         test_plot.render()
 
         axis_objs = test_plot.ax.get_children()
