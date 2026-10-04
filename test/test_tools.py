@@ -1,7 +1,7 @@
 # pylint: disable=multiple-statements,too-many-positional-arguments,redefined-outer-name,missing-function-docstring,missing-class-docstring,line-too-long,disable=consider-using-enumerate
 
 import unittest
-from stackedbarplots.tools import cumu1d, cumu2d, ColourGradient
+from stackedbarplots.tools import cumu1d, cumu2d, ColourGradient, ChartDataSorting
 
 class TestCumu1d(unittest.TestCase):
     """Unit tests for method cumu1d() in tools.py."""
@@ -146,6 +146,139 @@ class TestColourGradient(unittest.TestCase):
                          "Error in get_gradient_list() method.")
         self.assertEqual(col_obj.get_normalised_gradient_list(), [(0, 0, 0), (0, 0, 0), (1, 1, 1), (1, 1, 1)],
                          "Error in get_normalised_gradient_list() method.")
+
+
+
+
+class TestChartDataSorting(unittest.TestCase):
+    """Unit tests for chart sorting functionality in ChartDataSorting class in tools.py"""
+
+    def test_by_sum(self):
+        """Unit tests for sort_by_sum() method in ChartDataSorting class in tools.py"""
+        test_data = [[10, 5, 3, 11], [4, 2, 9, 12], [11, 12, 3, 4]]
+        category_headings = ["Category 1", "Category 2", "Category 3"]
+
+        #Test that sorting method creates a deep copy of the data and category headings.
+        sorted_data, sorted_category_headings = ChartDataSorting.by_sum(test_data, category_headings, reverse=False)
+        self.assertEqual(test_data, [[10, 5, 3, 11], [4, 2, 9, 12], [11, 12, 3, 4]], "Error in by_sum() method related to deep copying in ChartDataSorting class in tools.py")
+        self.assertEqual(category_headings, ["Category 1", "Category 2", "Category 3"], "Error in by_sum() method related to deep copying in ChartDataSorting class in tools.py")
+
+        #Test for sorting with integers
+        sorted_data, sorted_category_headings = ChartDataSorting.by_sum(test_data, category_headings, reverse=False)
+        self.assertEqual(sorted_data, [[4, 2, 9, 12], [10, 5, 3, 11], [11, 12, 3, 4]], "Error in by_sum() method in ChartDataSorting class in tools.py")
+        self.assertEqual(sorted_category_headings, ["Category 2", "Category 1", "Category 3"], "Error in by_sum() method in ChartDataSorting class in tools.py")
+
+        sorted_data, sorted_category_headings = ChartDataSorting.by_sum(test_data, category_headings, reverse=True)
+        self.assertEqual(sorted_data, [[11, 12, 3, 4], [10, 5, 3, 11], [4, 2, 9, 12]], "Error in by_sum() method in ChartDataSorting class in tools.py")
+        self.assertEqual(sorted_category_headings, ["Category 3", "Category 1", "Category 2"], "Error in by_sum() method in ChartDataSorting class in tools.py")
+
+        test_data = [[1, .5, .3, 1.1], [.4, .2, .9, 1.2], [1.1, 1.2, .3, .4]]
+        category_headings = ["Category 1", "Category 2", "Category 3"]
+
+        #Test for sorting with floats
+        sorted_data, sorted_category_headings = ChartDataSorting.by_sum(test_data, category_headings, reverse=False)
+        self.assertEqual(sorted_data, [[.4, .2, .9, 1.2], [1, .5, .3, 1.1], [1.1, 1.2, .3, .4]], "Error in by_sum() method with decimal values in ChartDataSorting class in tools.py")
+        self.assertEqual(sorted_category_headings, ["Category 2", "Category 1", "Category 3"], "Error in by_sum() method in ChartDataSorting class with decimal values in tools.py")
+
+        sorted_data, sorted_category_headings = ChartDataSorting.by_sum(test_data, category_headings, reverse=True)
+        self.assertEqual(sorted_data, [[1.1, 1.2, .3, .4], [1, .5, .3, 1.1], [.4, .2, .9, 1.2]], "Error in by_sum() method in ChartDataSorting class with decimal values in tools.py")
+        self.assertEqual(sorted_category_headings, ["Category 3", "Category 1", "Category 2"], "Error in by_sum() method in ChartDataSorting class with decimal values in tools.py")
+
+
+    def test_by_average(self):
+        """Unit tests for sort_by_average() method in ChartDataSorting class in tools.py"""
+        test_data = [[10, 5, 3, 11], [4, 2, 9, 12], [11, 12, 3, 4]]
+        category_headings = ["Category 1", "Category 2", "Category 3"]
+
+        #Test that sorting method creates a deep copy of the data and category headings.
+        sorted_data, sorted_category_headings = ChartDataSorting.by_average(test_data, category_headings, reverse=False)
+        self.assertEqual(test_data, [[10, 5, 3, 11], [4, 2, 9, 12], [11, 12, 3, 4]], "Error in by_average() method related to deep copying in ChartDataSorting class in tools.py")
+        self.assertEqual(category_headings, ["Category 1", "Category 2", "Category 3"], "Error in by_average() method related to deep copying in ChartDataSorting class in tools.py")
+
+        #Test for sorting with integers
+        sorted_data, sorted_category_headings = ChartDataSorting.by_average(test_data, category_headings, reverse=False)
+        self.assertEqual(sorted_data, [[4, 2, 9, 12], [10, 5, 3, 11], [11, 12, 3, 4]], "Error in by_average() method in ChartDataSorting class in tools.py")
+        self.assertEqual(sorted_category_headings, ["Category 2", "Category 1", "Category 3"], "Error in by_average() method in ChartDataSorting class in tools.py")
+
+        sorted_data, sorted_category_headings = ChartDataSorting.by_average(test_data, category_headings, reverse=True)
+        self.assertEqual(sorted_data, [[11, 12, 3, 4], [10, 5, 3, 11], [4, 2, 9, 12]], "Error in by_average() method in ChartDataSorting class in tools.py")
+        self.assertEqual(sorted_category_headings, ["Category 3", "Category 1", "Category 2"], "Error in by_average() method in ChartDataSorting class in tools.py")
+
+        test_data = [[1, .5, .3, 1.1], [.4, .2, .9, 1.2], [1.1, 1.2, .3, .4]]
+        category_headings = ["Category 1", "Category 2", "Category 3"]
+
+        #Test for sorting with floats
+        sorted_data, sorted_category_headings = ChartDataSorting.by_average(test_data, category_headings, reverse=False)
+        self.assertEqual(sorted_data, [[.4, .2, .9, 1.2], [1, .5, .3, 1.1], [1.1, 1.2, .3, .4]], "Error in by_average() method with decimal values in ChartDataSorting class in tools.py")
+        self.assertEqual(sorted_category_headings, ["Category 2", "Category 1", "Category 3"], "Error in by_average() method in ChartDataSorting class with decimal values in tools.py")
+
+        sorted_data, sorted_category_headings = ChartDataSorting.by_average(test_data, category_headings, reverse=True)
+        self.assertEqual(sorted_data, [[1.1, 1.2, .3, .4], [1, .5, .3, 1.1], [.4, .2, .9, 1.2]], "Error in by_average() method in ChartDataSorting class with decimal values in tools.py")
+        self.assertEqual(sorted_category_headings, ["Category 3", "Category 1", "Category 2"], "Error in by_average() method in ChartDataSorting class with decimal values in tools.py")
+
+
+    def test_by_left_half(self):
+        """Unit tests for sort_by_left_half() method in ChartDataSorting class in tools.py"""
+        test_data = [[10, 5, 3, 11], [4, 2, 9, 12], [11, 12, 3, 4]]
+        category_headings = ["Category 1", "Category 2", "Category 3"]
+
+        #Test that sorting method creates a deep copy of the data and category headings.
+        sorted_data, sorted_category_headings = ChartDataSorting.by_left_half(test_data, category_headings, reverse=False)
+        self.assertEqual(test_data, [[10, 5, 3, 11], [4, 2, 9, 12], [11, 12, 3, 4]], "Error in by_left_half() method related to deep copying in ChartDataSorting class in tools.py")
+        self.assertEqual(category_headings, ["Category 1", "Category 2", "Category 3"], "Error in by_left_half() method related to deep copying in ChartDataSorting class in tools.py")
+
+        #Test for sorting with integers
+        sorted_data, sorted_category_headings = ChartDataSorting.by_left_half(test_data, category_headings, reverse=False)
+        self.assertEqual(sorted_data, [[4, 2, 9, 12], [10, 5, 3, 11], [11, 12, 3, 4]], "Error in by_left_half() method in ChartDataSorting class in tools.py")
+        self.assertEqual(sorted_category_headings, ["Category 2", "Category 1", "Category 3"], "Error in by_left_half() method in ChartDataSorting class in tools.py")
+
+        sorted_data, sorted_category_headings = ChartDataSorting.by_left_half(test_data, category_headings, reverse=True)
+        self.assertEqual(sorted_data, [[11, 12, 3, 4], [10, 5, 3, 11], [4, 2, 9, 12]], "Error in by_left_half() method in ChartDataSorting class in tools.py")
+        self.assertEqual(sorted_category_headings, ["Category 3", "Category 1", "Category 2"], "Error in by_left_half() method in ChartDataSorting class in tools.py")
+
+        test_data = [[1, .5, .3, 1.1], [.4, .2, .9, 1.2], [1.1, 1.2, .3, .4]]
+        category_headings = ["Category 1", "Category 2", "Category 3"]
+
+        #Test for sorting with floats
+        sorted_data, sorted_category_headings = ChartDataSorting.by_left_half(test_data, category_headings, reverse=False)
+        self.assertEqual(sorted_data, [[.4, .2, .9, 1.2], [1, .5, .3, 1.1], [1.1, 1.2, .3, .4]], "Error in by_left_half() method with decimal values in ChartDataSorting class in tools.py")
+        self.assertEqual(sorted_category_headings, ["Category 2", "Category 1", "Category 3"], "Error in by_left_half() method in ChartDataSorting class with decimal values in tools.py")
+
+        sorted_data, sorted_category_headings = ChartDataSorting.by_left_half(test_data, category_headings, reverse=True)
+        self.assertEqual(sorted_data, [[1.1, 1.2, .3, .4], [1, .5, .3, 1.1], [.4, .2, .9, 1.2]], "Error in by_left_half() method in ChartDataSorting class with decimal values in tools.py")
+        self.assertEqual(sorted_category_headings, ["Category 3", "Category 1", "Category 2"], "Error in by_left_half() method in ChartDataSorting class with decimal values in tools.py")
+
+
+    def test_by_right_half(self):
+        """Unit tests for sort_by_right_half() method in ChartDataSorting class in tools.py"""
+        test_data = [[10, 5, 3, 11], [4, 2, 9, 12], [11, 12, 3, 4]]
+        category_headings = ["Category 1", "Category 2", "Category 3"]
+
+        #Test that sorting method creates a deep copy of the data and category headings.
+        sorted_data, sorted_category_headings = ChartDataSorting.by_right_half(test_data, category_headings, reverse=False)
+        self.assertEqual(test_data, [[10, 5, 3, 11], [4, 2, 9, 12], [11, 12, 3, 4]], "Error in by_right_half() method related to deep copying in ChartDataSorting class in tools.py")
+        self.assertEqual(category_headings, ["Category 1", "Category 2", "Category 3"], "Error in by_right_half() method related to deep copying in ChartDataSorting class in tools.py")
+
+        #Test for sorting with integers
+        sorted_data, sorted_category_headings = ChartDataSorting.by_right_half(test_data, category_headings, reverse=False)
+        self.assertEqual(sorted_data, [[11, 12, 3, 4], [10, 5, 3, 11], [4, 2, 9, 12]], "Error in by_right_half() method in ChartDataSorting class in tools.py")
+        self.assertEqual(sorted_category_headings, ["Category 3", "Category 1", "Category 2"], "Error in by_right_half() method in ChartDataSorting class in tools.py")
+
+        sorted_data, sorted_category_headings = ChartDataSorting.by_right_half(test_data, category_headings, reverse=True)
+        self.assertEqual(sorted_data, [[4, 2, 9, 12], [10, 5, 3, 11], [11, 12, 3, 4]], "Error in by_right_half() method in ChartDataSorting class in tools.py")
+        self.assertEqual(sorted_category_headings, ["Category 2", "Category 1", "Category 3"], "Error in by_right_half() method in ChartDataSorting class in tools.py")
+
+        test_data = [[1, .5, .3, 1.1], [.4, .2, .9, 1.2], [1.1, 1.2, .3, .4]]
+        category_headings = ["Category 1", "Category 2", "Category 3"]
+
+        #Test for sorting with floats
+        sorted_data, sorted_category_headings = ChartDataSorting.by_right_half(test_data, category_headings, reverse=False)
+        self.assertEqual(sorted_data, [[1.1, 1.2, .3, .4], [1.0, .5, .3, 1.1], [.4, .2, .9, 1.2]], "Error in by_right_half() method with decimal values in ChartDataSorting class in tools.py")
+        self.assertEqual(sorted_category_headings, ["Category 3", "Category 1", "Category 2"], "Error in by_right_half() method in ChartDataSorting class with decimal values in tools.py")
+
+        sorted_data, sorted_category_headings = ChartDataSorting.by_right_half(test_data, category_headings, reverse=True)
+        self.assertEqual(sorted_data, [[.4, .2, .9, 1.2], [1.0, .5, .3, 1.1], [1.1, 1.2, .3, .4]], "Error in by_right_half() method in ChartDataSorting class with decimal values in tools.py")
+        self.assertEqual(sorted_category_headings, ["Category 2", "Category 1", "Category 3"], "Error in by_right_half() method in ChartDataSorting class with decimal values in tools.py")
 
 
 

@@ -25,7 +25,7 @@ __all__ = [
 
 
 
-
+#TODO: Change order of default classes to match order used in StackedPlotStyle class.
 class DEFAULT_BAR_FONT_STYLE:
     """Default style class for bar textual annotations.
     
@@ -81,7 +81,7 @@ class DEFAULT_FIG_STYLE:
     title_colour = "black"
     font_family:str = "sans-serif"
     background_colour = "#ffffff"
-    sorted:str = None
+    sorted:str = None #sorted=None, sum-asc, sum-desc, avg-asc, avg-desc, lhlf-asc, lhlf-desc, rhlf-asc, rhlf-desc
     spine_display:tuple[bool, bool, bool, bool] = (False, False, False, True) #left, top, right, bottom
 
 
@@ -427,9 +427,13 @@ class StackedPlotStyle:
             fig_size: Tuple of integers representing the width and height of the figure.
             background_colour: The background colour of the figure.
             sorted: Whether the displayed categories should be ordered. Must be either 
-                None, 'ascending', or 'descending'. Categories are ordered based on sum of
-                leftmost bars.
-            spine_display: Tuple of booleans representing the four figure spines. Ordered as (left, top, right, bottom).
+                None, 'sum-asc', 'sum-desc', 'avg-asc', 'avg-desc', 'lhlf-asc', 'lhlf-desc', 'rhlf-asc', or 'rhlf-desc'. 
+                Sum denotes the total value of the category, avg denotes the average value, lhlf denotes the sum of the left
+                half of the category, and rhlf denotes the sum of the right half of the category.
+                Each of these can be sorted in ascending or descending order. None (default) 
+                indicates no sorting.
+            spine_display: Tuple of booleans representing the four figure spines. Ordered as 
+                (left, top, right, bottom).
         """
         if title is not None: self.__fig_style["title"] = title
         if title_font_size is not None: self.__fig_style["titlefontsize"] = title_font_size
@@ -440,9 +444,9 @@ class StackedPlotStyle:
                 raise ValueError("Argument fig_size must be a tuple of two integers representing the width and height of the figure.")
             self.__fig_style["size"] = fig_size
         if background_colour is not None: self.__fig_style["backgroundcolour"] = background_colour
-        if sorted is not None:
-            if sorted not in [None, "ascending", "descending"]:
-                raise ValueError("Argument sorted must be either None, 'ascending', or 'descending'.")
+        if sorted is not None: #sum-asc, sum-desc, avg-asc, avg-desc, lhlf-asc, lhlf-desc, rhlf-asc, rhlf-desc
+            if sorted not in [None, "sum-asc", "sum-desc", "avg-asc", "avg-desc", "lhlf-asc", "lhlf-desc", "rhlf-asc", "rhlf-desc"]:
+                raise ValueError("Argument sorted must be either None, sum-asc, sum-desc, avg-asc, avg-desc, lhlf-asc, lhlf-desc, rhlf-asc, or rhlf-desc.")
             self.__fig_style["sorted"] = sorted
         if spine_display is not None:
             if not isinstance(spine_display, tuple) or len(spine_display) != 4:

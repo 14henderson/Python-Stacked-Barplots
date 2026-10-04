@@ -12,7 +12,7 @@ import warnings
 import matplotlib.pyplot as plt
 import matplotlib.lines as mlines
 
-from .tools import cumu2d
+from .tools import cumu2d, ChartDataSorting
 from .defaults import StackedPlotStyle, DEFAULT_LEGEND_STYLE, DEFAULT_BAR_STYLE
 
 
@@ -24,7 +24,6 @@ __all__ = [
 
 
 class StackedBarplot():
-    #TODO: Fix docstring for StackedBarplot class, as it is now outdated and incomplete.
     """StackedBarplot object represents horizontal stacked barchart with given style.
 
     Each instance of StackedBarplot represents a single active plot. Class methods
@@ -41,7 +40,8 @@ class StackedBarplot():
             on legend.
         category_headings: List of string headings for data categories.
         fig: matplotlib.pyplot.figure object.
-        ax: matplotlib.pyplot.axis object.        
+        ax: matplotlib.pyplot.axis object.
+        style: StackedPlotStyle object representing the style of the current StackedBarplot instance.
     """
 
     def __init__(self, data:dict[str, list[float]], series_labels:list[str]):
@@ -177,16 +177,23 @@ class StackedBarplot():
         middle_index = len(self.data[0]) // 2
 
         if self.get_fig_style()["sorted"] is not None:
-            if self.get_fig_style()["sorted"] == "ascending": toreverse = True
-            elif self.get_fig_style()["sorted"] == "descending": toreverse = False
-            else: toreverse = False
-            if self.get_bar_style()["align"] == "left":
-                self.category_headings, self.data = zip(*sorted(zip(self.category_headings, self.data), key=lambda category: sum(category[1]), reverse=toreverse)) #Making sure the labels get ordered with the data
-            elif self.get_bar_style()["align"] == "centre":
-                if len(self.data[0]) % 2 == 0:
-                    self.category_headings, self.data = zip(*sorted(zip(self.category_headings, self.data),key=lambda category: sum(category[1][:middle_index]),reverse=toreverse))
-                else:
-                    self.category_headings, self.data = zip(*sorted(zip(self.category_headings, self.data),key=lambda category: sum(category[1][:middle_index]) + category[1][middle_index]/2,reverse=toreverse))
+            if self.get_fig_style()["sorted"] == "sum-asc":
+                self.data, self.category_headings = ChartDataSorting.by_sum(self.data, self.category_headings, reverse=False)
+            elif self.get_fig_style()["sorted"] == "sum-desc":
+                self.data, self.category_headings = ChartDataSorting.by_sum(self.data, self.category_headings, reverse=True)
+            elif self.get_fig_style()["sorted"] == "avg-asc":
+                self.data, self.category_headings = ChartDataSorting.by_average(self.data, self.category_headings, reverse=False)
+            elif self.get_fig_style()["sorted"] == "avg-desc":
+                self.data, self.category_headings = ChartDataSorting.by_average(self.data, self.category_headings, reverse=True)
+            elif self.get_fig_style()["sorted"] == "lhlf-asc":
+                self.data, self.category_headings = ChartDataSorting.by_left_half(self.data, self.category_headings, reverse=False)
+            elif self.get_fig_style()["sorted"] == "lhlf-desc":
+                self.data, self.category_headings = ChartDataSorting.by_left_half(self.data, self.category_headings, reverse=True)
+            elif self.get_fig_style()["sorted"] == "rhlf-asc":
+                self.data, self.category_headings = ChartDataSorting.by_right_half(self.data, self.category_headings, reverse=False)
+            elif self.get_fig_style()["sorted"] == "rhlf-desc":
+                self.data, self.category_headings = ChartDataSorting.by_right_half(self.data, self.category_headings, reverse=True)
+
         data_cum = cumu2d(self.data)
 
         offsets = [0]*len(self.data)

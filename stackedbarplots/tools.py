@@ -46,6 +46,91 @@ def cumu2d(data:list[list[float]]) -> list[list[float]]:
 
 
 
+class ChartDataSorting():
+    """Class holds static methods for the different types of sorting that can be applied to
+    the data in a StackedBarplot object, as defined in the StackedPlotStyle class. The 
+    StackedBarplot object data can be sorted by (a) the sum of the category, (b) the average 
+    value of the category, (c) the sum of the left half of the category, or (d) the sum of 
+    the right half of the category. Each of these can be sorted in ascending or descending order. 
+    Static methods in this class are called from the _plot_bars() method in the StackedBarplot 
+    class."""
+
+    @staticmethod
+    def by_sum(data:list[list[float]], category_headings:list[str], reverse:bool = False) -> tuple[list[list[float]], list[str]]:
+        """Sorts the data and category headings by the sum of each category.
+
+        Args:
+            data: 2-d list of floats representing the data to be plotted.
+            category_headings: List of strings representing the category headings.
+            reverse: Boolean indicating whether the data should be sorted in ascending 
+                or descending order (False indicates ascending order)."""
+        sorted_data, sorted_category_headings = zip(*sorted(zip(data, category_headings), key=lambda category: sum(category[0]), reverse=reverse))
+        return list(sorted_data), list(sorted_category_headings)
+
+
+    @staticmethod
+    def by_average(data:list[list[float]], category_headings:list[str], reverse:bool = False) -> tuple[list[list[float]], list[str]]:
+        """Sorts the data and category headings by the average value of each category.
+
+        Args:
+            data: 2-d list of floats representing the data to be plotted.
+            category_headings: List of strings representing the category headings.
+            reverse: Boolean indicating whether the data should be sorted in ascending 
+                or descending order (False indicates ascending order).
+
+        Returns:
+            Tuple containing the sorted data and category headings.
+        """
+        sorted_data, sorted_category_headings = zip(*sorted(zip(data, category_headings), key=lambda category: sum(category[0])/len(category[0]), reverse=reverse))
+        return list(sorted_data), list(sorted_category_headings)
+
+
+    @staticmethod
+    def by_left_half(data:list[list[float]], category_headings:list[str], reverse:bool = False) -> tuple[list[list[float]], list[str]]:
+        """Sorts the data and category headings by the sum of the left half of each category.
+        
+        Args:
+            data: 2-d list of floats representing the data to be plotted.
+            category_headings: List of strings representing the category headings.
+            reverse: Boolean indicating whether the data should be sorted in ascending 
+                or descending order (False indicates ascending order).
+
+        Returns:
+            Tuple containing the sorted data and category headings.
+        """
+        middle_index = len(data[0]) // 2
+
+        if len(data[0]) % 2 == 0:
+            sorted_data, sorted_category_headings = zip(*sorted(zip(data, category_headings), key=lambda category: sum(category[0][:middle_index]), reverse=reverse))
+        else:
+            sorted_data, sorted_category_headings = zip(*sorted(zip(data, category_headings), key=lambda category: sum(category[0][:middle_index])+category[0][middle_index]/2, reverse=reverse))
+        return list(sorted_data), list(sorted_category_headings)
+
+
+    @staticmethod
+    def by_right_half(data:list[list[float]], category_headings:list[str], reverse:bool = False) -> tuple[list[list[float]], list[str]]:
+        """Sorts the data and category headings by the sum of the right half of each category.
+        
+        Args:
+            data: 2-d list of floats representing the data to be plotted.
+            category_headings: List of strings representing the category headings.
+            reverse: Boolean indicating whether the data should be sorted in ascending 
+                or descending order (False indicates ascending order).
+
+        Returns:
+            Tuple containing the sorted data and category headings.
+        """
+        middle_index = len(data[0]) // 2
+
+        if len(data[0]) % 2 == 0:
+            sorted_data, sorted_category_headings = zip(*sorted(zip(data, category_headings), key=lambda category: sum(category[0][middle_index:]), reverse=reverse))
+        else:
+            sorted_data, sorted_category_headings = zip(*sorted(zip(data, category_headings), key=lambda category: sum(category[0][middle_index:])+category[0][len(category[0])//2]/2, reverse=reverse))
+        return list(sorted_data), list(sorted_category_headings)
+
+
+
+
 class ColourGradient():
     """ColourGradient objects represent the colour gradients for one StackedBarplot object.
     

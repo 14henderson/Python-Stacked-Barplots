@@ -61,9 +61,9 @@ class CoreClassTest(unittest.TestCase):
         test_plot = StackedBarplot(data=results, series_labels=series_labels)
 
         for alignment in ["left", "centre"]:
-            for order in [None, "ascending", "descending"]:
+            for sort in [None, "sum-asc", "sum-desc", "avg-asc", "avg-desc", "lhlf-asc", "lhlf-desc", "rhlf-asc", "rhlf-desc"]:
                 test_plot.set_bar_style(align=alignment)
-                test_plot.set_fig_style(sorted=order)
+                test_plot.set_fig_style(sorted=sort)
                 test_plot.render()
 
         #With odd number of series
@@ -73,9 +73,9 @@ class CoreClassTest(unittest.TestCase):
         test_plot = StackedBarplot(data=results, series_labels=series_labels)
 
         for alignment in ["left", "centre"]:
-            for order in [None, "ascending", "descending"]:
+            for sort in [None, "sum-asc", "sum-desc", "avg-asc", "avg-desc", "lhlf-asc", "lhlf-desc", "rhlf-asc", "rhlf-desc"]:
                 test_plot.set_bar_style(align=alignment)
-                test_plot.set_fig_style(sorted=order)
+                test_plot.set_fig_style(sorted=sort)
                 test_plot.render()
 
         #Test other misc settings
@@ -299,7 +299,7 @@ class CoreStyleTest(unittest.TestCase):
         test_plot.set_bar_style(bar_height=height,
                                 align=align,
                                 bar_gradient=custom_colours)
-        test_plot.set_fig_style(sorted="descending")
+        test_plot.set_fig_style(sorted="sum-desc")
         test_plot.render()
 
         axis_objs = test_plot.ax.get_children()
