@@ -236,33 +236,23 @@ class StackedBarplot():
     def _plot_bar_labels(self):
         """Internal method. Renders plot bar value annotations according to stored style configuration."""
 
-        for col_index, c in enumerate(self.ax.containers):
-            bar_labels = []
-
-            #Formatting bar value labels
-            for val in c.datavalues:
-                display = True
-                if self.get_bar_labels_style()["fontdisplaythresh"][0] is not None: #Threshold for displaying labels, if value is below or above given threshold, don't display label
-                    if val <= self.get_bar_labels_style()["fontdisplaythresh"][0]: display = False
-                if self.get_bar_labels_style()["fontdisplaythresh"][1] is not None:
-                    if val >= self.get_bar_labels_style()["fontdisplaythresh"][1]: display = False
-                if display: bar_labels.append(str.format(self.get_bar_labels_style()["fontformat"], val))
-                else: bar_labels.append("")
+        for series_index, c in enumerate(self.ax.containers):
 
             #Positioning bar value labels
-            for row_index, (rect, text) in enumerate(zip(c.patches, bar_labels)):
-                ha, va = "center", "center" #Point on the annotation object that is aligned to the given coordinates
+            for category_index, (rect, val) in enumerate(zip(c.patches, c.datavalues)):
+                text = str.format(self.get_bar_labels_style()["fontformat"], val)
+
+                ha = "center" #Point on the annotation object that is aligned to the given coordinates. Horizontal can change depending on whether annotations are left or right aligned.
                 y = rect.get_y() + rect.get_height() / 2 #Center annotation object to the bar vertically
                 x = None #To be set based on alignment and threshold settings
 
                 #Threshold for first and last bar on a row; if value is below threshold, move label to outside of bar
-                if col_index == 0 and self.get_bar_labels_style()["fontendsexpelthresh"] is not None and c.datavalues[row_index] <= self.get_bar_labels_style()["fontendsexpelthresh"]: #Leftmost bar label
+                if series_index == 0 and self.get_bar_labels_style()["fontendsexpelthresh"] is not None and c.datavalues[category_index] <= self.get_bar_labels_style()["fontendsexpelthresh"]: #Leftmost bar label
                     ha = "right"
                     x = rect.get_x() - self.get_bar_labels_style()["fontpadd"]
-                elif col_index == len(self.data[0])-1 and self.get_bar_labels_style()["fontendsexpelthresh"] is not None and c.datavalues[row_index] <= self.get_bar_labels_style()["fontendsexpelthresh"]:
+                elif series_index == len(self.data[0])-1 and self.get_bar_labels_style()["fontendsexpelthresh"] is not None and c.datavalues[category_index] <= self.get_bar_labels_style()["fontendsexpelthresh"]:
                     ha = "left"
                     x = rect.get_x() + rect.get_width() + self.get_bar_labels_style()["fontpadd"]
-
                 #Normal alignment for all other bars, or if no outside-of-bar threshold is set
                 elif self.get_bar_labels_style()["fontalign"] == "centre":
                     x = rect.get_x() + rect.get_width() / 2
@@ -282,15 +272,25 @@ class StackedBarplot():
                     else: fontcolour = "black"
                 else: fontcolour = self.get_bar_labels_style()["fontcolour"]
 
-                self.ax.annotate(
+                an = self.ax.annotate(
                     text,
                     (x, y),
                     textcoords="offset points",
                     xytext=(0, 0),
-                    ha=ha, va=va,
+                    ha=ha, va="center",
                     fontsize=self.get_bar_labels_style()["fontsize"],
                     color=fontcolour,
                     fontfamily=self.get_fig_style()["fontfamily"])
+
+                #Hide bar data annotation if squeezed and style dictates it is to be hidden.
+                if self.get_bar_labels_style()["fonthidesqueezed"] is not None:
+                    font_width = abs(an.get_window_extent().width)
+                    bar_width = abs(rect.get_window_extent().width)
+
+                    if self.get_bar_labels_style()["fonthidesqueezed"] == "all" and (font_width+3) > bar_width: #3 of padding added to font.
+                        an.set_visible(False)
+                    elif self.get_bar_labels_style()["fonthidesqueezed"] == "inner-only" and (series_index != 0 and series_index != len(self.data[0])-1) and (font_width+3) > bar_width: #3 of padding added to font.
+                        an.set_visible(False)
 
         self.ax.invert_yaxis() #Required for some reason?
 

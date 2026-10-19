@@ -44,8 +44,8 @@ class DEFAULT_BAR_FONT_STYLE:
     colour = "black"
     format:str = "{0:.1f}"
     align:str = "centre"
-    padding:float = 1.5
-    display_thresh:tuple[float, float] = (0, None)
+    padding:float = 1.5 #TODO: Needs to be window coords system rather than data coords system.
+    hide_squeezed:str = "inner-only" #Can be None, "all", "inner-only"
     colour_invert:bool = False
     ends_expel_thresh:float = None
 
@@ -218,7 +218,7 @@ class StackedPlotStyle:
             "fontalign": DEFAULT_BAR_FONT_STYLE.align,
             "fontpadd": DEFAULT_BAR_FONT_STYLE.padding,
             "fontcolourinvert": DEFAULT_BAR_FONT_STYLE.colour_invert,
-            "fontdisplaythresh": DEFAULT_BAR_FONT_STYLE.display_thresh,
+            "fonthidesqueezed": DEFAULT_BAR_FONT_STYLE.hide_squeezed,
             "fontendsexpelthresh": DEFAULT_BAR_FONT_STYLE.ends_expel_thresh
             #"fontpaddthresh": DEFAULT_BAR_FONT_STYLE.padding_thresh,
             #"fontendthreshpadd": DEFAULT_BAR_FONT_STYLE.end_thresh_padd
@@ -361,7 +361,7 @@ class StackedPlotStyle:
                 font_colour:str = None,
                 font_colour_invert:bool = False,
                 bar_value_format:str = None,
-                display_thresh:tuple[float, float] = (None, None),
+                hide_squeezed:str = None,
                 ends_expel_thresh:float = None,
                 align:str=None,
                 padding:float = None):
@@ -376,8 +376,10 @@ class StackedPlotStyle:
                 string can also round to (e.g., 1) decimal place(s) with '{0:.1}'. A suffix can
                 be added using (for example) '{0}%'. See Python documentation for more inforamtion 
                 (https://docs.python.org/3/library/string.html#format-specification-mini-language).
-            display_thresh: Tuple of floats representing optional minimum and maximum display
-                thresholds. Data labels below minimum or above maximum thresholds will not be displayed.
+            hide_squeezed: Whether data labels that overlap their bar should be hidden (e.g., for
+                very small bars). Can be None (default), "all" (hide all squeezed data labels), or 
+                "inner-only", which ignores data labels for left-most or right-most bars in a category 
+                (useful if these data labels are moved outside of the bar).
             ends_expel_thresh: Threshold for whether data labels on start or end bars of categories
                 should be moved to outside the bar for better clarity (i.e., to the left or right of the
                 while category bars). When set, data labels on start or end bars will be moved outside 
@@ -389,7 +391,7 @@ class StackedPlotStyle:
         if font_colour is not None: self.__bar_font_style["fontcolour"] = font_colour
         if font_colour_invert is not None: self.__bar_font_style["fontcolourinvert"] = font_colour_invert
         if bar_value_format is not None: self.__bar_font_style["fontformat"] = bar_value_format
-        if display_thresh is not None: self.__bar_font_style["fontdisplaythresh"] = display_thresh
+        if hide_squeezed is not None: self.__bar_font_style["fonthidesqueezed"] = hide_squeezed
         if ends_expel_thresh is not None: self.__bar_font_style["fontendsexpelthresh"] = ends_expel_thresh
         if align is not None:
             if align not in ["left", "centre", "right"]:
