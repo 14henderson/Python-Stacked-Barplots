@@ -47,7 +47,7 @@ class DEFAULT_BAR_FONT_STYLE:
     padding:float = 5 #In display coordinates
     hide_squeezed:str = "inner-only" #Can be None, "all", "inner-only"
     colour_invert:bool = False
-    ends_expel_thresh:float = None
+    ends_expel_thresh:float = None #Change to 'None', "auto"
 
 
 class DEFAULT_BAR_STYLE:
@@ -391,7 +391,9 @@ class StackedPlotStyle:
         if font_colour is not None: self.__bar_font_style["fontcolour"] = font_colour
         if font_colour_invert is not None: self.__bar_font_style["fontcolourinvert"] = font_colour_invert
         if bar_value_format is not None: self.__bar_font_style["fontformat"] = bar_value_format
-        if hide_squeezed is not None: self.__bar_font_style["fonthidesqueezed"] = hide_squeezed
+        if hide_squeezed not in [None, "all", "inner-only"]:
+            raise ValueError("Argument hide-squeezed must be either None, \"all\", or \"inner-only\".")
+        self.__bar_font_style["fonthidesqueezed"] = hide_squeezed
         if ends_expel_thresh is not None: self.__bar_font_style["fontendsexpelthresh"] = ends_expel_thresh
         if align is not None:
             if align not in ["left", "centre", "right"]:

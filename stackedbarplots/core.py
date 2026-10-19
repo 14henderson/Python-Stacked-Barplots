@@ -257,6 +257,7 @@ class StackedBarplot():
                 elif series_index == len(self.data[0])-1 and self.get_bar_labels_style()["fontendsexpelthresh"] is not None and c.datavalues[category_index] <= self.get_bar_labels_style()["fontendsexpelthresh"]:
                     ha = "left"
                     x = rect.get_x() + rect.get_width() + padding_data_coords
+
                 #Normal alignment for all other bars, or if no outside-of-bar threshold is set
                 elif self.get_bar_labels_style()["fontalign"] == "centre":
                     x = rect.get_x() + rect.get_width() / 2
@@ -284,16 +285,21 @@ class StackedBarplot():
                     ha=ha, va="center",
                     fontsize=self.get_bar_labels_style()["fontsize"],
                     color=fontcolour,
-                    fontfamily=self.get_fig_style()["fontfamily"])
-
+                    fontfamily=self.get_fig_style()["fontfamily"],
+                    annotation_clip=False
+                    )
+                self.fig.canvas.draw()
                 #Hide bar data annotation if squeezed and style dictates it is to be hidden.
                 if self.get_bar_labels_style()["fonthidesqueezed"] is not None:
-                    font_width = abs(an.get_window_extent().width)
+
+                    #3 of padding added to font. If font isn't centered, font padding also needs to be to font width when calculating overlap with bar.
+                    if self.get_bar_labels_style()["fontalign"] != "centre": font_width = abs(an.get_window_extent().width) + self.get_bar_labels_style()["fontpadd"] + 3
+                    else: font_width = abs(an.get_window_extent().width) + 3
                     bar_width = abs(rect.get_window_extent().width)
 
-                    if self.get_bar_labels_style()["fonthidesqueezed"] == "all" and (font_width+3) > bar_width: #3 of padding added to font.
+                    if self.get_bar_labels_style()["fonthidesqueezed"] == "all" and font_width > bar_width:
                         an.set_visible(False)
-                    elif self.get_bar_labels_style()["fonthidesqueezed"] == "inner-only" and (series_index != 0 and series_index != len(self.data[0])-1) and (font_width+3) > bar_width: #3 of padding added to font.
+                    elif self.get_bar_labels_style()["fonthidesqueezed"] == "inner-only" and (series_index not in (0, len(self.data[0])-1)) and font_width > bar_width:
                         an.set_visible(False)
 
         self.ax.invert_yaxis() #Required for some reason?
