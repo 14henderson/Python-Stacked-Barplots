@@ -44,7 +44,7 @@ class DEFAULT_BAR_FONT_STYLE:
     colour = "black"
     format:str = "{0:.1f}"
     align:str = "centre"
-    padding:float = 1.5 #TODO: Needs to be window coords system rather than data coords system.
+    padding:float = 5 #In display coordinates
     hide_squeezed:str = "inner-only" #Can be None, "all", "inner-only"
     colour_invert:bool = False
     ends_expel_thresh:float = None
@@ -216,7 +216,7 @@ class StackedPlotStyle:
             "fontcolour": DEFAULT_BAR_FONT_STYLE.colour,
             "fontformat": DEFAULT_BAR_FONT_STYLE.format,
             "fontalign": DEFAULT_BAR_FONT_STYLE.align,
-            "fontpadd": DEFAULT_BAR_FONT_STYLE.padding,
+            "fontpadd": DEFAULT_BAR_FONT_STYLE.padding, #TODO: Why has this got a different name? I.e., padd instead of padding.
             "fontcolourinvert": DEFAULT_BAR_FONT_STYLE.colour_invert,
             "fonthidesqueezed": DEFAULT_BAR_FONT_STYLE.hide_squeezed,
             "fontendsexpelthresh": DEFAULT_BAR_FONT_STYLE.ends_expel_thresh
@@ -385,7 +385,7 @@ class StackedPlotStyle:
                 while category bars). When set, data labels on start or end bars will be moved outside 
                 of the bar if the data value is below this threshold.
             align: Alignment of data labels within bars. Can be 'left', 'centre', or 'right'. 
-            padding: Padding for data labels moved.
+            padding: Padding for data labels moved. Given in display coordinate space. 
         """
         if font_size is not None: self.__bar_font_style["fontsize"] = font_size
         if font_colour is not None: self.__bar_font_style["fontcolour"] = font_colour

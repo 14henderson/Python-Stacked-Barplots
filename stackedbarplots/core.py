@@ -246,21 +246,25 @@ class StackedBarplot():
                 y = rect.get_y() + rect.get_height() / 2 #Center annotation object to the bar vertically
                 x = None #To be set based on alignment and threshold settings
 
+                #Transforming padding from display coordinate space to data space.
+                x_pixels_per_unit = self.ax.transData.get_matrix()[0, 0]
+                padding_data_coords = self.get_bar_labels_style()["fontpadd"]/x_pixels_per_unit
+
                 #Threshold for first and last bar on a row; if value is below threshold, move label to outside of bar
                 if series_index == 0 and self.get_bar_labels_style()["fontendsexpelthresh"] is not None and c.datavalues[category_index] <= self.get_bar_labels_style()["fontendsexpelthresh"]: #Leftmost bar label
                     ha = "right"
-                    x = rect.get_x() - self.get_bar_labels_style()["fontpadd"]
+                    x = rect.get_x() - padding_data_coords
                 elif series_index == len(self.data[0])-1 and self.get_bar_labels_style()["fontendsexpelthresh"] is not None and c.datavalues[category_index] <= self.get_bar_labels_style()["fontendsexpelthresh"]:
                     ha = "left"
-                    x = rect.get_x() + rect.get_width() + self.get_bar_labels_style()["fontpadd"]
+                    x = rect.get_x() + rect.get_width() + padding_data_coords
                 #Normal alignment for all other bars, or if no outside-of-bar threshold is set
                 elif self.get_bar_labels_style()["fontalign"] == "centre":
                     x = rect.get_x() + rect.get_width() / 2
                 elif self.get_bar_labels_style()["fontalign"] == "left":
-                    x = rect.get_x() + self.get_bar_labels_style()["fontpadd"]
+                    x = rect.get_x() + padding_data_coords
                     ha = "left"
                 elif self.get_bar_labels_style()["fontalign"] == "right":
-                    x = rect.get_x() + rect.get_width() - self.get_bar_labels_style()["fontpadd"]
+                    x = rect.get_x() + rect.get_width() - padding_data_coords
                     ha = "right"
 
                 #TODO if(rect.get_width() <= 3): y -= ((rect.get_height() / 2) +0.07) #raising labels above the bar if the bar is too small, so that it doesn't overlap with the bar boundary
