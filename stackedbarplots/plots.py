@@ -120,7 +120,7 @@ def basic(
                               font_colour=font_colour,
                               bar_value_format=data_label_format,
                               align=data_label_align,
-                              ends_expel_thresh=4)
+                              expel_squeezed_ends=True)
 
     if legend_placement is not None:
         plot.set_legend_style(show=True,
@@ -194,7 +194,7 @@ def centred(
                               font_colour=font_colour,
                               bar_value_format=data_label_format,
                               align=data_label_align,
-                              ends_expel_thresh=4)
+                              expel_squeezed_ends=True)
 
     if legend_placement is not None:
         plot.set_legend_style(show=True,
@@ -280,7 +280,7 @@ def normalised(
                                 font_colour=font_colour,
                                 bar_value_format=data_label_format,
                                 align=data_label_align,
-                                ends_expel_thresh=4)
+                                expel_squeezed_ends=True)
 
     if legend_placement is not None:
         plot.set_legend_style(show=True,
@@ -365,7 +365,7 @@ def normalised_centred(
                                 font_colour=font_colour,
                                 bar_value_format=data_label_format,
                                 align=data_label_align,
-                                ends_expel_thresh=4)
+                                expel_squeezed_ends=True)
 
     if legend_placement is not None:
         plot.set_legend_style(show=True,

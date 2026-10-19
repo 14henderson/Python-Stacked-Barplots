@@ -47,7 +47,7 @@ class DEFAULT_BAR_FONT_STYLE:
     padding:float = 5 #In display coordinates
     hide_squeezed:str = "inner-only" #Can be None, "all", "inner-only"
     colour_invert:bool = False
-    ends_expel_thresh:float = None #Change to 'None', "auto"
+    expel_squeezed_ends:bool = False
 
 
 class DEFAULT_BAR_STYLE:
@@ -219,9 +219,7 @@ class StackedPlotStyle:
             "fontpadd": DEFAULT_BAR_FONT_STYLE.padding, #TODO: Why has this got a different name? I.e., padd instead of padding.
             "fontcolourinvert": DEFAULT_BAR_FONT_STYLE.colour_invert,
             "fonthidesqueezed": DEFAULT_BAR_FONT_STYLE.hide_squeezed,
-            "fontendsexpelthresh": DEFAULT_BAR_FONT_STYLE.ends_expel_thresh
-            #"fontpaddthresh": DEFAULT_BAR_FONT_STYLE.padding_thresh,
-            #"fontendthreshpadd": DEFAULT_BAR_FONT_STYLE.end_thresh_padd
+            "fontexpelsqueezedends": DEFAULT_BAR_FONT_STYLE.expel_squeezed_ends
         }
         self.__fig_style = {
             "title": DEFAULT_FIG_STYLE.title,
@@ -362,7 +360,7 @@ class StackedPlotStyle:
                 font_colour_invert:bool = False,
                 bar_value_format:str = None,
                 hide_squeezed:str = None,
-                ends_expel_thresh:float = None,
+                expel_squeezed_ends:bool = None,
                 align:str=None,
                 padding:float = None):
         """Update StackedBarplot bar text style configuration.
@@ -380,10 +378,9 @@ class StackedPlotStyle:
                 very small bars). Can be None (default), "all" (hide all squeezed data labels), or 
                 "inner-only", which ignores data labels for left-most or right-most bars in a category 
                 (useful if these data labels are moved outside of the bar).
-            ends_expel_thresh: Threshold for whether data labels on start or end bars of categories
-                should be moved to outside the bar for better clarity (i.e., to the left or right of the
-                while category bars). When set, data labels on start or end bars will be moved outside 
-                of the bar if the data value is below this threshold.
+            expel_squeezed_ends: Boolean flag for whether data labels on start or end bars of categories
+                should be moved outside the bar for better clarity (i.e., to the left or right of the
+                while category bars) if the annotation is wider than its bar.
             align: Alignment of data labels within bars. Can be 'left', 'centre', or 'right'. 
             padding: Padding for data labels moved. Given in display coordinate space. 
         """
@@ -394,7 +391,7 @@ class StackedPlotStyle:
         if hide_squeezed not in [None, "all", "inner-only"]:
             raise ValueError("Argument hide-squeezed must be either None, \"all\", or \"inner-only\".")
         self.__bar_font_style["fonthidesqueezed"] = hide_squeezed
-        if ends_expel_thresh is not None: self.__bar_font_style["fontendsexpelthresh"] = ends_expel_thresh
+        if expel_squeezed_ends is not None: self.__bar_font_style["fontexpelsqueezedends"] = expel_squeezed_ends
         if align is not None:
             if align not in ["left", "centre", "right"]:
                 raise ValueError("Argument align must be either \"left\", \"centre\", or \"right\".")
