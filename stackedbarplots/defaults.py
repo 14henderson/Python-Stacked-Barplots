@@ -47,8 +47,7 @@ class DEFAULT_BAR_FONT_STYLE:
     padding:float = 1.5
     display_thresh:tuple[float, float] = (0, None)
     colour_invert:bool = False
-    padding_thresh:float = 0 #The threshold for if a label should be moved
-    end_thresh_padd:bool = False
+    ends_expel_thresh:float = None
 
 
 class DEFAULT_BAR_STYLE:
@@ -220,8 +219,9 @@ class StackedPlotStyle:
             "fontpadd": DEFAULT_BAR_FONT_STYLE.padding,
             "fontcolourinvert": DEFAULT_BAR_FONT_STYLE.colour_invert,
             "fontdisplaythresh": DEFAULT_BAR_FONT_STYLE.display_thresh,
-            "fontpaddthresh": DEFAULT_BAR_FONT_STYLE.padding_thresh,
-            "fontendthreshpadd": DEFAULT_BAR_FONT_STYLE.end_thresh_padd
+            "fontendsexpelthresh": DEFAULT_BAR_FONT_STYLE.ends_expel_thresh
+            #"fontpaddthresh": DEFAULT_BAR_FONT_STYLE.padding_thresh,
+            #"fontendthreshpadd": DEFAULT_BAR_FONT_STYLE.end_thresh_padd
         }
         self.__fig_style = {
             "title": DEFAULT_FIG_STYLE.title,
@@ -362,8 +362,7 @@ class StackedPlotStyle:
                 font_colour_invert:bool = False,
                 bar_value_format:str = None,
                 display_thresh:tuple[float, float] = (None, None),
-                padd_thresh:float = None,
-                end_thresh_padd:bool = None,
+                ends_expel_thresh:float = None,
                 align:str=None,
                 padding:float = None):
         """Update StackedBarplot bar text style configuration.
@@ -379,11 +378,10 @@ class StackedPlotStyle:
                 (https://docs.python.org/3/library/string.html#format-specification-mini-language).
             display_thresh: Tuple of floats representing optional minimum and maximum display
                 thresholds. Data labels below minimum or above maximum thresholds will not be displayed.
-            padd_thresh: Threshold for whether data labels on start or end bars of categories should
-                be moved for better clarity (see parameter endthreshpadd).
-            end_thresh_padd: Boolean value indicating whether, for data values for start or end bars, 
-                if the data value is below paddthresh, is should be moved outside of the bar for better
-                clarity. 
+            ends_expel_thresh: Threshold for whether data labels on start or end bars of categories
+                should be moved to outside the bar for better clarity (i.e., to the left or right of the
+                while category bars). When set, data labels on start or end bars will be moved outside 
+                of the bar if the data value is below this threshold.
             align: Alignment of data labels within bars. Can be 'left', 'centre', or 'right'. 
             padding: Padding for data labels moved.
         """
@@ -392,8 +390,7 @@ class StackedPlotStyle:
         if font_colour_invert is not None: self.__bar_font_style["fontcolourinvert"] = font_colour_invert
         if bar_value_format is not None: self.__bar_font_style["fontformat"] = bar_value_format
         if display_thresh is not None: self.__bar_font_style["fontdisplaythresh"] = display_thresh
-        if padd_thresh is not None: self.__bar_font_style["fontpaddthresh"] = padd_thresh
-        if end_thresh_padd is not None: self.__bar_font_style["fontendthreshpadd"] = end_thresh_padd
+        if ends_expel_thresh is not None: self.__bar_font_style["fontendsexpelthresh"] = ends_expel_thresh
         if align is not None:
             if align not in ["left", "centre", "right"]:
                 raise ValueError("Argument align must be either \"left\", \"centre\", or \"right\".")

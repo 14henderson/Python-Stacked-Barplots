@@ -251,32 +251,27 @@ class StackedBarplot():
 
             #Positioning bar value labels
             for row_index, (rect, text) in enumerate(zip(c.patches, bar_labels)):
-                ha, va = "center", "center" #Where the coords refer to on the text
-                y = rect.get_y() + rect.get_height() / 2 #Y coordinate is usually the same no matter the alignment, but this can be changed later
-                x = None #X coordinate will be set based on alignment
+                ha, va = "center", "center" #Point on the annotation object that is aligned to the given coordinates
+                y = rect.get_y() + rect.get_height() / 2 #Center annotation object to the bar vertically
+                x = None #To be set based on alignment and threshold settings
 
-                #Threshold for first and last bar on a row, if value is below threshold, move label to outside of bar
-                topadd = False
-                if col_index == 0 and self.get_bar_labels_style()["fontpaddthresh"] is not None and self.get_bar_labels_style()["fontendthreshpadd"]: #Leftmost bar label
-                    if c.datavalues[row_index] <= self.get_bar_labels_style()["fontpaddthresh"]:
-                        topadd = True
-                        ha = "right"
-                        x = rect.get_x() - self.get_bar_labels_style()["fontpadd"]
-                elif col_index == len(self.data[0])-1 and self.get_bar_labels_style()["fontpaddthresh"] is not None and self.get_bar_labels_style()["fontendthreshpadd"]: #Rightmost bar label
-                    if c.datavalues[row_index] <= self.get_bar_labels_style()["fontpaddthresh"]:
-                        topadd = True
-                        ha = "left"
-                        x = rect.get_x() + rect.get_width() + self.get_bar_labels_style()["fontpadd"]
+                #Threshold for first and last bar on a row; if value is below threshold, move label to outside of bar
+                if col_index == 0 and self.get_bar_labels_style()["fontendsexpelthresh"] is not None and c.datavalues[row_index] <= self.get_bar_labels_style()["fontendsexpelthresh"]: #Leftmost bar label
+                    ha = "right"
+                    x = rect.get_x() - self.get_bar_labels_style()["fontpadd"]
+                elif col_index == len(self.data[0])-1 and self.get_bar_labels_style()["fontendsexpelthresh"] is not None and c.datavalues[row_index] <= self.get_bar_labels_style()["fontendsexpelthresh"]:
+                    ha = "left"
+                    x = rect.get_x() + rect.get_width() + self.get_bar_labels_style()["fontpadd"]
 
-                if not topadd: #Normal alignment for all other bars, or if no outside-of-bar threshold is set
-                    if self.get_bar_labels_style()["fontalign"] == "centre":
-                        x = rect.get_x() + rect.get_width() / 2
-                    elif self.get_bar_labels_style()["fontalign"] == "left":
-                        x = rect.get_x() + self.get_bar_labels_style()["fontpadd"]
-                        ha = "left"
-                    elif self.get_bar_labels_style()["fontalign"] == "right":
-                        x = rect.get_x() + rect.get_width() - self.get_bar_labels_style()["fontpadd"]
-                        ha = "right"
+                #Normal alignment for all other bars, or if no outside-of-bar threshold is set
+                elif self.get_bar_labels_style()["fontalign"] == "centre":
+                    x = rect.get_x() + rect.get_width() / 2
+                elif self.get_bar_labels_style()["fontalign"] == "left":
+                    x = rect.get_x() + self.get_bar_labels_style()["fontpadd"]
+                    ha = "left"
+                elif self.get_bar_labels_style()["fontalign"] == "right":
+                    x = rect.get_x() + rect.get_width() - self.get_bar_labels_style()["fontpadd"]
+                    ha = "right"
 
                 #TODO if(rect.get_width() <= 3): y -= ((rect.get_height() / 2) +0.07) #raising labels above the bar if the bar is too small, so that it doesn't overlap with the bar boundary
                 #TODO if text is made white and shifted outside of bar, it becomes white text on white background.

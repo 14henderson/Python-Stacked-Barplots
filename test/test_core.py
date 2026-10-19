@@ -106,9 +106,8 @@ class CoreClassTest(unittest.TestCase):
         test_plot = StackedBarplot(data=results, series_labels=series_labels)
 
         for alignment in ["left", "centre", "right"]:
-            for endpadd in [True, False]:
-                test_plot.set_bar_labels_style(align=alignment, end_thresh_padd=endpadd)
-                test_plot.render()
+            test_plot.set_bar_labels_style(align=alignment)
+            test_plot.render()
 
         test_plot.set_bar_labels_style(bar_value_format="{0}")
         test_plot.render()
@@ -122,8 +121,8 @@ class CoreClassTest(unittest.TestCase):
         for fontsize in [0, 10, 30]:
             test_plot.set_bar_labels_style(font_size=fontsize)
             test_plot.render()
-        for paddthresh in [0, 5, 10]:
-            test_plot.set_bar_labels_style(padd_thresh=paddthresh)
+        for expel_thresh in [None, 0, 5, 10]:
+            test_plot.set_bar_labels_style(ends_expel_thresh=expel_thresh)
             test_plot.render()
         for padd in [0, 5, 10]:
             test_plot.set_bar_labels_style(padding=padd)
@@ -256,8 +255,7 @@ class CoreStyleTest(unittest.TestCase):
                                        font_colour_invert=True,
                                        bar_value_format="{0:.1f}@",
                                        display_thresh=display_thresh,
-                                       padd_thresh=4,
-                                       end_thresh_padd=True,
+                                       ends_expel_thresh=4,
                                        align="right",
                                        padding=padding)
         test_plot.render()
@@ -279,7 +277,7 @@ class CoreStyleTest(unittest.TestCase):
                          "Error in display_thresh for shart data labels. Some labels showing/not showing against set threshold.")
         self.assertEqual(axis_data_labels[0].get_text()[-1], "@",
                          "Error in data label format; format style not being followed")
-        #TODO: unit test for fontcolour, fontsize, fontcolourinvert, paddthresh, align, padding
+        #TODO: unit test for fontcolour, fontsize, fontcolourinvert, ends_expel_thresh, align, padding
 
         plt.close(test_plot.fig)
         del test_plot
