@@ -400,17 +400,17 @@ class StackedPlotStyle:
         """
         if font_size is not None: self.__bar_val_label_style["fontsize"] = font_size
         if font_colour is not None: self.__bar_val_label_style["fontcolour"] = font_colour
-        if colour_invert is not None: self.__bar_val_label_style["fontcolourinvert"] = colour_invert
-        if format is not None: self.__bar_val_label_style["fontformat"] = format
+        if colour_invert is not None: self.__bar_val_label_style["colourinvert"] = colour_invert
+        if format is not None: self.__bar_val_label_style["format"] = format
         if hide_squeezed not in [None, "all", "inner-only"]:
             raise ValueError("Argument hide-squeezed must be either None, \"all\", or \"inner-only\".")
-        self.__bar_val_label_style["fonthidesqueezed"] = hide_squeezed
-        if expel_squeezed_ends is not None: self.__bar_val_label_style["fontexpelsqueezedends"] = expel_squeezed_ends
+        self.__bar_val_label_style["hidesqueezed"] = hide_squeezed
+        if expel_squeezed_ends is not None: self.__bar_val_label_style["expelsqueezedends"] = expel_squeezed_ends
         if align is not None:
             if align not in ["left", "centre", "right"]:
                 raise ValueError("Argument align must be either \"left\", \"centre\", or \"right\".")
-            self.__bar_val_label_style["fontalign"] = align
-        if padding is not None: self.__bar_val_label_style["fontpadd"] = padding
+            self.__bar_val_label_style["align"] = align
+        if padding is not None: self.__bar_val_label_style["padding"] = padding
         self.unrendered_changes = True
 
 
