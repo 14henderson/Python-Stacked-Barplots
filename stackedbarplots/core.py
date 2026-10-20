@@ -260,12 +260,10 @@ class StackedBarplot():
                     x = rect.get_x() + rect.get_width() - padding_data_coords
                     ha = "right"
 
-                #TODO if text is made white and shifted outside of bar, it becomes white text on white background.
-                #TODO also, this should invert the colour rather than force white or black?
+                #Set font colour and handle colour inverting (if style setting is set)
                 font_colour = self.get_bar_val_label_style()["fontcolour"]
                 if self.get_bar_val_label_style()["colourinvert"]:
                     luminence = 0.2126*rect.get_facecolor()[0] + 0.7152*rect.get_facecolor()[1] + 0.0722*rect.get_facecolor()[2]
-                    print(f"Limunence for text {text} is {luminence}")
                     if luminence < 0.2: font_colour = "white"
                     elif luminence > 0.8: font_colour = "black"
 

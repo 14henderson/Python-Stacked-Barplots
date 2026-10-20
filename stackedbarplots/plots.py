@@ -47,7 +47,7 @@ Typical usage example:
 
 
 from .defaults import DEFAULT_BAR_VAL_LABEL_STYLE, DEFAULT_FIG_STYLE, DEFAULT_BAR_STYLE
-from .tools import *
+from .tools import ColourGradient
 from .core import StackedBarplot, StackedPlotStyle
 
 
