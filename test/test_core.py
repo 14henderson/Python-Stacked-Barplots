@@ -121,8 +121,8 @@ class CoreClassTest(unittest.TestCase):
         for fontsize in [0, 10, 30]:
             test_plot.set_bar_labels_style(font_size=fontsize)
             test_plot.render()
-        for expel_thresh in [None, 0, 5, 10]:
-            test_plot.set_bar_labels_style(ends_expel_thresh=expel_thresh)
+        for expel_thresh in [False, True]:
+            test_plot.set_bar_labels_style(expel_squeezed_ends=expel_thresh)
             test_plot.render()
         for padd in [0, 5, 10]:
             test_plot.set_bar_labels_style(padding=padd)
@@ -255,7 +255,7 @@ class CoreStyleTest(unittest.TestCase):
                                        font_colour_invert=True,
                                        bar_value_format="{0:.1f}@",
                                        hide_squeezed=hide_squeezed,
-                                       ends_expel_thresh=4,
+                                       expel_squeezed_ends=True,
                                        align="right",
                                        padding=padding)
         test_plot.render()
