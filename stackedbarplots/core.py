@@ -292,6 +292,12 @@ class StackedBarplot():
                     if series_index == 0 and font_width > bar_width:
                         an.set_ha("right")
                         an.xy = (rect.get_x() - padding_data_coords, y)
+
+                        #If the annotation has been placed overlapping with category ticks, the category ticks are padded by the required amount.
+                        if an.get_window_extent().x0 < self.ax.get_window_extent().x0:
+                            shift_px = self.ax.get_window_extent().x0 - an.get_window_extent().x0
+                            self.ax.tick_params(axis="y", pad=shift_px)
+
                     elif series_index == len(self.data[0])-1 and font_width > bar_width:
                         an.set_ha("left")
                         an.xy = (rect.get_x() + rect.get_width() + padding_data_coords, y)
