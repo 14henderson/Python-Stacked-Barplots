@@ -19,7 +19,7 @@ class CoreClassTest(unittest.TestCase):
 
     def test_set_style(self):
         style_obj = StackedPlotStyle()
-        style_obj.set_bar_labels_style(font_size=20)
+        style_obj.set_bar_val_label_style(font_size=20)
         style_obj.set_bar_style(bar_height=.5)
         style_obj.set_legend_style(show=True)
         style_obj.set_fig_style(title="Test Figure Title")
@@ -33,7 +33,7 @@ class CoreClassTest(unittest.TestCase):
         test_plot = StackedBarplot(data=results, series_labels=series_labels)
         test_plot.set_style(style_obj)
 
-        self.assertEqual(style_obj.get_bar_labels_style()["fontsize"], test_plot.style.get_bar_labels_style()["fontsize"],
+        self.assertEqual(style_obj.get_bar_val_label_style()["fontsize"], test_plot.style.get_bar_val_label_style()["fontsize"],
                          "Error: Fontsize attribute from StackedPlotStyle object not applied to StackedBarplot on set_style().")
         self.assertEqual(style_obj.get_bar_style()["height"], test_plot.style.get_bar_style()["height"],
                          "Error: Height attribute from StackedPlotStyle object not applied to StackedBarplot on set_style().")
@@ -106,32 +106,32 @@ class CoreClassTest(unittest.TestCase):
         test_plot = StackedBarplot(data=results, series_labels=series_labels)
 
         for alignment in ["left", "centre", "right"]:
-            test_plot.set_bar_labels_style(align=alignment)
+            test_plot.set_bar_val_label_style(align=alignment)
             test_plot.render()
 
-        test_plot.set_bar_labels_style(bar_value_format="{0}")
+        test_plot.set_bar_val_label_style(format="{0}")
         test_plot.render()
-        test_plot.set_bar_labels_style(bar_value_format="{0:.0f}")
+        test_plot.set_bar_val_label_style(format="{0:.0f}")
         test_plot.render()
-        test_plot.set_bar_labels_style(bar_value_format="{0:.4f}%")
+        test_plot.set_bar_val_label_style(format="{0:.4f}%")
         test_plot.render()
         test_plot.set_fig_style(font_family="monospace")
         test_plot.render()
 
         for fontsize in [0, 10, 30]:
-            test_plot.set_bar_labels_style(font_size=fontsize)
+            test_plot.set_bar_val_label_style(font_size=fontsize)
             test_plot.render()
         for expel_thresh in [False, True]:
-            test_plot.set_bar_labels_style(expel_squeezed_ends=expel_thresh)
+            test_plot.set_bar_val_label_style(expel_squeezed_ends=expel_thresh)
             test_plot.render()
         for padd in [0, 5, 10]:
-            test_plot.set_bar_labels_style(padding=padd)
+            test_plot.set_bar_val_label_style(padding=padd)
             test_plot.render()
         for display_thresh in [None, "all", "inner-only"]:
-            test_plot.set_bar_labels_style(hide_squeezed=display_thresh)
+            test_plot.set_bar_val_label_style(hide_squeezed=display_thresh)
             test_plot.render()
         for flag in [True, False]:
-            test_plot.set_bar_labels_style(font_colour_invert=flag)
+            test_plot.set_bar_val_label_style(colour_invert=flag)
             test_plot.render()
 
         if self.show_plots: test_plot.show()
@@ -250,10 +250,10 @@ class CoreStyleTest(unittest.TestCase):
         font_colour="red"
         padding = 4
 
-        test_plot.set_bar_labels_style(font_size=20,
+        test_plot.set_bar_val_label_style(font_size=20,
                                        font_colour=font_colour,
-                                       font_colour_invert=True,
-                                       bar_value_format="{0:.1f}@",
+                                       colour_invert=True,
+                                       format="{0:.1f}@",
                                        hide_squeezed=hide_squeezed,
                                        expel_squeezed_ends=True,
                                        align="right",

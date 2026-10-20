@@ -4,8 +4,7 @@
 tools.py contains non-member functions relating that emulate the Numpy 
 cumsum() method (To keep this package lightweight, Numpy is not used). This
 module also contains the ColourGradient class, which stores colour data
-used by StackedBarplot. The StackedBarplot and ColourGradient classes maintain
-a one-to-one relationship.
+used by StackedBarplot. 
 
 Typical usage example:
     results = {"Category 1": [10, 5, 3, 11], "Category 2": [4, 2, 9, 12], "Category 3": [11, 12, 3, 4]}

@@ -6,48 +6,73 @@ defaults.py contains classes which store the default values for
 all plot style elements covered in this project. Plot styles are 
 separated into bars, bar text, overall axes and figure styles, and 
 style settings relating to the plot legend and (where appropriate)
-the vertical line. 
+the vertical line.
+
+defaults.py also contains the class StackedPlotStyle, of which each 
+StackedBarplot object has an instance. The StackedBarplot and 
+ColourGradient classes maintain a one-to-one relationship. Each
+StackedPlotStyle hold style attributes related to a plot, as well 
+as getter and setter functions which check argument value type and
+values. Delegation means that StackedPlotStyle methods can be called
+directly from a StackedBarplot object (see example below).
 
 Typical usage example:
+    results = {"Category 1": [10, 5, 3, 11], "Category 2": [4, 2, 9, 12], "Category 3": [11, 12, 3, 4]}
+    series_labels = ["Series 1", "Series 2", "Series 3", "Series 4"]
 
-  foo = ClassFoo()
-  bar = foo.function_bar()
+    #Style object can be created manually rather than through free methods in plots.py.
+    local_style = StackedPlotStyle() 
+    plot = StackedBarplot(data, series_labels)
+    plot.set_style(local_style)
+
+    plot.set_bar_labels_style(font_size=12,
+                            bar_value_format="{0:.1f}%",
+                            align="left",
+                            expel_squeezed_ends=True)
+    plot.render()
+    plot.show()
 """
 
 import matplotlib.lines as mlines
 from .tools import ColourGradient
 
 __all__ = [
-    "StackedPlotStyle", "DEFAULT_BAR_FONT_STYLE", "DEFAULT_BAR_STYLE", "DEFAULT_FIG_STYLE", 
+    "StackedPlotStyle", "DEFAULT_BAR_VAL_LABEL_STYLE", "DEFAULT_BAR_STYLE", "DEFAULT_FIG_STYLE", 
     "DEFAULT_AXIS_STYLE", "DEFAULT_AXIS_TITLE_STYLE", "DEFAULT_LEGEND_STYLE", 
     "DEFAULT_VERTLINE_STYLE"
 ]
 
 
-
-#TODO: Change order of default classes to match order used in StackedPlotStyle class.
-class DEFAULT_BAR_FONT_STYLE:
-    """Default style class for bar textual annotations.
+class DEFAULT_AXIS_STYLE:
+    """Default style class for axis scale font and values
     
-    Default style settings for stacked barchart relating to 
-    textual annotations made on data bars containing bar values. 
-    Default values are stored on font size, colour, format, alignment in bar, and 
-    a display threshold. The user can also specify if the text colour should be
-    inverted when displayed on a dark-coloured bar; this is set to False by default.
+    Default style settings for stacked barchart relating to the
+    style of axis font and format are defined here. This includes
+    axis min and max limits, font size, and format.
+    
+    xlim is stored as tuple of two integers representing the minimum
+    and maximum values to be displayed on the X axis (None indicates 
+    no limit). Font format is str.format() type, default as "{0}"."""
 
-    More advanced style settings allow the user to specify if, when the 
-    bar value is below a certain value (and thus below a certain visual width), 
-    whether (for first or last bars for a category) the value should be moved outside 
-    of the bar."""
+    x_lim:tuple[int, int] = None
+    step:int = None
+    x_font_size:int = 12
+    y_font_size:int = 12
+    x_axis_format:str = "{0:.0f}"
+    x_axis_show:bool = True
+    y_axis_show:bool = True
+    x_axis_abs:bool = False
 
-    size:int = 12
-    colour = "black"
-    format:str = "{0:.1f}"
-    align:str = "centre"
-    padding:float = 5 #In display coordinates
-    hide_squeezed:str = "inner-only" #Can be None, "all", "inner-only"
-    colour_invert:bool = False
-    expel_squeezed_ends:bool = False
+
+class DEFAULT_AXIS_TITLE_STYLE:
+    """Default style class for axis labels.
+
+    Default style settings for stacked barchart relating to the 
+    style of X and Y axis labels. None value indicates no label."""
+    x_label:str = None
+    y_label:str = None
+    axis_label_font_size:int = 12
+    axis_label_font_colour = "black"
 
 
 class DEFAULT_BAR_STYLE:
@@ -66,13 +91,37 @@ class DEFAULT_BAR_STYLE:
     mid_colour:tuple[int, int, int] = (220, 221, 221)
 
 
+class DEFAULT_BAR_VAL_LABEL_STYLE:
+    """Default style class for bar data value annotations.
+    
+    Default style settings for stacked barchart relating to 
+    textual annotations made on data bars containing bar values. 
+    Default values are stored on font size, colour, format, 
+    alignment in bar, and a what to do if the bar is thinner 
+    than the label itself (if a start or end bar in a category,
+    the label can be moved to outside the bar). The user can 
+    also specify if the text colour should be inverted when
+    displayed on a dark-coloured bar; this is set to False by 
+    default."""
+
+    font_size:int = 12
+    font_colour = "black"
+    format:str = "{0:.1f}"
+    align:str = "centre"
+    colour_invert:bool = False
+    padding:float = 5 #In display coordinates
+    hide_squeezed:str = "inner-only" #Can be None, "all", "inner-only"
+    expel_squeezed_ends:bool = True
+
+
 class DEFAULT_FIG_STYLE:
     """Default style class for general figure style.
 
     Default style settings for stacked barchart relating to the
     style of the figure itself. Default values on figure size, title (and
     related settings), figure font family, background colour, spine display, 
-    and whether the bars are ordered are defined here."""
+    and whether the categories should be ordererd based on an aggregate
+    function of each category."""
 
     size:tuple[int, int] = (10, 5)
     title:str = None
@@ -80,42 +129,8 @@ class DEFAULT_FIG_STYLE:
     title_colour = "black"
     font_family:str = "sans-serif"
     background_colour = "#ffffff"
-    sorted:str = None #sorted=None, sum-asc, sum-desc, avg-asc, avg-desc, lhlf-asc, lhlf-desc, rhlf-asc, rhlf-desc
+    sorted:str = None #Can be None, "sum-asc", "sum-desc", "avg-asc", "avg-desc", "lhlf-asc", "lhlf-desc", "rhlf-asc", "rhlf-desc"
     spine_display:tuple[bool, bool, bool, bool] = (False, False, False, True) #left, top, right, bottom
-
-
-class DEFAULT_AXIS_STYLE:
-    """Default style class for axis scale font and values
-    
-    Default style settings for stacked barchart relating to the
-    style of axis font and format are defined here. This includes
-    axis min and max limits, font size, and format.
-    
-    xlim is stored as tuple of two integers representing the minimum
-    and maximum values to be displayed on the X axis (None indicates 
-    no limit). Font format is str.format() type, default as "{0}".
-    """
-
-    x_lim:tuple[int, int] = None
-    step:int = None
-    x_font_size:int = 12
-    y_font_size:int = 12
-    x_axis_format:str = "{0:.0f}"
-    x_axis_show:bool = True
-    y_axis_show:bool = True
-    x_axis_abs:bool = False
-
-
-class DEFAULT_AXIS_TITLE_STYLE:
-    """Default style class for axis labels.
-
-    Default style settings for stacked barchart relating to the 
-    style of X and Y axis labels. None value indicates no label.
-    """
-    x_label:str = None
-    y_label:str = None
-    axis_label_font_size:int = 12
-    axis_label_font_colour = "black"
 
 
 class DEFAULT_LEGEND_STYLE:
@@ -128,13 +143,12 @@ class DEFAULT_LEGEND_STYLE:
     Default positioning for the legend is also defined here, which
     is managed through a legend anchor location combined with a figure anchor.
     Users are expected to choose one of the given placement options for
-    accessibility. A 'placementtransform' is also given to adjust placement.
-    """
+    accessibility. A 'placementtransform' is also given to adjust placement."""
 
     show:bool = False
     font_size:int = 12
-    label_spacing:float = 0.5
     font_colour = "black"
+    label_spacing:float = 0.5
     marker_shape:str = "s" #see for different marker shapes https://matplotlib.org/stable/api/_as_gen/matplotlib.lines.Line2D.html
     border_colour = "#ededed"
     background_colour = "#ededed"
@@ -145,7 +159,7 @@ class DEFAULT_LEGEND_STYLE:
         "below-horizontal": ["upper center", (0.5, -0.12)],
         "above-horizontal": ["lower center", (0.5, 1.02)]
     }
-    placement_transform:tuple[float, float] = (0, 0)
+    placement_transform:tuple[float, float] = (0, 0) #TODO: Convert from fractional dimension space to display coordinate space.
 
 
 class DEFAULT_VERTLINE_STYLE:
@@ -159,7 +173,7 @@ class DEFAULT_VERTLINE_STYLE:
     line_style:str = "-"
     colour = "black"
     alpha:float = 1
-    z_order:str = "front"
+    z_order:str = "front" #Can be "front" or "behind"
 
 
 
@@ -211,15 +225,15 @@ class StackedPlotStyle:
             "endcolour": DEFAULT_BAR_STYLE.end_colour,
             "midcolour": DEFAULT_BAR_STYLE.mid_colour
         }
-        self.__bar_font_style = {
-            "fontsize": DEFAULT_BAR_FONT_STYLE.size,
-            "fontcolour": DEFAULT_BAR_FONT_STYLE.colour,
-            "fontformat": DEFAULT_BAR_FONT_STYLE.format,
-            "fontalign": DEFAULT_BAR_FONT_STYLE.align,
-            "fontpadd": DEFAULT_BAR_FONT_STYLE.padding, #TODO: Why has this got a different name? I.e., padd instead of padding.
-            "fontcolourinvert": DEFAULT_BAR_FONT_STYLE.colour_invert,
-            "fonthidesqueezed": DEFAULT_BAR_FONT_STYLE.hide_squeezed,
-            "fontexpelsqueezedends": DEFAULT_BAR_FONT_STYLE.expel_squeezed_ends
+        self.__bar_val_label_style = {
+            "fontsize": DEFAULT_BAR_VAL_LABEL_STYLE.font_size,
+            "fontcolour": DEFAULT_BAR_VAL_LABEL_STYLE.font_colour,
+            "format": DEFAULT_BAR_VAL_LABEL_STYLE.format,
+            "align": DEFAULT_BAR_VAL_LABEL_STYLE.align,
+            "padding": DEFAULT_BAR_VAL_LABEL_STYLE.padding,
+            "colourinvert": DEFAULT_BAR_VAL_LABEL_STYLE.colour_invert,
+            "hidesqueezed": DEFAULT_BAR_VAL_LABEL_STYLE.hide_squeezed,
+            "expelsqueezedends": DEFAULT_BAR_VAL_LABEL_STYLE.expel_squeezed_ends
         }
         self.__fig_style = {
             "title": DEFAULT_FIG_STYLE.title,
@@ -348,32 +362,34 @@ class StackedPlotStyle:
         self.unrendered_changes = True
 
 
-    def get_bar_labels_style(self) -> dict:
+    def get_bar_val_label_style(self) -> dict:
         """Returns dictionary containing style configuration for chart bar labels."""
-        return self.__bar_font_style
+        return self.__bar_val_label_style
 
 
-    #TODO: Start and end bar data label movement is implicit in whether paddthresh is None, thus endthreshpadd is redundant.
-    def set_bar_labels_style(self,
+    def set_bar_val_label_style(self,
                 font_size:int=None,
                 font_colour:str = None,
-                font_colour_invert:bool = False,
-                bar_value_format:str = None,
-                hide_squeezed:str = None,
-                expel_squeezed_ends:bool = None,
+                colour_invert:bool = False,
+                format:str = None,
                 align:str=None,
-                padding:float = None):
+                padding:float = None,
+                hide_squeezed:str = None,
+                expel_squeezed_ends:bool = None
+                ):
         """Update StackedBarplot bar text style configuration.
 
         Args:
             font_size: Data label font size in points or as a string (e.g., 'large').
             font_colour: The colour of data labels.
-            font_colour_invert: Boolean flag for if font colour should be inverted for
+            colour_invert: Boolean flag for if font colour should be inverted for
                 data labels displayed on bars with low luminence.
-            bar_value_format: format()-style format string for data labels. Default '{0}'. Format
+            format: format()-style format string for data labels. Default '{0}'. Format
                 string can also round to (e.g., 1) decimal place(s) with '{0:.1}'. A suffix can
                 be added using (for example) '{0}%'. See Python documentation for more inforamtion 
                 (https://docs.python.org/3/library/string.html#format-specification-mini-language).
+            align: Alignment of data labels within bars. Can be 'left', 'centre', or 'right'. 
+            padding: Padding for data labels moved. Given in display coordinate space. 
             hide_squeezed: Whether data labels that overlap their bar should be hidden (e.g., for
                 very small bars). Can be None (default), "all" (hide all squeezed data labels), or 
                 "inner-only", which ignores data labels for left-most or right-most bars in a category 
@@ -381,22 +397,20 @@ class StackedPlotStyle:
             expel_squeezed_ends: Boolean flag for whether data labels on start or end bars of categories
                 should be moved outside the bar for better clarity (i.e., to the left or right of the
                 while category bars) if the annotation is wider than its bar.
-            align: Alignment of data labels within bars. Can be 'left', 'centre', or 'right'. 
-            padding: Padding for data labels moved. Given in display coordinate space. 
         """
-        if font_size is not None: self.__bar_font_style["fontsize"] = font_size
-        if font_colour is not None: self.__bar_font_style["fontcolour"] = font_colour
-        if font_colour_invert is not None: self.__bar_font_style["fontcolourinvert"] = font_colour_invert
-        if bar_value_format is not None: self.__bar_font_style["fontformat"] = bar_value_format
+        if font_size is not None: self.__bar_val_label_style["fontsize"] = font_size
+        if font_colour is not None: self.__bar_val_label_style["fontcolour"] = font_colour
+        if colour_invert is not None: self.__bar_val_label_style["fontcolourinvert"] = colour_invert
+        if format is not None: self.__bar_val_label_style["fontformat"] = format
         if hide_squeezed not in [None, "all", "inner-only"]:
             raise ValueError("Argument hide-squeezed must be either None, \"all\", or \"inner-only\".")
-        self.__bar_font_style["fonthidesqueezed"] = hide_squeezed
-        if expel_squeezed_ends is not None: self.__bar_font_style["fontexpelsqueezedends"] = expel_squeezed_ends
+        self.__bar_val_label_style["fonthidesqueezed"] = hide_squeezed
+        if expel_squeezed_ends is not None: self.__bar_val_label_style["fontexpelsqueezedends"] = expel_squeezed_ends
         if align is not None:
             if align not in ["left", "centre", "right"]:
                 raise ValueError("Argument align must be either \"left\", \"centre\", or \"right\".")
-            self.__bar_font_style["fontalign"] = align
-        if padding is not None: self.__bar_font_style["fontpadd"] = padding
+            self.__bar_val_label_style["fontalign"] = align
+        if padding is not None: self.__bar_val_label_style["fontpadd"] = padding
         self.unrendered_changes = True
 
 

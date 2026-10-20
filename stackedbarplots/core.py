@@ -240,7 +240,7 @@ class StackedBarplot():
 
             #Positioning bar value labels
             for category_index, (rect, val) in enumerate(zip(c.patches, c.datavalues)):
-                text = str.format(self.get_bar_labels_style()["fontformat"], val)
+                text = str.format(self.get_bar_val_label_style()["format"], val)
 
                 ha = "center" #Point on the annotation object that is aligned to the given coordinates. Horizontal can change depending on whether annotations are left or right aligned.
                 y = rect.get_y() + rect.get_height() / 2 #Center annotation object to the bar vertically
@@ -248,26 +248,26 @@ class StackedBarplot():
 
                 #Transforming padding from display coordinate space to data space.
                 x_pixels_per_unit = self.ax.transData.get_matrix()[0, 0]
-                padding_data_coords = self.get_bar_labels_style()["fontpadd"]/x_pixels_per_unit
+                padding_data_coords = self.get_bar_val_label_style()["padding"]/x_pixels_per_unit
 
                 #Normal alignment for all other bars, or if no outside-of-bar threshold is set
-                if self.get_bar_labels_style()["fontalign"] == "centre":
+                if self.get_bar_val_label_style()["align"] == "centre":
                     x = rect.get_x() + rect.get_width() / 2
-                elif self.get_bar_labels_style()["fontalign"] == "left":
+                elif self.get_bar_val_label_style()["align"] == "left":
                     x = rect.get_x() + padding_data_coords
                     ha = "left"
-                elif self.get_bar_labels_style()["fontalign"] == "right":
+                elif self.get_bar_val_label_style()["align"] == "right":
                     x = rect.get_x() + rect.get_width() - padding_data_coords
                     ha = "right"
 
                 #TODO if(rect.get_width() <= 3): y -= ((rect.get_height() / 2) +0.07) #raising labels above the bar if the bar is too small, so that it doesn't overlap with the bar boundary
                 #TODO if text is made white and shifted outside of bar, it becomes white text on white background.
                 #TODO also, this should invert the colour rather than force white or black?
-                if self.get_bar_labels_style()["fontcolourinvert"]:
+                if self.get_bar_val_label_style()["colourinvert"]:
                     luminence = 0.2126*rect.get_facecolor()[0] + 0.7152*rect.get_facecolor()[1] + 0.0722*rect.get_facecolor()[2]
-                    if luminence < 0.4: fontcolour = "white"
-                    else: fontcolour = "black"
-                else: fontcolour = self.get_bar_labels_style()["fontcolour"]
+                    if luminence < 0.4: font_colour = "white"
+                    else: font_colour = "black"
+                else: font_colour = self.get_bar_val_label_style()["fontcolour"]
 
                 #Create annotation object (needed for measuring width differences to bar)
                 an = self.ax.annotate(
@@ -276,19 +276,19 @@ class StackedBarplot():
                     textcoords="offset points",
                     xytext=(0, 0),
                     ha=ha, va="center",
-                    fontsize=self.get_bar_labels_style()["fontsize"],
-                    color=fontcolour,
+                    fontsize=self.get_bar_val_label_style()["fontsize"],
+                    color=font_colour,
                     fontfamily=self.get_fig_style()["fontfamily"],
                     annotation_clip=False
                     )
 
                 #3 of padding added to font. If font isn't centered, font padding also needs to be to font width when calculating overlap with bar.
-                if self.get_bar_labels_style()["fontalign"] != "centre": font_width = abs(an.get_window_extent().width) + self.get_bar_labels_style()["fontpadd"] + 3
+                if self.get_bar_val_label_style()["align"] != "centre": font_width = abs(an.get_window_extent().width) + self.get_bar_val_label_style()["padding"] + 3
                 else: font_width = abs(an.get_window_extent().width) + 3
                 bar_width = abs(rect.get_window_extent().width)
 
                 #Threshold for first and last bar on a row; if value is below threshold, move label to outside of bar
-                if self.get_bar_labels_style()["fontexpelsqueezedends"] is True:
+                if self.get_bar_val_label_style()["expelsqueezedends"] is True:
                     if series_index == 0 and font_width > bar_width:
                         an.set_ha("right")
                         an.xy = (rect.get_x() - padding_data_coords, y)
@@ -303,10 +303,10 @@ class StackedBarplot():
                         an.xy = (rect.get_x() + rect.get_width() + padding_data_coords, y)
 
                 #Hide bar data annotation if squeezed and style dictates it is to be hidden.
-                if self.get_bar_labels_style()["fonthidesqueezed"] is not None:
-                    if self.get_bar_labels_style()["fonthidesqueezed"] == "all" and font_width > bar_width:
+                if self.get_bar_val_label_style()["hidesqueezed"] is not None:
+                    if self.get_bar_val_label_style()["hidesqueezed"] == "all" and font_width > bar_width:
                         an.set_visible(False)
-                    elif self.get_bar_labels_style()["fonthidesqueezed"] == "inner-only" and (series_index not in (0, len(self.data[0])-1)) and font_width > bar_width:
+                    elif self.get_bar_val_label_style()["hidesqueezed"] == "inner-only" and (series_index not in (0, len(self.data[0])-1)) and font_width > bar_width:
                         an.set_visible(False)
 
         self.ax.invert_yaxis() #Required for some reason?
