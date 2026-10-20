@@ -260,14 +260,14 @@ class StackedBarplot():
                     x = rect.get_x() + rect.get_width() - padding_data_coords
                     ha = "right"
 
-                #TODO if(rect.get_width() <= 3): y -= ((rect.get_height() / 2) +0.07) #raising labels above the bar if the bar is too small, so that it doesn't overlap with the bar boundary
                 #TODO if text is made white and shifted outside of bar, it becomes white text on white background.
                 #TODO also, this should invert the colour rather than force white or black?
+                font_colour = self.get_bar_val_label_style()["fontcolour"]
                 if self.get_bar_val_label_style()["colourinvert"]:
                     luminence = 0.2126*rect.get_facecolor()[0] + 0.7152*rect.get_facecolor()[1] + 0.0722*rect.get_facecolor()[2]
-                    if luminence < 0.4: font_colour = "white"
-                    else: font_colour = "black"
-                else: font_colour = self.get_bar_val_label_style()["fontcolour"]
+                    print(f"Limunence for text {text} is {luminence}")
+                    if luminence < 0.2: font_colour = "white"
+                    elif luminence > 0.8: font_colour = "black"
 
                 #Create annotation object (needed for measuring width differences to bar)
                 an = self.ax.annotate(
@@ -292,6 +292,7 @@ class StackedBarplot():
                     if series_index == 0 and font_width > bar_width:
                         an.set_ha("right")
                         an.xy = (rect.get_x() - padding_data_coords, y)
+                        an.set_color(self.get_bar_val_label_style()["fontcolour"])
 
                         #If the annotation has been placed overlapping with category ticks, the category ticks are padded by the required amount.
                         if an.get_window_extent().x0 < self.ax.get_window_extent().x0:
@@ -301,6 +302,7 @@ class StackedBarplot():
                     elif series_index == len(self.data[0])-1 and font_width > bar_width:
                         an.set_ha("left")
                         an.xy = (rect.get_x() + rect.get_width() + padding_data_coords, y)
+                        an.set_color(self.get_bar_val_label_style()["fontcolour"])
 
                 #Hide bar data annotation if squeezed and style dictates it is to be hidden.
                 if self.get_bar_val_label_style()["hidesqueezed"] is not None:
@@ -349,6 +351,8 @@ class StackedBarplot():
                                fontsize=self.get_axis_title_style()["axislabelfontsize"],
                                color=self.get_axis_title_style()["axislabelfontcolour"],
                                fontfamily=self.get_fig_style()["fontfamily"])
+
+        self.ax.tick_params(axis='y', which='major', left=False, right=False)
 
 
     def _plot_legend(self):
