@@ -44,11 +44,10 @@ class DEFAULT_BAR_FONT_STYLE:
     colour = "black"
     format:str = "{0:.1f}"
     align:str = "centre"
-    padding:float = 1.5
-    display_thresh:tuple[float, float] = (0, None)
+    padding:float = 5 #In display coordinates
+    hide_squeezed:str = "inner-only" #Can be None, "all", "inner-only"
     colour_invert:bool = False
-    padding_thresh:float = 0 #The threshold for if a label should be moved
-    end_thresh_padd:bool = False
+    expel_squeezed_ends:bool = False
 
 
 class DEFAULT_BAR_STYLE:
@@ -217,11 +216,10 @@ class StackedPlotStyle:
             "fontcolour": DEFAULT_BAR_FONT_STYLE.colour,
             "fontformat": DEFAULT_BAR_FONT_STYLE.format,
             "fontalign": DEFAULT_BAR_FONT_STYLE.align,
-            "fontpadd": DEFAULT_BAR_FONT_STYLE.padding,
+            "fontpadd": DEFAULT_BAR_FONT_STYLE.padding, #TODO: Why has this got a different name? I.e., padd instead of padding.
             "fontcolourinvert": DEFAULT_BAR_FONT_STYLE.colour_invert,
-            "fontdisplaythresh": DEFAULT_BAR_FONT_STYLE.display_thresh,
-            "fontpaddthresh": DEFAULT_BAR_FONT_STYLE.padding_thresh,
-            "fontendthreshpadd": DEFAULT_BAR_FONT_STYLE.end_thresh_padd
+            "fonthidesqueezed": DEFAULT_BAR_FONT_STYLE.hide_squeezed,
+            "fontexpelsqueezedends": DEFAULT_BAR_FONT_STYLE.expel_squeezed_ends
         }
         self.__fig_style = {
             "title": DEFAULT_FIG_STYLE.title,
@@ -361,9 +359,8 @@ class StackedPlotStyle:
                 font_colour:str = None,
                 font_colour_invert:bool = False,
                 bar_value_format:str = None,
-                display_thresh:tuple[float, float] = (None, None),
-                padd_thresh:float = None,
-                end_thresh_padd:bool = None,
+                hide_squeezed:str = None,
+                expel_squeezed_ends:bool = None,
                 align:str=None,
                 padding:float = None):
         """Update StackedBarplot bar text style configuration.
@@ -377,23 +374,24 @@ class StackedPlotStyle:
                 string can also round to (e.g., 1) decimal place(s) with '{0:.1}'. A suffix can
                 be added using (for example) '{0}%'. See Python documentation for more inforamtion 
                 (https://docs.python.org/3/library/string.html#format-specification-mini-language).
-            display_thresh: Tuple of floats representing optional minimum and maximum display
-                thresholds. Data labels below minimum or above maximum thresholds will not be displayed.
-            padd_thresh: Threshold for whether data labels on start or end bars of categories should
-                be moved for better clarity (see parameter endthreshpadd).
-            end_thresh_padd: Boolean value indicating whether, for data values for start or end bars, 
-                if the data value is below paddthresh, is should be moved outside of the bar for better
-                clarity. 
+            hide_squeezed: Whether data labels that overlap their bar should be hidden (e.g., for
+                very small bars). Can be None (default), "all" (hide all squeezed data labels), or 
+                "inner-only", which ignores data labels for left-most or right-most bars in a category 
+                (useful if these data labels are moved outside of the bar).
+            expel_squeezed_ends: Boolean flag for whether data labels on start or end bars of categories
+                should be moved outside the bar for better clarity (i.e., to the left or right of the
+                while category bars) if the annotation is wider than its bar.
             align: Alignment of data labels within bars. Can be 'left', 'centre', or 'right'. 
-            padding: Padding for data labels moved.
+            padding: Padding for data labels moved. Given in display coordinate space. 
         """
         if font_size is not None: self.__bar_font_style["fontsize"] = font_size
         if font_colour is not None: self.__bar_font_style["fontcolour"] = font_colour
         if font_colour_invert is not None: self.__bar_font_style["fontcolourinvert"] = font_colour_invert
         if bar_value_format is not None: self.__bar_font_style["fontformat"] = bar_value_format
-        if display_thresh is not None: self.__bar_font_style["fontdisplaythresh"] = display_thresh
-        if padd_thresh is not None: self.__bar_font_style["fontpaddthresh"] = padd_thresh
-        if end_thresh_padd is not None: self.__bar_font_style["fontendthreshpadd"] = end_thresh_padd
+        if hide_squeezed not in [None, "all", "inner-only"]:
+            raise ValueError("Argument hide-squeezed must be either None, \"all\", or \"inner-only\".")
+        self.__bar_font_style["fonthidesqueezed"] = hide_squeezed
+        if expel_squeezed_ends is not None: self.__bar_font_style["fontexpelsqueezedends"] = expel_squeezed_ends
         if align is not None:
             if align not in ["left", "centre", "right"]:
                 raise ValueError("Argument align must be either \"left\", \"centre\", or \"right\".")
