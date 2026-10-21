@@ -197,8 +197,7 @@ class ColourGradient():
             for i in range(series_length):
                 series_colours.append(tuple([int(start+col_step[j]*i) for j, start in enumerate(start_colour)]))
         else:
-            col_step1 = [(centre-start)/(series_length//2.0) for start, centre in zip(start_colour, centre_colour)]
-            col_step2 = [(end-centre)/(series_length//2.0) for end, centre in zip(end_colour, centre_colour)]
+            if series_length == 1:
             for i in range(series_length):
                 if i < series_length//2:
                     series_colours.append(tuple([int(start+col_step1[j]*i) for j, start in enumerate(start_colour)]))
@@ -229,7 +228,8 @@ class ColourGradient():
         if end_intensity < 0 or end_intensity > 255:
             raise ValueError("Argument end_intensity must be a float with value between 0 and 255.")
 
-        col_step = (end_intensity-start_intensity)/(series_length-1.0)
+        if series_length == 1: col_step = 0
+        else: col_step = (end_intensity-start_intensity)/(series_length-1.0)
         self.colour_gradient_list = [((start_intensity+col_step*i, start_intensity+col_step*i, start_intensity+col_step*i)) for i in range(series_length)]
 
     def set_colour_gradient_list(self, new_colour_gradient_list:list[tuple[int, int, int]]):
