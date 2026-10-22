@@ -176,6 +176,16 @@ class StackedBarplot():
         ax_width = Auto_Style_Calculations.calc_axis_width(len(self.data[0]))
         ax_height = Auto_Style_Calculations.calc_axis_height(len(self.data))
 
+        if self.get_legend_style()["show"] and "horizontal" in self.get_legend_style()["placement"]:
+            legend_height_px = self.ax.get_legend().get_window_extent().height
+            ax_height += legend_height_px / self.fig.dpi * 2.54
+        if self.get_legend_style()["show"] and "vertical" in self.get_legend_style()["placement"]:
+            legend_width_px = self.ax.get_legend().get_window_extent().width
+            ax_width += legend_width_px / self.fig.dpi * 2.54
+        if self.get_fig_style()["title"] is not None:
+            title_height_px = self.get_fig_style()["titlefontsize"] + 20 #Extra padding
+            ax_height += title_height_px / self.fig.dpi * 2.54
+
         label_width_px = max([label.get_window_extent().width for label in self.ax.get_yticklabels()]) #Take category label into account
         label_width_cm = label_width_px / self.fig.dpi* 2.54
         ax_width += label_width_cm
@@ -351,10 +361,13 @@ class StackedBarplot():
 
         #TODO: Adjust (auto) figsize to account for inclusion of title, and length of category names(?)
         if self.get_fig_style()["title"] is not None:
+            if self.get_legend_style()["placement"] == "above-horizontal": pad=35
+            else: pad=6 #6 is default
             self.ax.set_title(self.get_fig_style()["title"],
                               fontsize=self.get_fig_style()["titlefontsize"],
                               color=self.get_fig_style()["titlecolour"],
-                              fontfamily=self.get_fig_style()["fontfamily"])
+                              fontfamily=self.get_fig_style()["fontfamily"],
+                              pad=pad)
         if self.get_axis_title_style()["xlabel"] is not None:
             self.ax.set_xlabel(self.get_axis_title_style()["xlabel"],
                                fontsize=self.get_axis_title_style()["axislabelfontsize"],
