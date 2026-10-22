@@ -39,8 +39,36 @@ from .tools import ColourGradient
 __all__ = [
     "StackedPlotStyle", "DEFAULT_BAR_VAL_LABEL_STYLE", "DEFAULT_BAR_STYLE", "DEFAULT_FIG_STYLE", 
     "DEFAULT_AXIS_STYLE", "DEFAULT_AXIS_TITLE_STYLE", "DEFAULT_LEGEND_STYLE", 
-    "DEFAULT_VERTLINE_STYLE"
+    "DEFAULT_VERTLINE_STYLE", "Auto_Style_Calculations"
 ]
+
+
+class Auto_Style_Calculations:
+    """Class holding static methods relating to calculations for default 
+    style values. In particular, where the style value is contingent on
+    chart data (e.g., figur"""
+
+    @staticmethod
+    def calc_axis_width(num_series:int) -> int:
+        """Calculate axis width (in cm) from number of series in plot.
+
+        Args:
+            num_series: The number of series in each category inthe plot."""
+        print("Called!")
+        if num_series > 10: return 24
+        else: return (-0.198*num_series**2) + 4.23*num_series + .7212
+
+
+    @staticmethod
+    def calc_axis_height(num_categories:int) -> float:
+        """Calculate axis height (in cm) from number of categories in plot.
+
+        Args:
+            num_categories: The number of categories in the plot."""
+        print("Called!")
+        if num_categories > 25: return 31.5
+        else: return (-0.025*num_categories**2) + 1.2557*num_categories + 1.5726
+
 
 
 class DEFAULT_AXIS_STYLE:
@@ -123,7 +151,7 @@ class DEFAULT_FIG_STYLE:
     and whether the categories should be ordererd based on an aggregate
     function of each category."""
 
-    size:tuple[int, int] = (10, 5)
+    size:tuple[int, int] = None #TODO: I'm not sure this is actually used anymore, as the default size scales to data.
     title:str = None
     title_font_size:int = 12
     title_colour = "black"
@@ -432,7 +460,7 @@ class StackedPlotStyle:
 
         Args:
             title: The title of the plot.
-            title_font_size: Plot title font size in points or as a string (e.g., 'large').
+            title_font_size: Plot title font size in points.
             title_colour: The colour of the plot title.
             font_family: The font family for all text used in the plot. User must select from
                 a list of font families (installed on user's machine).

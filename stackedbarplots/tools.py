@@ -198,6 +198,11 @@ class ColourGradient():
                 series_colours.append(tuple([int(start+col_step[j]*i) for j, start in enumerate(start_colour)]))
         else:
             if series_length == 1:
+                col_step1 = [0, 0, 0]
+                col_step2 = [0, 0, 0]
+            else:
+                col_step1 = [(centre-start)/(series_length//2.0) for start, centre in zip(start_colour, centre_colour)]
+                col_step2 = [(end-centre)/(series_length//2.0) for end, centre in zip(end_colour, centre_colour)]
             for i in range(series_length):
                 if i < series_length//2:
                     series_colours.append(tuple([int(start+col_step1[j]*i) for j, start in enumerate(start_colour)]))

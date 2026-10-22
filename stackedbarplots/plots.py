@@ -46,7 +46,7 @@ Typical usage example:
 """
 
 
-from .defaults import DEFAULT_BAR_VAL_LABEL_STYLE, DEFAULT_FIG_STYLE, DEFAULT_BAR_STYLE
+from .defaults import DEFAULT_BAR_VAL_LABEL_STYLE, DEFAULT_BAR_STYLE
 from .tools import ColourGradient
 from .core import StackedBarplot, StackedPlotStyle
 
@@ -60,8 +60,8 @@ def basic(
         data:dict[str, list[float]],
         series_labels:list[str],
         title:str = None,
-        fig_size:tuple[int, int] = DEFAULT_FIG_STYLE.size,
-        font_size:int = DEFAULT_BAR_VAL_LABEL_STYLE.font_size,
+        fig_size:tuple[int, int] = None,
+        font_size:int = None,
         font_colour:str = DEFAULT_BAR_VAL_LABEL_STYLE.font_colour,
         data_label_format:str = DEFAULT_BAR_VAL_LABEL_STYLE.format,
         data_label_align:str = DEFAULT_BAR_VAL_LABEL_STYLE.align,
@@ -133,7 +133,7 @@ def centred(
         data:dict[str, list[float]],
         series_labels:list[str],
         title:str = None,
-        fig_size:tuple[int, int] = DEFAULT_FIG_STYLE.size,
+        fig_size:tuple[int, int] = None,
         font_size:int = DEFAULT_BAR_VAL_LABEL_STYLE.font_size,
         font_colour:str = DEFAULT_BAR_VAL_LABEL_STYLE.font_colour,
         data_label_format:str = DEFAULT_BAR_VAL_LABEL_STYLE.format,
@@ -209,7 +209,7 @@ def normalised(
         data:dict[str, list[float]],
         series_labels:list[str],
         title:str = None,
-        fig_size:tuple[int, int] = DEFAULT_FIG_STYLE.size,
+        fig_size:tuple[int, int] = None,
         font_size:int = DEFAULT_BAR_VAL_LABEL_STYLE.font_size,
         font_colour:str = DEFAULT_BAR_VAL_LABEL_STYLE.font_colour,
         data_label_format:str = "{0:.1f}%",
@@ -292,7 +292,7 @@ def normalised_centred(
         data:dict[str, list[float]],
         series_labels:list[str],
         title:str = None,
-        fig_size:tuple[int, int] = DEFAULT_FIG_STYLE.size,
+        fig_size:tuple[int, int] = None,
         font_size:int = DEFAULT_BAR_VAL_LABEL_STYLE.font_size,
         font_colour:str = DEFAULT_BAR_VAL_LABEL_STYLE.font_colour,
         data_label_format:str = "{0:.1f}%",

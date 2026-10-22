@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 import matplotlib.lines as mlines
 
 from .tools import cumu2d, ChartDataSorting
-from .defaults import StackedPlotStyle, DEFAULT_LEGEND_STYLE, DEFAULT_BAR_STYLE
+from .defaults import StackedPlotStyle, DEFAULT_LEGEND_STYLE, DEFAULT_BAR_STYLE, Auto_Style_Calculations
 
 
 __all__ = [
@@ -160,6 +160,8 @@ class StackedBarplot():
             self._plot_legend()
         if self.get_vert_line_style()["show"]:
             self._plot_vert_line()
+        print("Fig size in -render is", self.get_fig_style()["size"])
+        if self.get_fig_style()["size"] is None: self._auto_size_fig()
         self.fig.tight_layout()
 
 
@@ -170,9 +172,22 @@ class StackedBarplot():
             plt.close(self.fig)
 
 
+    def _auto_size_fig(self):
+        """Sets the size of the figure automatically (if not user defined)."""
+        ax_width = Auto_Style_Calculations.calc_axis_width(len(self.data[0]))
+        ax_height = Auto_Style_Calculations.calc_axis_height(len(self.data))
+
+        label_width_px = max([label.get_window_extent().width for label in self.ax.get_yticklabels()]) #Take category label into account
+        label_width_cm = label_width_px / self.fig.dpi* 2.54 #TODO: This should take into account label font size as well?
+        ax_width += label_width_cm
+
+        self.fig.set_size_inches((ax_width*0.393701, ax_height*0.393701))
+
+
     def _plot_bars(self):
         """Internal method. Renders bars and category headings according to stored style configuration."""
-        self.fig, self.ax = plt.subplots(figsize=self.get_fig_style()["size"])
+        if self.get_fig_style()["size"] is None: self.fig, self.ax = plt.subplots()
+        else: self.fig, self.ax = plt.subplots(figsize=self.get_fig_style()["size"])
 
         middle_index = len(self.data[0]) // 2
 
@@ -334,6 +349,8 @@ class StackedBarplot():
         if not self.get_fig_style()["spinedisplay"][2]: self.ax.spines['right'].set_visible(False)
         if not self.get_fig_style()["spinedisplay"][3]: self.ax.spines['bottom'].set_visible(False)
 
+
+        #TODO: Adjust (auto) figsize to account for inclusion of title, and length of category names(?)
         if self.get_fig_style()["title"] is not None:
             self.ax.set_title(self.get_fig_style()["title"],
                               fontsize=self.get_fig_style()["titlefontsize"],
