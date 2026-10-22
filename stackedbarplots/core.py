@@ -160,7 +160,6 @@ class StackedBarplot():
             self._plot_legend()
         if self.get_vert_line_style()["show"]:
             self._plot_vert_line()
-        print("Fig size in -render is", self.get_fig_style()["size"])
         if self.get_fig_style()["size"] is None: self._auto_size_fig()
         self.fig.tight_layout()
 
