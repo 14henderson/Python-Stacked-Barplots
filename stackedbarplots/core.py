@@ -176,8 +176,18 @@ class StackedBarplot():
         ax_width = Auto_Style_Calculations.calc_axis_width(len(self.data[0]))
         ax_height = Auto_Style_Calculations.calc_axis_height(len(self.data))
 
+        if self.get_legend_style()["show"] and "horizontal" in self.get_legend_style()["placement"]:
+            legend_height_px = self.ax.get_legend().get_window_extent().height
+            ax_height += legend_height_px / self.fig.dpi * 2.54
+        if self.get_legend_style()["show"] and "vertical" in self.get_legend_style()["placement"]:
+            legend_width_px = self.ax.get_legend().get_window_extent().width
+            ax_width += legend_width_px / self.fig.dpi * 2.54
+        if self.get_fig_style()["title"] is not None:
+            title_height_px = self.get_fig_style()["titlefontsize"] + 20 #Extra padding
+            ax_height += title_height_px / self.fig.dpi * 2.54
+
         label_width_px = max([label.get_window_extent().width for label in self.ax.get_yticklabels()]) #Take category label into account
-        label_width_cm = label_width_px / self.fig.dpi* 2.54 #TODO: This should take into account label font size as well?
+        label_width_cm = label_width_px / self.fig.dpi* 2.54
         ax_width += label_width_cm
 
         self.fig.set_size_inches((ax_width*0.393701, ax_height*0.393701))
@@ -351,10 +361,13 @@ class StackedBarplot():
 
         #TODO: Adjust (auto) figsize to account for inclusion of title, and length of category names(?)
         if self.get_fig_style()["title"] is not None:
+            if self.get_legend_style()["placement"] == "above-horizontal": pad=35
+            else: pad=6 #6 is default
             self.ax.set_title(self.get_fig_style()["title"],
                               fontsize=self.get_fig_style()["titlefontsize"],
                               color=self.get_fig_style()["titlecolour"],
-                              fontfamily=self.get_fig_style()["fontfamily"])
+                              fontfamily=self.get_fig_style()["fontfamily"],
+                              pad=pad)
         if self.get_axis_title_style()["xlabel"] is not None:
             self.ax.set_xlabel(self.get_axis_title_style()["xlabel"],
                                fontsize=self.get_axis_title_style()["axislabelfontsize"],
@@ -367,6 +380,13 @@ class StackedBarplot():
                                fontfamily=self.get_fig_style()["fontfamily"])
 
         self.ax.tick_params(axis='y', which='major', left=False, right=False)
+
+        if self.get_axis_style()["xfontcolour"] is not None:
+            #Assumption made that bottom spine colour should match x axis tick colour?
+            self.ax.spines["bottom"].set_color(self.get_axis_style()["xfontcolour"])
+            self.ax.tick_params(axis='x', colors=self.get_axis_style()["xfontcolour"])
+        if self.get_axis_style()["yfontcolour"] is not None:
+            self.ax.tick_params(axis='y', colors=self.get_axis_style()["yfontcolour"])
 
 
     def _plot_legend(self):
@@ -383,12 +403,15 @@ class StackedBarplot():
                        bbox_to_anchor=bbox_to_anchor,
                        loc=DEFAULT_LEGEND_STYLE.placement_options[self.get_legend_style()["placement"]][0],
                        fontsize=self.get_legend_style()["fontsize"],
-                       labelspacing = self.get_legend_style()["spacing"],
+                       labelspacing = self.get_legend_style()["padding"], #Done twice so it is applied either vert or horiz
+                       columnspacing = self.get_legend_style()["padding"], #Done twice so it is applied either vert or horiz
                        labelcolor=self.get_legend_style()["fontcolour"],
                        facecolor=self.get_legend_style()["backgroundcolour"],
                        edgecolor = self.get_legend_style()["bordercolour"],
                        framealpha=1,
-                       shadow=False)
+                       shadow=False,
+                       handletextpad=0.1 #Space between label and marker
+                       )
 
 
     def _plot_vert_line(self):

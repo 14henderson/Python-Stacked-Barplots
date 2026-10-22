@@ -113,8 +113,7 @@ def basic(
     if bar_colours is not None: plot.set_bar_style(bar_gradient=bar_colours)
 
     plot.set_fig_style(title=title,
-                       fig_size=fig_size,
-                       spine_display=(False, False, False, True))
+                       fig_size=fig_size)
 
     plot.set_bar_val_label_style(font_size=font_size,
                               font_colour=font_colour,
@@ -187,8 +186,7 @@ def centred(
     plot.set_vert_line_style(show=True)
 
     plot.set_fig_style(title=title,
-                       fig_size=fig_size,
-                       spine_display=(False, False, False, True))
+                       fig_size=fig_size)
 
     plot.set_bar_val_label_style(font_size=font_size,
                               font_colour=font_colour,
@@ -272,8 +270,7 @@ def normalised(
     if bar_colours is not None: plot.set_bar_style(bar_gradient=bar_colours)
 
     plot.set_fig_style(title=title,
-                        fig_size=fig_size,
-                        spine_display=(False, False, False, True))
+                        fig_size=fig_size)
 
     plot.set_bar_val_label_style(font_size=font_size,
                                 font_colour=font_colour,
@@ -357,8 +354,7 @@ def normalised_centred(
     plot.set_vert_line_style(show=True)
 
     plot.set_fig_style(title=title,
-                        fig_size=fig_size,
-                        spine_display=(False, False, False, True))
+                        fig_size=fig_size)
 
     plot.set_bar_val_label_style(font_size=font_size,
                                 font_colour=font_colour,
