@@ -111,7 +111,7 @@ class DEFAULT_BAR_STYLE:
     here for a colour gradient to be generated."""
 
     align:str = "left"
-    height:float = 0.8
+    height:float = .8
     start_colour:tuple[int, int, int] = (227, 108, 85)
     end_colour:tuple[int, int, int] = (106, 139, 239)
     mid_colour:tuple[int, int, int] = (220, 221, 221)
@@ -130,7 +130,7 @@ class DEFAULT_BAR_VAL_LABEL_STYLE:
     displayed on a dark-coloured bar; this is set to False by 
     default."""
 
-    font_size:int = 12
+    font_size:int = 10
     font_colour = "black"
     format:str = "{0:.1f}"
     align:str = "centre"
@@ -449,7 +449,7 @@ class StackedPlotStyle:
                     title:str = None,
                     title_font_size:int = None,
                     title_colour:str = None,
-                    font_family:str = None,
+                    font_family:str = "Arial",
                     fig_size:tuple[int, int] = None,
                     background_colour:str = None,
                     sorted:str = None,
