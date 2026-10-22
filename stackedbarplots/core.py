@@ -155,11 +155,15 @@ class StackedBarplot():
         self._plot_bars()
         self._plot_bar_labels()
         self._plot_axes()
+        self._plot_peritext()
+
         if self.get_legend_style()["show"]:
-            self._init_legend_markers()
             self._plot_legend()
         if self.get_vert_line_style()["show"]:
             self._plot_vert_line()
+
+        self._plot_paratext()
+
         if self.get_fig_style()["size"] is None: self._auto_size_fig()
         self.fig.tight_layout()
 
@@ -197,6 +201,8 @@ class StackedBarplot():
         """Internal method. Renders bars and category headings according to stored style configuration."""
         if self.get_fig_style()["size"] is None: self.fig, self.ax = plt.subplots()
         else: self.fig, self.ax = plt.subplots(figsize=self.get_fig_style()["size"])
+
+        self.ax.margins(y=0)
 
         middle_index = len(self.data[0]) // 2
 
@@ -336,38 +342,8 @@ class StackedBarplot():
         self.ax.invert_yaxis() #Required for some reason?
 
 
-    def _plot_axes(self):
-        """Internal method. Renders and applies plot labels/title and axes settings according to stored style configuration."""
-        if not self.get_axis_style()["yaxisshow"]: self.ax.yaxis.set_visible(False)
-        if not self.get_axis_style()["xaxisshow"]: self.ax.xaxis.set_visible(False)
-        else:
-            if self.get_axis_style()["xlim"] is not None:
-                self.ax.set_xlim(self.get_axis_style()["xlim"])
-                if self.get_axis_style()["step"] is not None:
-                    self.ax.set_xticks([i for i in range(self.get_axis_style()["xlim"][0], self.get_axis_style()["xlim"][1]+1, self.get_axis_style()["step"])])
-            if self.get_axis_style()["xaxisabs"]:
-                self.ax.xaxis.set_major_formatter(lambda x, pos: self.get_axis_style()["xaxisformat"].format(abs(x))) #Absolute x ticks
-            else:
-                self.ax.xaxis.set_major_formatter(lambda x, pos: self.get_axis_style()["xaxisformat"].format(x))
-            self.ax.tick_params(axis='x', labelsize=int(self.get_axis_style()["xfontsize"]), labelfontfamily=self.get_fig_style()["fontfamily"])
-
-        self.ax.tick_params(axis='y', labelsize=int(self.get_axis_style()["yfontsize"]), labelfontfamily=self.get_fig_style()["fontfamily"])
-
-        if not self.get_fig_style()["spinedisplay"][0]: self.ax.spines['left'].set_visible(False)
-        if not self.get_fig_style()["spinedisplay"][1]: self.ax.spines['top'].set_visible(False)
-        if not self.get_fig_style()["spinedisplay"][2]: self.ax.spines['right'].set_visible(False)
-        if not self.get_fig_style()["spinedisplay"][3]: self.ax.spines['bottom'].set_visible(False)
-
-
-        #TODO: Adjust (auto) figsize to account for inclusion of title, and length of category names(?)
-        if self.get_fig_style()["title"] is not None:
-            if self.get_legend_style()["placement"] == "above-horizontal": pad=35
-            else: pad=6 #6 is default
-            self.ax.set_title(self.get_fig_style()["title"],
-                              fontsize=self.get_fig_style()["titlefontsize"],
-                              color=self.get_fig_style()["titlecolour"],
-                              fontfamily=self.get_fig_style()["fontfamily"],
-                              pad=pad)
+    def _plot_peritext(self):
+        """Internal method. Draws peritext (i.e., text of the axis) including axes ticks and axes labels."""
         if self.get_axis_title_style()["xlabel"] is not None:
             self.ax.set_xlabel(self.get_axis_title_style()["xlabel"],
                                fontsize=self.get_axis_title_style()["axislabelfontsize"],
@@ -389,8 +365,46 @@ class StackedBarplot():
             self.ax.tick_params(axis='y', colors=self.get_axis_style()["yfontcolour"])
 
 
+    def _plot_paratext(self):
+        """Internal method. Draws paratext (i.e., text around the axis) including title and subtitle."""
+        #TODO: Adjust (auto) figsize to account for inclusion of title, and length of category names(?)
+        if self.get_fig_style()["title"] is not None:
+            if self.get_legend_style()["placement"] == "above-horizontal": pad=35
+            else: pad=6 #6 is default
+            self.ax.set_title(self.get_fig_style()["title"],
+                              fontsize=self.get_fig_style()["titlefontsize"],
+                              color=self.get_fig_style()["titlecolour"],
+                              fontfamily=self.get_fig_style()["fontfamily"],
+                              pad=pad)
+
+
+    def _plot_axes(self):
+        """Internal method. Draws and scales plot axes (spine and x axis scale) according to stored style configuration."""
+        if not self.get_axis_style()["yaxisshow"]: self.ax.yaxis.set_visible(False)
+        self.ax.tick_params(axis='y', labelsize=int(self.get_axis_style()["yfontsize"]), labelfontfamily=self.get_fig_style()["fontfamily"])
+
+        if not self.get_axis_style()["xaxisshow"]: self.ax.xaxis.set_visible(False)
+        else:
+            if self.get_axis_style()["xlim"] is not None:
+                self.ax.set_xlim(self.get_axis_style()["xlim"])
+                if self.get_axis_style()["step"] is not None:
+                    self.ax.set_xticks([i for i in range(self.get_axis_style()["xlim"][0], self.get_axis_style()["xlim"][1]+1, self.get_axis_style()["step"])])
+            if self.get_axis_style()["xaxisabs"]:
+                self.ax.xaxis.set_major_formatter(lambda x, pos: self.get_axis_style()["xaxisformat"].format(abs(x))) #Absolute x ticks
+            else:
+                self.ax.xaxis.set_major_formatter(lambda x, pos: self.get_axis_style()["xaxisformat"].format(x))
+            self.ax.tick_params(axis='x', labelsize=int(self.get_axis_style()["xfontsize"]), labelfontfamily=self.get_fig_style()["fontfamily"])
+
+        if not self.get_fig_style()["spinedisplay"][0]: self.ax.spines['left'].set_visible(False)
+        if not self.get_fig_style()["spinedisplay"][1]: self.ax.spines['top'].set_visible(False)
+        if not self.get_fig_style()["spinedisplay"][2]: self.ax.spines['right'].set_visible(False)
+        if not self.get_fig_style()["spinedisplay"][3]: self.ax.spines['bottom'].set_visible(False)
+
+
     def _plot_legend(self):
         """Internal method. Renders a plot legend according to stored style configuration."""
+        self._init_legend_markers()
+
         if "horizontal" in self.get_legend_style()["placement"]: ncol = len(self.series_labels)
         else: ncol = 1
 
