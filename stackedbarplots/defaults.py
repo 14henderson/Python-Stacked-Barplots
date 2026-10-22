@@ -173,7 +173,7 @@ class DEFAULT_LEGEND_STYLE:
     Users are expected to choose one of the given placement options for
     accessibility. A 'placementtransform' is also given to adjust placement."""
 
-    show:bool = False
+    show:bool = False #TODO: Is this necessary? A placement is required for the legend to appear
     font_size:int = 8
     font_colour = "black"
     label_padding:float = 0.8
@@ -182,10 +182,9 @@ class DEFAULT_LEGEND_STYLE:
     background_colour = DEFAULT_FIG_STYLE.background_colour
     placement:str = "right-vertical" #TODO: tidy up the difference between placement and location
     placement_options = {
-        "right-vertical": ["upper left", (1.12, 1)],
-        "left-vertical": ["upper right", (-0.12, 1)],
-        "below-horizontal": ["upper center", (0.5, -0.12)],
-        "above-horizontal": ["lower center", (0.5, 1.02)]
+        "right-vertical": ["upper left", (1, 1)],
+        "below-horizontal": ["upper center", (0.5, 0)],
+        "above-horizontal": ["lower center", (0.5, 1)]
     }
     placement_transform:tuple[float, float] = (0, 0) #TODO: Convert from fractional dimension space to display coordinate space.
 
@@ -242,7 +241,7 @@ class StackedPlotStyle:
             "yaxisshow": DEFAULT_AXIS_STYLE.y_axis_show,
             "xaxisabs": DEFAULT_AXIS_STYLE.x_axis_abs
         }
-        self.__axis_title_style = {
+        self.__axis_title_style = { #TODO: Change name to axis peritext?
             "xlabel": DEFAULT_AXIS_TITLE_STYLE.x_label,
             "ylabel": DEFAULT_AXIS_TITLE_STYLE.y_label,
             "axislabelfontsize": DEFAULT_AXIS_TITLE_STYLE.axis_label_font_size,
@@ -375,7 +374,7 @@ class StackedPlotStyle:
 
 
     def set_bar_style(self,
-                    bar_height:int = None,
+                    bar_height:int = None, #TODO: Change to height
                     align:str = None,
                     bar_gradient:ColourGradient = None):
         """Update StackedBarplot bar style configuration.
@@ -540,7 +539,7 @@ class StackedPlotStyle:
             background_colour: The legend's background color.
             border_colour: The legend's background patch edge color.
             placement: String representing where around the figure the legend should be
-                displayed. {"right-vertical", "left-vertical", "below-horizontal", "above-horizontal"}.
+                displayed. {"right-vertical", "below-horizontal", "above-horizontal"}.
             marker_shape: Marker style string. {'*': 'star', '+': 'plus', 's':'square', 
                 'o':circle'}. For a full list of marker styles see https://matplotlib.org/stable/api/_as_gen/matplotlib.lines.Line2D.html.
             transform: Allows the user to make minor adjustments to the legend's placement
@@ -554,8 +553,8 @@ class StackedPlotStyle:
         if background_colour is not None: self.__legend_style["backgroundcolour"] = background_colour
         if border_colour is not None: self.__legend_style["bordercolour"] = border_colour
         if placement is not None:
-            if placement not in ["right-vertical", "left-vertical", "below-horizontal", "above-horizontal"]:
-                raise ValueError("Placement must be either \"right-vertical\", \"left-vertical\", \"below-horizontal\", \"above-horizontal\".")
+            if placement not in ["right-vertical", "below-horizontal", "above-horizontal"]:
+                raise ValueError("Placement must be either \"right-vertical\", \"below-horizontal\", \"above-horizontal\".")
             self.__legend_style["placement"] = placement
         if marker_shape is not None: self.__legend_style["markershape"] = marker_shape
         if transform is not None:

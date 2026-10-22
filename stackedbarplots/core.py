@@ -11,6 +11,7 @@ import os
 import warnings
 import matplotlib.pyplot as plt
 import matplotlib.lines as mlines
+from matplotlib.transforms import offset_copy
 
 from .tools import cumu2d, ChartDataSorting
 from .defaults import StackedPlotStyle, DEFAULT_LEGEND_STYLE, DEFAULT_BAR_STYLE, Auto_Style_Calculations
@@ -346,11 +347,17 @@ class StackedBarplot():
         """Internal method. Draws peritext (i.e., text of the axis) including axes ticks and axes labels."""
         if self.get_axis_title_style()["xlabel"] is not None:
             self.ax.set_xlabel(self.get_axis_title_style()["xlabel"],
+                               labelpad=0,
                                fontsize=self.get_axis_title_style()["axislabelfontsize"],
                                color=self.get_axis_title_style()["axislabelfontcolour"],
                                fontfamily=self.get_fig_style()["fontfamily"])
+            self.ax.xaxis.label.set_transform( #set padding between label and x axis
+                offset_copy(self.ax.xaxis.label.get_transform(), fig=self.fig, y=-5, units="dots")
+            )
+
         if self.get_axis_title_style()["ylabel"] is not None:
             self.ax.set_ylabel(self.get_axis_title_style()["ylabel"],
+                               labelpad=0,
                                fontsize=self.get_axis_title_style()["axislabelfontsize"],
                                color=self.get_axis_title_style()["axislabelfontcolour"],
                                fontfamily=self.get_fig_style()["fontfamily"])
@@ -412,9 +419,26 @@ class StackedBarplot():
         bbox_to_anchor[0] += self.get_legend_style()["transform"][0]
         bbox_to_anchor[1] += self.get_legend_style()["transform"][1]
 
+        #Apply positional transforms to the legend to avoid overlapping with peri/para-text
+        if self.get_legend_style()["placement"] == "right-vertical":
+            bbox_transform = offset_copy(self.ax.transAxes, fig=self.fig, x=5, units="dots")
+        elif self.get_legend_style()["placement"] == "above-horizontal":
+            bbox_transform = offset_copy(self.ax.transAxes, fig=self.fig, y=5, units="dots")
+        elif self.get_legend_style()["placement"] == "below-horizontal":
+            ytrans = -5
+            if self.get_axis_style()["xaxisshow"]:
+                ytrans -= (self.ax.xaxis.get_tightbbox().height)
+                if self.get_axis_title_style()["xlabel"] is not None:
+                    ytrans -= (self.ax.xaxis.label.get_window_extent().height + 5)
+            bbox_transform = offset_copy(self.ax.transAxes, fig=self.fig, y=ytrans, units="dots")
+        else:
+            bbox_transform = offset_copy(self.ax.transAxes, fig=self.fig, x=0, units="dots")
+
         self.ax.legend(handles=self.get_legend_style()["markers"],
                        ncol=ncol,
                        bbox_to_anchor=bbox_to_anchor,
+                       bbox_transform=bbox_transform,
+                       borderaxespad=0,
                        loc=DEFAULT_LEGEND_STYLE.placement_options[self.get_legend_style()["placement"]][0],
                        fontsize=self.get_legend_style()["fontsize"],
                        labelspacing = self.get_legend_style()["padding"], #Done twice so it is applied either vert or horiz
