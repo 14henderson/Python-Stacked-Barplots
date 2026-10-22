@@ -158,7 +158,7 @@ class DEFAULT_FIG_STYLE:
     font_family:str = "sans-serif"
     background_colour = "#ffffff"
     sorted:str = None #Can be None, "sum-asc", "sum-desc", "avg-asc", "avg-desc", "lhlf-asc", "lhlf-desc", "rhlf-asc", "rhlf-desc"
-    spine_display:tuple[bool, bool, bool, bool] = (False, False, False, True) #left, top, right, bottom
+    spine_display:tuple[bool, bool, bool, bool] = (False, False, False, False) #left, top, right, bottom
 
 
 class DEFAULT_LEGEND_STYLE:
