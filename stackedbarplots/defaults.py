@@ -82,8 +82,10 @@ class DEFAULT_AXIS_STYLE:
 
     x_lim:tuple[int, int] = None
     step:int = None
-    x_font_size:int = 12
+    x_font_size:int = 10
     y_font_size:int = 12
+    x_font_colour = "#7E7D7D"
+    y_font_colour = "#2c2c2c"
     x_axis_format:str = "{0:.0f}"
     x_axis_show:bool = True
     y_axis_show:bool = True
@@ -149,7 +151,7 @@ class DEFAULT_FIG_STYLE:
     and whether the categories should be ordererd based on an aggregate
     function of each category."""
 
-    size:tuple[int, int] = None #TODO: I'm not sure this is actually used anymore, as the default size scales to data.
+    size:tuple[int, int] = None #Can be None (auto scaling), or an integer tuple.
     title:str = None
     title_font_size:int = 12
     title_colour = "black"
@@ -233,6 +235,8 @@ class StackedPlotStyle:
             "step": DEFAULT_AXIS_STYLE.step,
             "xfontsize": DEFAULT_AXIS_STYLE.x_font_size,
             "yfontsize": DEFAULT_AXIS_STYLE.y_font_size,
+            "xfontcolour": DEFAULT_AXIS_STYLE.x_font_colour,
+            "yfontcolour": DEFAULT_AXIS_STYLE.y_font_colour,
             "xaxisformat": DEFAULT_AXIS_STYLE.x_axis_format,
             "xaxisshow": DEFAULT_AXIS_STYLE.x_axis_show,
             "yaxisshow": DEFAULT_AXIS_STYLE.y_axis_show,
@@ -302,6 +306,8 @@ class StackedPlotStyle:
                         step:int = None,
                         x_font_size:int = None,
                         y_font_size:int = None,
+                        x_font_colour:str = None,
+                        y_font_colour:str = None,
                         x_axis_format:str = None,
                         x_axis_show:bool = None,
                         y_axis_show:bool = None,
@@ -314,6 +320,8 @@ class StackedPlotStyle:
                 is a requirement for step.
             x_font_size: X axis tick label font size in points or as a string (e.g., 'large').
             y_font_size: Y axis tick label font size in points or as a string (e.g., 'large').
+            x_font_colour: X axis tick label font colour.
+            y_font_colour: X axis tick label font colour.
             x_axis_format: format()-style format string for x axis ticks. Default '{0}'. Format
                 string can also round to (e.g., 1) decimal place(s) with '{0:.1}'. A suffix can
                 be added using (for example) '{0}%'. See Python documentation for more inforamtion 
@@ -326,6 +334,8 @@ class StackedPlotStyle:
         if step is not None: self.__axis_style["step"] = step
         if x_font_size is not None: self.__axis_style["xfontsize"] = x_font_size
         if y_font_size is not None: self.__axis_style["yfontsize"] = y_font_size
+        if x_font_colour is not None: self.__axis_style["xfontcolour"] = x_font_colour
+        if y_font_colour is not None: self.__axis_style["yfontcolour"] = y_font_colour
         if x_axis_format is not None: self.__axis_style["xaxisformat"] = x_axis_format
         if x_axis_show is not None: self.__axis_style["xaxisshow"] = x_axis_show
         if y_axis_show is not None: self.__axis_style["yaxisshow"] = y_axis_show

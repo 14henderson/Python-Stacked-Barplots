@@ -177,7 +177,7 @@ class StackedBarplot():
         ax_height = Auto_Style_Calculations.calc_axis_height(len(self.data))
 
         label_width_px = max([label.get_window_extent().width for label in self.ax.get_yticklabels()]) #Take category label into account
-        label_width_cm = label_width_px / self.fig.dpi* 2.54 #TODO: This should take into account label font size as well?
+        label_width_cm = label_width_px / self.fig.dpi* 2.54
         ax_width += label_width_cm
 
         self.fig.set_size_inches((ax_width*0.393701, ax_height*0.393701))
@@ -367,6 +367,13 @@ class StackedBarplot():
                                fontfamily=self.get_fig_style()["fontfamily"])
 
         self.ax.tick_params(axis='y', which='major', left=False, right=False)
+
+        if self.get_axis_style()["xfontcolour"] is not None:
+            #Assumption made that bottom spine colour should match x axis tick colour?
+            self.ax.spines["bottom"].set_color(self.get_axis_style()["xfontcolour"])
+            self.ax.tick_params(axis='x', colors=self.get_axis_style()["xfontcolour"])
+        if self.get_axis_style()["yfontcolour"] is not None:
+            self.ax.tick_params(axis='y', colors=self.get_axis_style()["yfontcolour"])
 
 
     def _plot_legend(self):
