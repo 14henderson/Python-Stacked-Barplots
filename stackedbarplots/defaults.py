@@ -80,6 +80,8 @@ class DEFAULT_AXIS_STYLE:
     and maximum values to be displayed on the X axis (None indicates 
     no limit). Font format is str.format() type, default as "{0}"."""
 
+    x_axis_show:bool = True
+    y_axis_show:bool = True
     x_lim:tuple[int, int] = None
     step:int = None
     x_font_size:int = 10
@@ -87,8 +89,6 @@ class DEFAULT_AXIS_STYLE:
     x_font_colour = "#7E7D7D"
     y_font_colour = "#2c2c2c"
     x_axis_format:str = "{0:.0f}"
-    x_axis_show:bool = True
-    y_axis_show:bool = True
     x_axis_abs:bool = False
 
 
@@ -166,7 +166,7 @@ class DEFAULT_LEGEND_STYLE:
     
     Default style settings for stacked barchart relating to the
     style of the plot legend. The visibility, font size, legend marker
-    shape, and spacing between legend items is defined here. 
+    shape, and padding between legend items is defined here. 
 
     Default positioning for the legend is also defined here, which
     is managed through a legend anchor location combined with a figure anchor.
@@ -174,12 +174,12 @@ class DEFAULT_LEGEND_STYLE:
     accessibility. A 'placementtransform' is also given to adjust placement."""
 
     show:bool = False
-    font_size:int = 12
+    font_size:int = 8
     font_colour = "black"
-    label_spacing:float = 0.5
+    label_padding:float = 0.8
     marker_shape:str = "s" #see for different marker shapes https://matplotlib.org/stable/api/_as_gen/matplotlib.lines.Line2D.html
-    border_colour = "#ededed"
-    background_colour = "#ededed"
+    border_colour = DEFAULT_FIG_STYLE.background_colour
+    background_colour = DEFAULT_FIG_STYLE.background_colour
     placement:str = "right-vertical" #TODO: tidy up the difference between placement and location
     placement_options = {
         "right-vertical": ["upper left", (1.12, 1)],
@@ -278,7 +278,7 @@ class StackedPlotStyle:
         self.__legend_style = {
             "show": DEFAULT_LEGEND_STYLE.show,
             "fontsize": DEFAULT_LEGEND_STYLE.font_size,
-            "spacing": DEFAULT_LEGEND_STYLE.label_spacing,
+            "padding": DEFAULT_LEGEND_STYLE.label_padding,
             "fontcolour": DEFAULT_LEGEND_STYLE.font_colour,
             "backgroundcolour": DEFAULT_LEGEND_STYLE.background_colour,
             "bordercolour": DEFAULT_LEGEND_STYLE.border_colour,
@@ -522,7 +522,7 @@ class StackedPlotStyle:
     def set_legend_style(self,
                         show:bool = None,
                         font_size:int = None,
-                        spacing:float = None,
+                        padding:float = None,
                         font_colour:str = None,
                         background_colour:str = None,
                         border_colour:str = None,
@@ -535,7 +535,7 @@ class StackedPlotStyle:
             show: A boolean flag for whether the legend should be shown, irrespective
                 of other legend style configurations. 
             font_size: Series headings' font size in points or as a string (e.g., 'large').
-            spacing: Spacing between series headings, in font-size units.
+            padding: Padding between series headings.
             font_colour: The color of the text in the legend.
             background_colour: The legend's background color.
             border_colour: The legend's background patch edge color.
@@ -549,7 +549,7 @@ class StackedPlotStyle:
         #TODO: finalise method argument documentation relating to legend placement.
         if show is not None: self.__legend_style["show"] = show
         if font_size is not None: self.__legend_style["fontsize"] = font_size
-        if spacing is not None: self.__legend_style["spacing"] = spacing
+        if padding is not None: self.__legend_style["padding"] = padding
         if font_colour is not None: self.__legend_style["fontcolour"] = font_colour
         if background_colour is not None: self.__legend_style["backgroundcolour"] = background_colour
         if border_colour is not None: self.__legend_style["bordercolour"] = border_colour

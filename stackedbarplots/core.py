@@ -390,12 +390,15 @@ class StackedBarplot():
                        bbox_to_anchor=bbox_to_anchor,
                        loc=DEFAULT_LEGEND_STYLE.placement_options[self.get_legend_style()["placement"]][0],
                        fontsize=self.get_legend_style()["fontsize"],
-                       labelspacing = self.get_legend_style()["spacing"],
+                       labelspacing = self.get_legend_style()["padding"], #Done twice so it is applied either vert or horiz
+                       columnspacing = self.get_legend_style()["padding"], #Done twice so it is applied either vert or horiz
                        labelcolor=self.get_legend_style()["fontcolour"],
                        facecolor=self.get_legend_style()["backgroundcolour"],
                        edgecolor = self.get_legend_style()["bordercolour"],
                        framealpha=1,
-                       shadow=False)
+                       shadow=False,
+                       handletextpad=0.1 #Space between label and marker
+                       )
 
 
     def _plot_vert_line(self):
