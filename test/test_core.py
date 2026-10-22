@@ -195,7 +195,7 @@ class CoreClassTest(unittest.TestCase):
                 test_plot.render()
 
             for padd in [0, .1, .25, .5, 1]:
-                test_plot.set_legend_style(spacing=padd)
+                test_plot.set_legend_style(padding=padd)
                 test_plot.render()
 
             for trans in [(0, 0), (.1, 0), (0, .1), (.1, .1)]:
@@ -420,7 +420,7 @@ class CoreStyleTest(unittest.TestCase):
 
         test_plot.set_legend_style(show=True,
                                    font_size=15,
-                                   spacing=.5,
+                                   padding=.5,
                                    font_colour="blue",
                                    background_colour="yellow",
                                    border_colour="black",
