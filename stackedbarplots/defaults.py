@@ -100,7 +100,7 @@ class DEFAULT_AXIS_TITLE_STYLE:
     x_label:str = None
     y_label:str = None
     axis_label_font_size:int = 12
-    axis_label_font_colour = "black"
+    axis_label_font_colour = "#2c2c2c"
 
 
 class DEFAULT_BAR_STYLE:
@@ -154,7 +154,7 @@ class DEFAULT_FIG_STYLE:
     size:tuple[int, int] = None #Can be None (auto scaling), or an integer tuple.
     title:str = None
     title_font_size:int = 12
-    title_colour = "black"
+    title_colour = "#2c2c2c"
     font_family:str = "sans-serif"
     background_colour = "#ffffff"
     sorted:str = None #Can be None, "sum-asc", "sum-desc", "avg-asc", "avg-desc", "lhlf-asc", "lhlf-desc", "rhlf-asc", "rhlf-desc"
@@ -175,7 +175,7 @@ class DEFAULT_LEGEND_STYLE:
 
     show:bool = False #TODO: Is this necessary? A placement is required for the legend to appear
     font_size:int = 8
-    font_colour = "black"
+    font_colour = "#2c2c2c"
     label_padding:float = 0.8
     marker_shape:str = "s" #see for different marker shapes https://matplotlib.org/stable/api/_as_gen/matplotlib.lines.Line2D.html
     border_colour = DEFAULT_FIG_STYLE.background_colour
@@ -198,7 +198,7 @@ class DEFAULT_VERTLINE_STYLE:
     (see https://matplotlib.org/stable/gallery/lines_bars_and_markers/linestyles.html)."""
     show:bool = False
     line_style:str = "-"
-    colour = "black"
+    colour = "#2c2c2c"
     alpha:float = 1
     z_order:str = "front" #Can be "front" or "behind"
 

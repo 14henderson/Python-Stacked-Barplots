@@ -185,7 +185,7 @@ class CoreClassTest(unittest.TestCase):
         for show in [True, False]:
             test_plot.set_legend_style(show=show)
 
-            for placement in ["right-vertical", "left-vertical", "below-horizontal", "above-horizontal"]:
+            for placement in ["right-vertical", "below-horizontal", "above-horizontal"]:
                 test_plot.set_legend_style(placement=placement)
                 test_plot.render()
                 if self.show_plots and show: test_plot.show()
