@@ -1,4 +1,4 @@
-# pylint: disable=multiple-statements,too-many-positional-arguments,redefined-outer-name,line-too-long,arguments-differ
+# pylint: disable=multiple-statements,too-many-positional-arguments,redefined-outer-name,line-too-long,arguments-differ, wrong-import-position, unnecessary-pass
 """Module contains LayoutEngine class for arranging figure and axis elements.
 
 LayoutEngine child class is called at draw time for the plot, and aims
@@ -9,13 +9,19 @@ A custom LayoutEngine is defined to allow more control of plot elements
 matplotlib tight/constrained LayoutEngines), and to move layout code
 out of core.py.
 """
+from __future__ import annotations
+from typing import TYPE_CHECKING
+if TYPE_CHECKING: from .core import StackedBarplot
 
-import matplotlib.layout_engine
 import warnings
+import matplotlib.layout_engine
+
 
 __all__ = [
     "StackedBarLayoutEngine"
 ]
+
+
 
 
 class StackedBarLayoutEngine(matplotlib.layout_engine.LayoutEngine):
@@ -30,22 +36,23 @@ class StackedBarLayoutEngine(matplotlib.layout_engine.LayoutEngine):
 
     1. The plot's axes
     2. x and y axes ticks (including category labels)
-    3. Axis labels (if shown)
+    3. Peritext (i.e., axis labels if shown)
     4. Plot legend (if shown)
-    5. Plot subtitle (if shown) Note: Not yet implemented
-    6. Plot title (if shown)
-    7. Resizing of the figure itself    
+    5. Paratext (i.e., subtitle then title if shown)
+    6. Resizing of the figure itself
     """
-    def __init__(self):
+    def __init__(self, plot:StackedBarplot) -> None:
         super().__init__()
 
+        self.plot = plot
 
-    def execute(self, fig):
+
+    def execute(self, fig) -> None:
         """Perform layout algorithm and move and resize axis and axis elements accordingly."""
         pass
 
 
-    def set(self):
+    def set(self) -> None:
         """Required override, but redundant in this context."""
         warnings.warn("You are attempting to set or configure elements of" \
         "the plot's LayoutEngine. This LayoutEngine does not support such" \
