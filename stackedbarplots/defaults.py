@@ -43,10 +43,16 @@ __all__ = [
 ]
 
 
-class Auto_Style_Calculations:
+class Auto_Style_Calculations: #TODO: Calculate in pixels rather than cm.
     """Class holding static methods relating to calculations for default 
     style values. In particular, where the style value is contingent on
-    chart data (e.g., figur"""
+    chart data (e.g., figure height calculate from number of categories)"""
+
+    #Padding around figure (in pixels)
+    fig_left_pad = 10
+    fig_top_pad = 10
+    fig_right_pad = 10
+    fig_bottom_pad = 10
 
     @staticmethod
     def calc_axis_width(num_series:int) -> int:
@@ -151,7 +157,7 @@ class DEFAULT_FIG_STYLE:
     and whether the categories should be ordererd based on an aggregate
     function of each category."""
 
-    size:tuple[int, int] = None #Can be None (auto scaling), or an integer tuple.
+    size:tuple[int, int] = None #Can be None (auto scaling), or an integer tuple. In pixels.
     title:str = None
     title_font_size:int = 12
     title_colour = "black"
@@ -472,7 +478,7 @@ class StackedPlotStyle:
             title_colour: The colour of the plot title.
             font_family: The font family for all text used in the plot. User must select from
                 a list of font families (installed on user's machine).
-            fig_size: Tuple of integers representing the width and height of the figure.
+            fig_size: Tuple of integers representing the width and height of the figure in pixels.
             background_colour: The background colour of the figure.
             sorted: Whether the displayed categories should be ordered. Must be either 
                 None, 'sum-asc', 'sum-desc', 'avg-asc', 'avg-desc', 'lhlf-asc', 'lhlf-desc', 'rhlf-asc', or 'rhlf-desc'. 
