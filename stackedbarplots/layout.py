@@ -85,9 +85,6 @@ class StackedBarLayoutEngine(matplotlib.layout_engine.LayoutEngine):
         from the axes y0 coordinate). A padding is applied (defined in
         defaults.py) and the figure size is set."""
 
-        #TODO: Legend not working
-        #TODO: Doesn't take into account title/subtitle
-
         if self.plot.get_fig_style()["size"] is None:
             desired_ax_width = Auto_Style_Calculations.calc_axis_width(len(self.plot.series_labels))*fig.dpi/2.54
             desired_ax_height = Auto_Style_Calculations.calc_axis_height(len(self.plot.category_headings))*fig.dpi/2.54
@@ -106,15 +103,17 @@ class StackedBarLayoutEngine(matplotlib.layout_engine.LayoutEngine):
             m_left_px += self.plot.ax.get_window_extent().x0 - min_x0
 
         #Calculate right margin
-        if self.plot.get_legend_style()["show"] and self.plot.get_legend_style()["placement"] == "vertical-right":
+        if self.plot.get_legend_style()["show"] and self.plot.get_legend_style()["placement"] == "right-vertical":
             m_right_px += self.plot.ax.get_legend().get_window_extent().x1 - self.plot.ax.get_window_extent().x1
 
         #Calculate top margin
-        if self.plot.get_legend_style()["show"] and self.plot.get_legend_style()["placement"] == "horizontal-top":
-            m_top_px += self.plot.ax.get_legend().get_window_extent().width
+        if self.plot.get_fig_style()["title"] is not None:
+            m_top_px += self.plot.ax.title.get_window_extent().y1 - self.plot.ax.get_window_extent().y1
+        elif self.plot.get_legend_style()["show"] and self.plot.get_legend_style()["placement"] == "above-horizontal":
+            m_top_px += self.plot.ax.get_legend().get_window_extent().y1 - self.plot.ax.get_window_extent().y1
 
         #Calculate bottom margin
-        if self.plot.get_legend_style()["show"] and self.plot.get_legend_style()["placement"] == "horizontal-bottom":
+        if self.plot.get_legend_style()["show"] and self.plot.get_legend_style()["placement"] == "below-horizontal":
             m_bottom_px += self.plot.ax.get_window_extent().y0 - self.plot.ax.get_legend().get_window_extent().y0
         elif self.plot.get_axis_title_style()["xlabel"] is not None:
             m_bottom_px += self.plot.ax.get_window_extent().y0 - self.plot.ax.xaxis.label.get_window_extent().y0
