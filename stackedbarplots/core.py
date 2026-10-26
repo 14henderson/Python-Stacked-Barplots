@@ -369,13 +369,8 @@ class StackedBarplot():
         if "horizontal" in self.get_legend_style()["placement"]: ncol = len(self.series_labels)
         else: ncol = 1
 
-        bbox_to_anchor = list(DEFAULT_LEGEND_STYLE.placement_options[self.get_legend_style()["placement"]][1])
-        bbox_to_anchor[0] += self.get_legend_style()["transform"][0]
-        bbox_to_anchor[1] += self.get_legend_style()["transform"][1]
-
         self.ax.legend(handles=self.get_legend_style()["markers"],
                        ncol=ncol,
-                       bbox_to_anchor=bbox_to_anchor,
                        loc=DEFAULT_LEGEND_STYLE.placement_options[self.get_legend_style()["placement"]][0],
                        fontsize=self.get_legend_style()["fontsize"],
                        labelspacing = self.get_legend_style()["padding"], #Done twice so it is applied either vert or horiz
@@ -385,6 +380,7 @@ class StackedBarplot():
                        edgecolor = self.get_legend_style()["bordercolour"],
                        framealpha=1,
                        shadow=False,
+                       borderaxespad=0,
                        handletextpad=0.1 #Space between label and marker
                        )
 

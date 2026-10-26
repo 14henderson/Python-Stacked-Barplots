@@ -34,6 +34,7 @@ Typical usage example:
 """
 
 import matplotlib.lines as mlines
+import warnings
 from .tools import ColourGradient
 
 __all__ = [
@@ -43,7 +44,9 @@ __all__ = [
 ]
 
 
-class Auto_Style_Calculations: #TODO: Calculate in pixels rather than cm.
+#TODO: Calculate in pixels rather than cm. 
+#TODO: Re-calculate as these are now estimated axes sizes not figure sizes.
+class Auto_Style_Calculations:
     """Class holding static methods relating to calculations for default 
     style values. In particular, where the style value is contingent on
     chart data (e.g., figure height calculate from number of categories)"""
@@ -157,7 +160,7 @@ class DEFAULT_FIG_STYLE:
     and whether the categories should be ordererd based on an aggregate
     function of each category."""
 
-    size:tuple[int, int] = None #Can be None (auto scaling), or an integer tuple. In pixels.
+    size:tuple[int, int] = None #Can be None (auto scaling), or an integer tuple. In pixels. #TODO: Move to axis style as this is now the desired axis size?
     title:str = None
     title_font_size:int = 12
     title_colour = "black"
@@ -186,14 +189,14 @@ class DEFAULT_LEGEND_STYLE:
     marker_shape:str = "s" #see for different marker shapes https://matplotlib.org/stable/api/_as_gen/matplotlib.lines.Line2D.html
     border_colour = DEFAULT_FIG_STYLE.background_colour
     background_colour = DEFAULT_FIG_STYLE.background_colour
-    placement:str = "right-vertical" #TODO: tidy up the difference between placement and location
+    placement:str = "right-vertical"
     placement_options = {
-        "right-vertical": ["upper left", (1.12, 1)],
-        "left-vertical": ["upper right", (-0.12, 1)],
-        "below-horizontal": ["upper center", (0.5, -0.12)],
-        "above-horizontal": ["lower center", (0.5, 1.02)]
+        "right-vertical": ["upper left", (1, 1)],
+        "left-vertical": ["upper right", (0, 1)],
+        "below-horizontal": ["upper center", (0.5, 0)],
+        "above-horizontal": ["lower center", (0.5, 1)]
     }
-    placement_transform:tuple[float, float] = (0, 0) #TODO: Convert from fractional dimension space to display coordinate space.
+    placement_transform:tuple[float, float] = (0, 0) #In dots/pixels
 
 
 class DEFAULT_VERTLINE_STYLE:
@@ -496,6 +499,8 @@ class StackedPlotStyle:
         if fig_size is not None:
             if not isinstance(fig_size, tuple) or len(fig_size) != 2:
                 raise ValueError("Argument fig_size must be a tuple of two integers representing the width and height of the figure.")
+            elif fig_size[0] < 500:
+                warnings.warn("An axis width below 500px can result in a larger than expected margin at right of figure.")
             self.__fig_style["size"] = fig_size
         if background_colour is not None: self.__fig_style["backgroundcolour"] = background_colour
         if sorted is not None: #sum-asc, sum-desc, avg-asc, avg-desc, lhlf-asc, lhlf-desc, rhlf-asc, rhlf-desc
@@ -546,11 +551,11 @@ class StackedPlotStyle:
             background_colour: The legend's background color.
             border_colour: The legend's background patch edge color.
             placement: String representing where around the figure the legend should be
-                displayed. {"right-vertical", "left-vertical", "below-horizontal", "above-horizontal"}.
+                displayed. {"right-vertical", "below-horizontal", "above-horizontal"}.
             marker_shape: Marker style string. {'*': 'star', '+': 'plus', 's':'square', 
                 'o':circle'}. For a full list of marker styles see https://matplotlib.org/stable/api/_as_gen/matplotlib.lines.Line2D.html.
             transform: Allows the user to make minor adjustments to the legend's placement
-                after placement choice. Must be tuple of length 2 representing a transform in X and Y axis. 
+                after placement choice. Must be tuple of length 2 representing a transform in X and Y axis in dots/pixels. 
         """
         #TODO: finalise method argument documentation relating to legend placement.
         if show is not None: self.__legend_style["show"] = show
@@ -560,13 +565,13 @@ class StackedPlotStyle:
         if background_colour is not None: self.__legend_style["backgroundcolour"] = background_colour
         if border_colour is not None: self.__legend_style["bordercolour"] = border_colour
         if placement is not None:
-            if placement not in ["right-vertical", "left-vertical", "below-horizontal", "above-horizontal"]:
-                raise ValueError("Placement must be either \"right-vertical\", \"left-vertical\", \"below-horizontal\", \"above-horizontal\".")
+            if placement not in ["right-vertical", "below-horizontal", "above-horizontal"]:
+                raise ValueError("Placement must be either \"right-vertical\", \"below-horizontal\", \"above-horizontal\".")
             self.__legend_style["placement"] = placement
         if marker_shape is not None: self.__legend_style["markershape"] = marker_shape
         if transform is not None:
             if not isinstance(transform, tuple) and len(transform) != 2:
-                raise ValueError("Argument transform must be tuple of length two representing transform in X and Y axis.")
+                raise ValueError("Argument transform must be tuple of length two representing transform in X and Y axis in dots/pixels.")
             self.__legend_style["transform"] = transform
         self.unrendered_changes = True
 

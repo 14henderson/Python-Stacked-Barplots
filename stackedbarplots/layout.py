@@ -15,9 +15,10 @@ from typing import TYPE_CHECKING
 import warnings
 import matplotlib.layout_engine
 from matplotlib.figure import Figure
+import matplotlib.transforms as mtransforms
 
 if TYPE_CHECKING: from .core import StackedBarplot
-from .defaults import Auto_Style_Calculations
+from .defaults import Auto_Style_Calculations, DEFAULT_LEGEND_STYLE
 
 
 __all__ = [
@@ -51,8 +52,8 @@ class StackedBarLayoutEngine(matplotlib.layout_engine.LayoutEngine):
 
     def execute(self, fig:Figure) -> None:
         """Perform layout algorithm and move and resize axis and axis elements accordingly."""
-        self.layout_legend(fig)
-        self.layout_paratext(fig)
+        if self.plot.get_legend_style()["show"]: self.layout_legend(fig)
+        if self.plot.get_fig_style()["title"] is not None: self.layout_paratext(fig)
         self.size_figure(fig)
 
 
@@ -68,12 +69,47 @@ class StackedBarLayoutEngine(matplotlib.layout_engine.LayoutEngine):
 
     def layout_legend(self, fig:Figure) -> None:
         """Layout plot legend to not overlap with plot peritext."""
-        pass
+
+        x_transform = self.plot.get_legend_style()["transform"][0]
+        y_transform = self.plot.get_legend_style()["transform"][1]
+
+        if "above-horizontal" in self.plot.get_legend_style()["placement"]:
+            self.plot.ax.get_legend().set_bbox_to_anchor(
+                list(DEFAULT_LEGEND_STYLE.placement_options[self.plot.get_legend_style()["placement"]][1]),
+                transform=mtransforms.offset_copy(self.plot.ax.transAxes, fig=fig, y=y_transform + 5, x=x_transform, units="dots"),
+            )
+        elif "below-horizontal" in self.plot.get_legend_style()["placement"]:
+            m_bottom_padd = 0
+            if self.plot.get_axis_title_style()["xlabel"] is not None:
+                m_bottom_padd += self.plot.ax.get_window_extent().y0 - self.plot.ax.xaxis.label.get_window_extent().y0
+            else:
+                labels = [label for label in self.plot.ax.get_xticklabels() if label.get_visible()]
+                min_y0 = min(label.get_window_extent().y0 for label in labels)
+                m_bottom_padd += self.plot.ax.get_window_extent().y0 - min_y0
+
+            m_bottom_padd += 15
+
+            self.plot.ax.get_legend().set_bbox_to_anchor(
+                list(DEFAULT_LEGEND_STYLE.placement_options[self.plot.get_legend_style()["placement"]][1]),
+                transform=mtransforms.offset_copy(self.plot.ax.transAxes, fig=fig, y=y_transform + (m_bottom_padd*-1), x = x_transform, units="dots"),
+            )
+        elif "right-vertical" in self.plot.get_legend_style()["placement"]:
+            self.plot.ax.get_legend().set_bbox_to_anchor(
+                list(DEFAULT_LEGEND_STYLE.placement_options[self.plot.get_legend_style()["placement"]][1]),
+                transform=mtransforms.offset_copy(self.plot.ax.transAxes, fig=fig, x=x_transform + 15, y=y_transform, units="dots"),
+            )
 
 
     def layout_paratext(self, fig:Figure) -> None:
         """Layout paratext around the figure (i.e., (sub)title)."""
-        pass
+
+        title_pad = 20
+        if self.plot.get_legend_style()["show"] and "above-horizontal" in self.plot.get_legend_style()["placement"]:
+            title_pad += self.plot.ax.get_legend().get_window_extent().y1 - self.plot.ax.get_window_extent().y1
+
+        self.plot.ax.title.set_transform(
+            mtransforms.offset_copy(self.plot.ax.transAxes, fig=fig, y=title_pad, units="dots")
+        )
 
 
     def size_figure(self, fig:Figure):
@@ -122,7 +158,9 @@ class StackedBarLayoutEngine(matplotlib.layout_engine.LayoutEngine):
             min_y0 = min(label.get_window_extent().y0 for label in labels)
             m_bottom_px += self.plot.ax.get_window_extent().y0 - min_y0
 
-        #print(f"Bottom margin: {m_bottom_px}, Left m: {m_left_px}, Top m: {m_top_px}, Right m: {m_right_px}")
+        print(f"Axis bounds: {self.plot.ax.get_window_extent().bounds}")
+        print(f"Bottom margin: {m_bottom_px}, Left m: {m_left_px}, Top m: {m_top_px}, Right m: {m_right_px}")
+
         m_left_px += Auto_Style_Calculations.fig_left_pad
         m_right_px += Auto_Style_Calculations.fig_right_pad
         m_top_px += Auto_Style_Calculations.fig_top_pad
