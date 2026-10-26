@@ -13,7 +13,8 @@ import matplotlib.pyplot as plt
 import matplotlib.lines as mlines
 
 from .tools import cumu2d, ChartDataSorting
-from .defaults import StackedPlotStyle, DEFAULT_LEGEND_STYLE, DEFAULT_BAR_STYLE, Auto_Style_Calculations
+from .defaults import StackedPlotStyle, DEFAULT_LEGEND_STYLE, DEFAULT_BAR_STYLE
+from .layout import StackedBarLayoutEngine
 
 
 __all__ = [
@@ -160,8 +161,6 @@ class StackedBarplot():
             self._plot_legend()
         if self.get_vert_line_style()["show"]:
             self._plot_vert_line()
-        if self.get_fig_style()["size"] is None: self._auto_size_fig()
-        self.fig.tight_layout()
 
 
     def _destroy_fig(self):
@@ -171,34 +170,14 @@ class StackedBarplot():
             plt.close(self.fig)
 
 
-    def _auto_size_fig(self):
-        """Sets the size of the figure automatically (if not user defined)."""
-        ax_width = Auto_Style_Calculations.calc_axis_width(len(self.data[0]))
-        ax_height = Auto_Style_Calculations.calc_axis_height(len(self.data))
-
-        if self.get_legend_style()["show"] and "horizontal" in self.get_legend_style()["placement"]:
-            legend_height_px = self.ax.get_legend().get_window_extent().height
-            ax_height += legend_height_px / self.fig.dpi * 2.54
-        if self.get_legend_style()["show"] and "vertical" in self.get_legend_style()["placement"]:
-            legend_width_px = self.ax.get_legend().get_window_extent().width
-            ax_width += legend_width_px / self.fig.dpi * 2.54
-        if self.get_fig_style()["title"] is not None:
-            title_height_px = self.get_fig_style()["titlefontsize"] + 20 #Extra padding
-            ax_height += title_height_px / self.fig.dpi * 2.54
-
-        label_width_px = max([label.get_window_extent().width for label in self.ax.get_yticklabels()]) #Take category label into account
-        label_width_cm = label_width_px / self.fig.dpi* 2.54
-        ax_width += label_width_cm
-
-        self.fig.set_size_inches((ax_width*0.393701, ax_height*0.393701))
-
-
     def _plot_bars(self):
         """Internal method. Renders bars and category headings according to stored style configuration."""
-        if self.get_fig_style()["size"] is None: self.fig, self.ax = plt.subplots()
-        else: self.fig, self.ax = plt.subplots(figsize=self.get_fig_style()["size"])
+        self.fig, self.ax = plt.subplots()
 
-        middle_index = len(self.data[0]) // 2
+        layout_engine = StackedBarLayoutEngine(self)
+        self.fig.set_layout_engine(layout_engine)
+
+        middle_index = len(self.series_labels) // 2
 
         if self.get_fig_style()["sorted"] is not None:
             if self.get_fig_style()["sorted"] == "sum-asc":
@@ -224,7 +203,7 @@ class StackedBarplot():
         if self.get_bar_style()["align"] == "centre":
             offsets = []
             for(row_index, row) in enumerate(self.data):
-                if len(self.data[0]) % 2 == 0:
+                if len(self.series_labels) % 2 == 0:
                     offsets.append(sum(self.data[row_index][0:middle_index]))
                 else:
                     offsets.append(sum(self.data[row_index][0:middle_index]) + self.data[row_index][middle_index]/2)
@@ -321,7 +300,7 @@ class StackedBarplot():
                             shift_px = self.ax.get_window_extent().x0 - an.get_window_extent().x0
                             self.ax.tick_params(axis="y", pad=shift_px)
 
-                    elif series_index == len(self.data[0])-1 and font_width > bar_width:
+                    elif series_index == len(self.series_labels)-1 and font_width > bar_width:
                         an.set_ha("left")
                         an.xy = (rect.get_x() + rect.get_width() + padding_data_coords, y)
                         an.set_color(self.get_bar_val_label_style()["fontcolour"])
@@ -330,7 +309,7 @@ class StackedBarplot():
                 if self.get_bar_val_label_style()["hidesqueezed"] is not None:
                     if self.get_bar_val_label_style()["hidesqueezed"] == "all" and font_width > bar_width:
                         an.set_visible(False)
-                    elif self.get_bar_val_label_style()["hidesqueezed"] == "inner-only" and (series_index not in (0, len(self.data[0])-1)) and font_width > bar_width:
+                    elif self.get_bar_val_label_style()["hidesqueezed"] == "inner-only" and (series_index not in (0, len(self.series_labels)-1)) and font_width > bar_width:
                         an.set_visible(False)
 
         self.ax.invert_yaxis() #Required for some reason?
@@ -358,16 +337,12 @@ class StackedBarplot():
         if not self.get_fig_style()["spinedisplay"][2]: self.ax.spines['right'].set_visible(False)
         if not self.get_fig_style()["spinedisplay"][3]: self.ax.spines['bottom'].set_visible(False)
 
-
-        #TODO: Adjust (auto) figsize to account for inclusion of title, and length of category names(?)
         if self.get_fig_style()["title"] is not None:
-            if self.get_legend_style()["placement"] == "above-horizontal": pad=35
-            else: pad=6 #6 is default
             self.ax.set_title(self.get_fig_style()["title"],
                               fontsize=self.get_fig_style()["titlefontsize"],
                               color=self.get_fig_style()["titlecolour"],
                               fontfamily=self.get_fig_style()["fontfamily"],
-                              pad=pad)
+                              )
         if self.get_axis_title_style()["xlabel"] is not None:
             self.ax.set_xlabel(self.get_axis_title_style()["xlabel"],
                                fontsize=self.get_axis_title_style()["axislabelfontsize"],
@@ -394,13 +369,8 @@ class StackedBarplot():
         if "horizontal" in self.get_legend_style()["placement"]: ncol = len(self.series_labels)
         else: ncol = 1
 
-        bbox_to_anchor = list(DEFAULT_LEGEND_STYLE.placement_options[self.get_legend_style()["placement"]][1])
-        bbox_to_anchor[0] += self.get_legend_style()["transform"][0]
-        bbox_to_anchor[1] += self.get_legend_style()["transform"][1]
-
         self.ax.legend(handles=self.get_legend_style()["markers"],
                        ncol=ncol,
-                       bbox_to_anchor=bbox_to_anchor,
                        loc=DEFAULT_LEGEND_STYLE.placement_options[self.get_legend_style()["placement"]][0],
                        fontsize=self.get_legend_style()["fontsize"],
                        labelspacing = self.get_legend_style()["padding"], #Done twice so it is applied either vert or horiz
@@ -410,6 +380,7 @@ class StackedBarplot():
                        edgecolor = self.get_legend_style()["bordercolour"],
                        framealpha=1,
                        shadow=False,
+                       borderaxespad=0,
                        handletextpad=0.1 #Space between label and marker
                        )
 

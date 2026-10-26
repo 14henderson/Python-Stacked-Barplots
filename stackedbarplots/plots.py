@@ -81,7 +81,7 @@ def basic(
         series_labels: Required list of string headings for chart series, to be (optionally) be 
             displayed on legend.
         title: The title of the plot.
-        fig_size: Tuple of integers representing the width and height of the figure.
+        fig_size: Tuple of integers representing the width and height of the axes in pixels.
         font_size: Figure font size in points or as a string (e.g., 'large'). Font size for 
             individual figure elemetns may be changed with set_style_ methods.
         font_colour: Figure font colour. Font colour for individual plot elements may be changed 
@@ -93,7 +93,7 @@ def basic(
         data_label_align: Alignment of data labels within bars. Can be 'left', 'centre', or 'right'. 
         bar_colours: List of colour tuples, matching the number of series in each category.
         legend_placement: String representing where around the figure the legend should be
-                        displayed. {"right-vertical", "left-vertical", "below-horizontal", "above-horizontal"}.
+                        displayed. {"right-vertical", "below-horizontal", "above-horizontal"}.
         x_axis_lim:Left and right xlim in data coordinates, as a tuple.
         x_axis_step: Intevals at which x axis ticks should be displayed.
         bar_height: The height of each bar as a fraction. Selection 1 results on 
@@ -153,7 +153,7 @@ def centred(
         series_labels: Required list of string headings for chart series, to be (optionally) be 
             displayed on legend.
         title: The title of the plot.
-        fig_size: Tuple of integers representing the width and height of the figure.
+        fig_size: Tuple of integers representing the width and height of the axes in pixels.
         font_size: Figure font size in points or as a string (e.g., 'large'). Font size for 
             individual figure elemetns may be changed with set_style_ methods.
         font_colour: Figure font colour. Font colour for individual plot elements may be changed 
@@ -165,7 +165,7 @@ def centred(
         data_label_align: Alignment of data labels within bars. Can be 'left', 'centre', or 'right'. 
         bar_colours: List of colour tuples, matching the number of series in each category.
         legend_placement: String representing where around the figure the legend should be
-                        displayed. {"right-vertical", "left-vertical", "below-horizontal", "above-horizontal"}.
+                        displayed. {"right-vertical", "below-horizontal", "above-horizontal"}.
         x_axis_lim:Left and right xlim in data coordinates, as a tuple.
         x_axis_step: Intevals at which x axis ticks should be displayed.
         bar_height: The height of each bar as a fraction. Selection 1 results on 
@@ -229,7 +229,7 @@ def normalised(
         series_labels: Required list of string headings for chart series, to be (optionally) be 
             displayed on legend.
         title: The title of the plot.
-        fig_size: Tuple of integers representing the width and height of the figure.
+        fig_size: Tuple of integers representing the width and height of the axes in pixels.
         font_size: Figure font size in points or as a string (e.g., 'large'). Font size for 
             individual figure elemetns may be changed with set_style_ methods.
         font_colour: Figure font colour. Font colour for individual plot elements may be changed 
@@ -241,7 +241,7 @@ def normalised(
         data_label_align: Alignment of data labels within bars. Can be 'left', 'centre', or 'right'. 
         bar_colours: List of colour tuples, matching the number of series in each category.
         legend_placement: String representing where around the figure the legend should be
-                        displayed. {"right-vertical", "left-vertical", "below-horizontal", "above-horizontal"}.
+                        displayed. {"right-vertical", "below-horizontal", "above-horizontal"}.
         x_axis_lim:Left and right xlim in data coordinates, as a tuple.
         x_axis_step: Intevals at which x axis ticks should be displayed.
         x_axis_abs: Boolean flag for if absolute value of X axis ticks shold be displayed.
@@ -311,7 +311,7 @@ def normalised_centred(
         series_labels: Required list of string headings for chart series, to be (optionally) be 
             displayed on legend.
         title: The title of the plot.
-        fig_size: Tuple of integers representing the width and height of the figure.
+        fig_size: Tuple of integers representing the width and height of the axes in pixels.
         font_size: Figure font size in points or as a string (e.g., 'large'). Font size for 
             individual figure elemetns may be changed with set_style_ methods.
         font_colour: Figure font colour. Font colour for individual plot elements may be changed 
@@ -323,7 +323,7 @@ def normalised_centred(
         data_label_align: Alignment of data labels within bars. Can be 'left', 'centre', or 'right'. 
         bar_colours: List of colour tuples, matching the number of series in each category.
         legend_placement: String representing where around the figure the legend should be
-                        displayed. {"right-vertical", "left-vertical", "below-horizontal", "above-horizontal"}.
+                        displayed. {"right-vertical", "below-horizontal", "above-horizontal"}.
         x_axis_lim:Left and right xlim in data coordinates, as a tuple.
         x_axis_step: Intevals at which x axis ticks should be displayed.
         x_axis_abs: Boolean flag for if absolute value of X axis ticks shold be displayed.
