@@ -34,15 +34,11 @@ class StackedBarLayoutEngine(matplotlib.layout_engine.LayoutEngine):
     Once this layout enging is attached to the StackedBarplot library, the layout
     engine ``execute`` function is called at draw time, providing a special draw-time
     hook (see https://matplotlib.org/stable/api/layout_engine_api.html). The 
-    execution of this layout engine follows a specific pipeline, padding figure
-    decorations outward from the axes. The order is as follows.
+    execution of this layout engine follows a specific pipeline:
 
-    1. The plot's axes
-    2. x and y axes ticks (including category labels)
-    3. Peritext (i.e., axis labels if shown)
-    4. Plot legend (if shown)
-    5. Paratext (i.e., subtitle then title if shown)
-    6. Resizing of the figure itself
+    1. align the plot legend with the rest of the figure decorations,
+    2. align the plot's paratext (i.e., title and subtitle), and
+    3. calculate the margins and overall size of the figure.
     """
     def __init__(self, plot:StackedBarplot) -> None:
         super().__init__()
@@ -55,11 +51,9 @@ class StackedBarLayoutEngine(matplotlib.layout_engine.LayoutEngine):
 
     def execute(self, fig:Figure) -> None:
         """Perform layout algorithm and move and resize axis and axis elements accordingly."""
-        #Required to ensure the layout engine size_figure is only being called once.
-        if len(self.fig_size_settings.keys()) == 0:
-            self.layout_legend(fig)
-            self.layout_paratext(fig)
-            self.size_figure(fig)
+        self.layout_legend(fig)
+        self.layout_paratext(fig)
+        self.size_figure(fig)
 
 
     def set(self) -> None:
@@ -91,7 +85,10 @@ class StackedBarLayoutEngine(matplotlib.layout_engine.LayoutEngine):
         from the axes y0 coordinate). A padding is applied (defined in
         defaults.py) and the figure size is set."""
 
-        if self.plot.get_fig_style()["size"] is None: 
+        #TODO: Legend not working
+        #TODO: Doesn't take into account title/subtitle
+
+        if self.plot.get_fig_style()["size"] is None:
             desired_ax_width = Auto_Style_Calculations.calc_axis_width(len(self.plot.series_labels))*fig.dpi/2.54
             desired_ax_height = Auto_Style_Calculations.calc_axis_height(len(self.plot.category_headings))*fig.dpi/2.54
         else:
@@ -101,9 +98,12 @@ class StackedBarLayoutEngine(matplotlib.layout_engine.LayoutEngine):
         m_left_px, m_right_px, m_top_px, m_bottom_px = 0, 0, 0, 0
 
         #Calculate left margin
-        labels = [label for label in self.plot.ax.get_yticklabels() if label.get_visible()]
-        min_x0 = min(label.get_window_extent().x0 for label in labels)
-        m_left_px += self.plot.ax.get_window_extent().x0 - min_x0
+        if self.plot.get_axis_title_style()["ylabel"] is not None:
+            m_left_px += self.plot.ax.get_window_extent().x0 - self.plot.ax.yaxis.label.get_tightbbox().x0
+        else:
+            labels = [label for label in self.plot.ax.get_yticklabels() if label.get_visible()]
+            min_x0 = min(label.get_window_extent().x0 for label in labels)
+            m_left_px += self.plot.ax.get_window_extent().x0 - min_x0
 
         #Calculate right margin
         if self.plot.get_legend_style()["show"] and self.plot.get_legend_style()["placement"] == "vertical-right":
@@ -112,16 +112,18 @@ class StackedBarLayoutEngine(matplotlib.layout_engine.LayoutEngine):
         #Calculate top margin
         if self.plot.get_legend_style()["show"] and self.plot.get_legend_style()["placement"] == "horizontal-top":
             m_top_px += self.plot.ax.get_legend().get_window_extent().width
-            #TODO: Take into account title and subtitle
 
         #Calculate bottom margin
         if self.plot.get_legend_style()["show"] and self.plot.get_legend_style()["placement"] == "horizontal-bottom":
-            m_bottom_px += self.plot.ax.get_window_extent().x0 - self.plot.ax.get_legend().get_window_extent().x0
+            m_bottom_px += self.plot.ax.get_window_extent().y0 - self.plot.ax.get_legend().get_window_extent().y0
+        elif self.plot.get_axis_title_style()["xlabel"] is not None:
+            m_bottom_px += self.plot.ax.get_window_extent().y0 - self.plot.ax.xaxis.label.get_window_extent().y0
         else:
-            m_bottom_px += self.plot.ax.get_window_extent().y0 - self.plot.ax.xaxis.get_window_extent().y0
+            labels = [label for label in self.plot.ax.get_xticklabels() if label.get_visible()]
+            min_y0 = min(label.get_window_extent().y0 for label in labels)
+            m_bottom_px += self.plot.ax.get_window_extent().y0 - min_y0
 
         #print(f"Bottom margin: {m_bottom_px}, Left m: {m_left_px}, Top m: {m_top_px}, Right m: {m_right_px}")
-
         m_left_px += Auto_Style_Calculations.fig_left_pad
         m_right_px += Auto_Style_Calculations.fig_right_pad
         m_top_px += Auto_Style_Calculations.fig_top_pad
