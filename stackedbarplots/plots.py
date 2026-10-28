@@ -60,6 +60,7 @@ def basic(
         data:dict[str, list[float]],
         series_labels:list[str],
         title:str = None,
+        subtitle:str = None,
         fig_size:tuple[int, int] = None,
         font_size:int = None,
         font_colour:str = DEFAULT_BAR_VAL_LABEL_STYLE.font_colour,
@@ -81,6 +82,7 @@ def basic(
         series_labels: Required list of string headings for chart series, to be (optionally) be 
             displayed on legend.
         title: The title of the plot.
+        subtitle: The subtitle of the plot.
         fig_size: Tuple of integers representing the width and height of the axes in pixels.
         font_size: Figure font size in points or as a string (e.g., 'large'). Font size for 
             individual figure elemetns may be changed with set_style_ methods.
@@ -113,6 +115,7 @@ def basic(
     if bar_colours is not None: plot.set_bar_style(bar_gradient=bar_colours)
 
     plot.set_fig_style(title=title,
+                       subtitle=subtitle,
                        fig_size=fig_size)
 
     plot.set_bar_val_label_style(font_size=font_size,
@@ -132,6 +135,7 @@ def centred(
         data:dict[str, list[float]],
         series_labels:list[str],
         title:str = None,
+        subtitle:str = None,
         fig_size:tuple[int, int] = None,
         font_size:int = DEFAULT_BAR_VAL_LABEL_STYLE.font_size,
         font_colour:str = DEFAULT_BAR_VAL_LABEL_STYLE.font_colour,
@@ -153,6 +157,7 @@ def centred(
         series_labels: Required list of string headings for chart series, to be (optionally) be 
             displayed on legend.
         title: The title of the plot.
+        subtitle: The subtitle of the plot.
         fig_size: Tuple of integers representing the width and height of the axes in pixels.
         font_size: Figure font size in points or as a string (e.g., 'large'). Font size for 
             individual figure elemetns may be changed with set_style_ methods.
@@ -186,6 +191,7 @@ def centred(
     plot.set_vert_line_style(show=True)
 
     plot.set_fig_style(title=title,
+                       subtitle=subtitle,
                        fig_size=fig_size)
 
     plot.set_bar_val_label_style(font_size=font_size,
@@ -207,6 +213,7 @@ def normalised(
         data:dict[str, list[float]],
         series_labels:list[str],
         title:str = None,
+        subtitle:str = None,
         fig_size:tuple[int, int] = None,
         font_size:int = DEFAULT_BAR_VAL_LABEL_STYLE.font_size,
         font_colour:str = DEFAULT_BAR_VAL_LABEL_STYLE.font_colour,
@@ -229,6 +236,7 @@ def normalised(
         series_labels: Required list of string headings for chart series, to be (optionally) be 
             displayed on legend.
         title: The title of the plot.
+        subtitle: The subtitle of the plot.
         fig_size: Tuple of integers representing the width and height of the axes in pixels.
         font_size: Figure font size in points or as a string (e.g., 'large'). Font size for 
             individual figure elemetns may be changed with set_style_ methods.
@@ -270,7 +278,8 @@ def normalised(
     if bar_colours is not None: plot.set_bar_style(bar_gradient=bar_colours)
 
     plot.set_fig_style(title=title,
-                        fig_size=fig_size)
+                       subtitle=subtitle,
+                       fig_size=fig_size)
 
     plot.set_bar_val_label_style(font_size=font_size,
                                 font_colour=font_colour,
@@ -289,6 +298,7 @@ def normalised_centred(
         data:dict[str, list[float]],
         series_labels:list[str],
         title:str = None,
+        subtitle:str = None,
         fig_size:tuple[int, int] = None,
         font_size:int = DEFAULT_BAR_VAL_LABEL_STYLE.font_size,
         font_colour:str = DEFAULT_BAR_VAL_LABEL_STYLE.font_colour,
@@ -311,6 +321,7 @@ def normalised_centred(
         series_labels: Required list of string headings for chart series, to be (optionally) be 
             displayed on legend.
         title: The title of the plot.
+        subtitle: The subtitle of the plot.
         fig_size: Tuple of integers representing the width and height of the axes in pixels.
         font_size: Figure font size in points or as a string (e.g., 'large'). Font size for 
             individual figure elemetns may be changed with set_style_ methods.
@@ -354,7 +365,8 @@ def normalised_centred(
     plot.set_vert_line_style(show=True)
 
     plot.set_fig_style(title=title,
-                        fig_size=fig_size)
+                       subtitle=subtitle,
+                       fig_size=fig_size)
 
     plot.set_bar_val_label_style(font_size=font_size,
                                 font_colour=font_colour,
