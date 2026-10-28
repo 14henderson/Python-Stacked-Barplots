@@ -33,8 +33,8 @@ Typical usage example:
     plot.show()
 """
 
-import matplotlib.lines as mlines
 import warnings
+import matplotlib.lines as mlines
 from .tools import ColourGradient
 
 __all__ = [
@@ -44,7 +44,7 @@ __all__ = [
 ]
 
 
-#TODO: Calculate in pixels rather than cm. 
+#TODO: Calculate in pixels rather than cm.
 #TODO: Re-calculate as these are now estimated axes sizes not figure sizes.
 class Auto_Style_Calculations:
     """Class holding static methods relating to calculations for default 
@@ -60,7 +60,6 @@ class Auto_Style_Calculations:
     @staticmethod
     def calc_axis_width(num_series:int) -> int:
         """Calculate axis width (in cm) from number of series in plot.
-
         Args:
             num_series: The number of series in each category inthe plot."""
         if num_series > 10: return 24
@@ -70,7 +69,6 @@ class Auto_Style_Calculations:
     @staticmethod
     def calc_axis_height(num_categories:int) -> float:
         """Calculate axis height (in cm) from number of categories in plot.
-
         Args:
             num_categories: The number of categories in the plot."""
         if num_categories > 25: return 31.5
@@ -164,6 +162,9 @@ class DEFAULT_FIG_STYLE:
     title:str = None
     title_font_size:int = 12
     title_colour = "black"
+    subtitle:str = None
+    subtitle_font_size:int = 12
+    subtitle_colour = "black"
     font_family:str = "sans-serif"
     background_colour = "#ffffff"
     sorted:str = None #Can be None, "sum-asc", "sum-desc", "avg-asc", "avg-desc", "lhlf-asc", "lhlf-desc", "rhlf-asc", "rhlf-desc"
@@ -279,6 +280,9 @@ class StackedPlotStyle:
             "titlefontsize": DEFAULT_FIG_STYLE.title_font_size,
             "titlecolour": DEFAULT_FIG_STYLE.title_colour,
             "fontfamily": DEFAULT_FIG_STYLE.font_family,
+            "subtitle": DEFAULT_FIG_STYLE.subtitle,
+            "subtitlefontsize": DEFAULT_FIG_STYLE.subtitle_font_size,
+            "subtitlecolour": DEFAULT_FIG_STYLE.subtitle_colour,
             "size": DEFAULT_FIG_STYLE.size,
             "backgroundcolour": DEFAULT_FIG_STYLE.background_colour,
             "sorted": DEFAULT_FIG_STYLE.sorted,
@@ -468,6 +472,9 @@ class StackedPlotStyle:
                     title:str = None,
                     title_font_size:int = None,
                     title_colour:str = None,
+                    subtitle:str = None,
+                    subtitle_font_size:int = None,
+                    subtitle_colour:str = None,
                     font_family:str = "Arial",
                     fig_size:tuple[int, int] = None,
                     background_colour:str = None,
@@ -479,6 +486,9 @@ class StackedPlotStyle:
             title: The title of the plot.
             title_font_size: Plot title font size in points.
             title_colour: The colour of the plot title.
+            subttile: The subtitle of the plot.
+            subtitle_font_size: Plot subtitle font size in points.
+            subtitle_colour: The colour of the plot subtitle.
             font_family: The font family for all text used in the plot. User must select from
                 a list of font families (installed on user's machine).
             fig_size: Tuple of integers representing the width and height of the figure in pixels.
@@ -495,6 +505,9 @@ class StackedPlotStyle:
         if title is not None: self.__fig_style["title"] = title
         if title_font_size is not None: self.__fig_style["titlefontsize"] = title_font_size
         if title_colour is not None: self.__fig_style["titlecolour"] = title_colour
+        if subtitle is not None: self.__fig_style["subtitle"] = subtitle
+        if subtitle_font_size is not None: self.__fig_style["subtitlefontsize"] = subtitle_font_size
+        if subtitle_colour is not None: self.__fig_style["subtitlecolour"] = subtitle_colour
         if font_family is not None: self.__fig_style["fontfamily"] = font_family
         if fig_size is not None:
             if not isinstance(fig_size, tuple) or len(fig_size) != 2:
