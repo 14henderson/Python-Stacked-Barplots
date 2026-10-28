@@ -88,11 +88,11 @@ class CoreClassTest(unittest.TestCase):
         test_plot.set_vert_line_style(show=True)
         test_plot.render()
 
-        test_plot.set_fig_style(fig_size=(10, 5))
+        test_plot.set_fig_style(fig_size=(1000, 500))
         test_plot.render()
-        test_plot.set_fig_style(fig_size=(10, 10))
+        test_plot.set_fig_style(fig_size=(1000, 1000))
         test_plot.render()
-        test_plot.set_fig_style(fig_size=(5, 10))
+        test_plot.set_fig_style(fig_size=(500, 1000))
         test_plot.render()
 
         if self.show_plots: test_plot.show()
@@ -319,23 +319,37 @@ class CoreStyleTest(unittest.TestCase):
         title="Test Title"
         title_font_size=20
         title_colour="green"
+        subtitle="Test subtitle"
+        subtitle_font_size=10
+        subtitle_colour="red"
         font_family="monospace"
         spine_display=(False, True, False, True)
 
         test_plot.set_fig_style(title=title,
                                 title_font_size=title_font_size,
                                 title_colour=title_colour,
+                                subtitle=subtitle,
+                                subtitle_font_size=subtitle_font_size,
+                                subtitle_colour=subtitle_colour,
                                 font_family=font_family,
-                                fig_size=(20, 20),
+                                fig_size=(500, 800),
                                 spine_display=spine_display)
         test_plot.render()
-        self.assertEqual(test_plot.ax.title.get_text(), title,
+        self.assertEqual(test_plot.fig.get_suptitle(), title,
                          "Attribute title not being applied.")
-        self.assertEqual(test_plot.ax.title.get_fontsize(), title_font_size,
+        self.assertEqual(test_plot.fig._suptitle.get_fontsize(), title_font_size,
                          "Attribute font_size not being applied.")
-        self.assertEqual(test_plot.ax.title.get_color(), title_colour,
+        self.assertEqual(test_plot.fig._suptitle.get_color(), title_colour,
                          "Attribute title_colour not being applied.")
-        self.assertEqual(test_plot.ax.title.get_fontfamily()[0], font_family,
+        self.assertEqual(test_plot.fig._suptitle.get_fontfamily()[0], font_family,
+                         "Attribute font_family not being applied.")
+        self.assertEqual(test_plot.fig._subtitle.get_text(), subtitle,
+                         "Attribute subtitle not being applied.")
+        self.assertEqual(test_plot.fig._subtitle.get_fontsize(), subtitle_font_size,
+                         "Attribute subtitle_font_size not being applied.")
+        self.assertEqual(test_plot.fig._subtitle.get_color(), subtitle_colour,
+                         "Attribute subtitle_colour not being applied.")
+        self.assertEqual(test_plot.fig._subtitle.get_fontfamily()[0], font_family,
                          "Attribute font_family not being applied.")
         self.assertEqual(test_plot.ax.spines['left'].get_visible(), spine_display[0],
                          "Left spine showing/not showing against defined style.")
