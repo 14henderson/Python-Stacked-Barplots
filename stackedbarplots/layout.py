@@ -1,4 +1,4 @@
-# pylint: disable=multiple-statements,too-many-positional-arguments,redefined-outer-name,line-too-long,arguments-differ, wrong-import-position, unnecessary-pass
+# pylint: disable=multiple-statements,too-many-positional-arguments,redefined-outer-name,line-too-long,arguments-differ, wrong-import-position, unnecessary-pass, protected-access
 """Module contains LayoutEngine class for arranging figure and axis elements.
 
 LayoutEngine child class is called at draw time for the plot, and aims
@@ -25,7 +25,7 @@ __all__ = [
     "StackedBarLayoutEngine"
 ]
 
-
+#TODO: Stop using self.plot.fig/ax and use fig param instead.
 
 
 class StackedBarLayoutEngine(matplotlib.layout_engine.LayoutEngine):
@@ -53,7 +53,7 @@ class StackedBarLayoutEngine(matplotlib.layout_engine.LayoutEngine):
     def execute(self, fig:Figure) -> None:
         """Perform layout algorithm and move and resize axis and axis elements accordingly."""
         if self.plot.get_legend_style()["show"]: self.layout_legend(fig)
-        if self.plot.get_fig_style()["title"] is not None: self.layout_paratext(fig)
+        if self.plot.get_fig_style()["title"] is not None or self.plot.get_fig_style()["subtitle"]: self.layout_paratext(fig)
         self.size_figure(fig)
 
 
@@ -103,13 +103,27 @@ class StackedBarLayoutEngine(matplotlib.layout_engine.LayoutEngine):
     def layout_paratext(self, fig:Figure) -> None:
         """Layout paratext around the figure (i.e., (sub)title)."""
 
-        title_pad = 20
-        if self.plot.get_legend_style()["show"] and "above-horizontal" in self.plot.get_legend_style()["placement"]:
-            title_pad += self.plot.ax.get_legend().get_window_extent().y1 - self.plot.ax.get_window_extent().y1
+        if self.plot.get_fig_style()["subtitle"] is not None:
+            subtitle_pad = 0
+            if self.plot.get_legend_style()["show"] and "above-horizontal" in self.plot.get_legend_style()["placement"]:
+                subtitle_pad += self.plot.ax.get_legend().get_window_extent().y1 - self.plot.ax.get_window_extent().y1
+                subtitle_pad += 10 #Add extra padding between legend and subtitle
 
-        self.plot.ax.title.set_transform(
-            mtransforms.offset_copy(self.plot.ax.transAxes, fig=fig, y=title_pad, units="dots")
-        )
+            fig._subtitle.set_transform(mtransforms.IdentityTransform())
+            fig._subtitle.set_position((fig.get_window_extent().width/2,
+                                                self.plot.ax.get_window_extent().y1+subtitle_pad))
+
+        if self.plot.get_fig_style()["title"] is not None:
+            title_pad = 0
+            if fig._subtitle is not None:
+                title_pad += fig._subtitle.get_window_extent().y1 - self.plot.ax.get_window_extent().y1
+                title_pad += 10 #Add extra padding between subtitle and title
+            elif self.plot.get_legend_style()["show"] and "above-horizontal" in self.plot.get_legend_style()["placement"]:
+                title_pad += self.plot.ax.get_legend().get_window_extent().y1 - self.plot.ax.get_window_extent().y1
+
+            fig._suptitle.set_transform(mtransforms.IdentityTransform())
+            fig._suptitle.set_position((fig.get_window_extent().width/2,
+                                                   self.plot.ax.get_window_extent().y1+title_pad))
 
 
     def size_figure(self, fig:Figure):
@@ -144,7 +158,9 @@ class StackedBarLayoutEngine(matplotlib.layout_engine.LayoutEngine):
 
         #Calculate top margin
         if self.plot.get_fig_style()["title"] is not None:
-            m_top_px += self.plot.ax.title.get_window_extent().y1 - self.plot.ax.get_window_extent().y1
+            m_top_px += self.plot.fig._suptitle.get_window_extent().y1 - self.plot.ax.get_window_extent().y1
+        elif self.plot.get_fig_style()["subtitle"] is not None:
+            m_top_px += self.plot.fig._subtitle.get_window_extent().y1 - self.plot.ax.get_window_extent().y1
         elif self.plot.get_legend_style()["show"] and self.plot.get_legend_style()["placement"] == "above-horizontal":
             m_top_px += self.plot.ax.get_legend().get_window_extent().y1 - self.plot.ax.get_window_extent().y1
 
@@ -158,8 +174,8 @@ class StackedBarLayoutEngine(matplotlib.layout_engine.LayoutEngine):
             min_y0 = min(label.get_window_extent().y0 for label in labels)
             m_bottom_px += self.plot.ax.get_window_extent().y0 - min_y0
 
-        print(f"Axis bounds: {self.plot.ax.get_window_extent().bounds}")
-        print(f"Bottom margin: {m_bottom_px}, Left m: {m_left_px}, Top m: {m_top_px}, Right m: {m_right_px}")
+        #print(f"Axis bounds: {self.plot.ax.get_window_extent().bounds}")
+        #print(f"Bottom margin: {m_bottom_px}, Left m: {m_left_px}, Top m: {m_top_px}, Right m: {m_right_px}")
 
         m_left_px += Auto_Style_Calculations.fig_left_pad
         m_right_px += Auto_Style_Calculations.fig_right_pad
