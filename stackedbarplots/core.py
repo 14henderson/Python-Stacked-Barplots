@@ -11,6 +11,7 @@ import os
 import warnings
 import matplotlib.pyplot as plt
 import matplotlib.lines as mlines
+import matplotlib.text
 
 from .tools import cumu2d, ChartDataSorting
 from .defaults import StackedPlotStyle, DEFAULT_LEGEND_STYLE, DEFAULT_BAR_STYLE
@@ -156,11 +157,14 @@ class StackedBarplot():
         self._plot_bars()
         self._plot_bar_labels()
         self._plot_axes()
+        self._plot_peritext()
+
         if self.get_legend_style()["show"]:
-            self._init_legend_markers()
             self._plot_legend()
         if self.get_vert_line_style()["show"]:
             self._plot_vert_line()
+
+        self._plot_paratext()
 
 
     def _destroy_fig(self):
@@ -315,6 +319,57 @@ class StackedBarplot():
         self.ax.invert_yaxis() #Required for some reason?
 
 
+    def _plot_peritext(self):
+        """Internal method. Draws peritext (i.e., text of the axis) including axes ticks and axes labels."""
+
+        if self.get_axis_title_style()["xlabel"] is not None:
+            self.ax.set_xlabel(self.get_axis_title_style()["xlabel"],
+                               labelpad=0,
+                               fontsize=self.get_axis_title_style()["axislabelfontsize"],
+                               color=self.get_axis_title_style()["axislabelfontcolour"],
+                               fontfamily=self.get_fig_style()["fontfamily"])
+
+        if self.get_axis_title_style()["ylabel"] is not None:
+            self.ax.set_ylabel(self.get_axis_title_style()["ylabel"],
+                               labelpad=0,
+                               fontsize=self.get_axis_title_style()["axislabelfontsize"],
+                               color=self.get_axis_title_style()["axislabelfontcolour"],
+                               fontfamily=self.get_fig_style()["fontfamily"])
+
+        self.ax.tick_params(axis='y', which='major', left=False, right=False)
+
+        if self.get_axis_style()["xfontcolour"] is not None:
+            #Assumption made that bottom spine colour should match x axis tick colour?
+            self.ax.spines["bottom"].set_color(self.get_axis_style()["xfontcolour"])
+            self.ax.tick_params(axis='x', colors=self.get_axis_style()["xfontcolour"])
+        if self.get_axis_style()["yfontcolour"] is not None:
+            self.ax.tick_params(axis='y', colors=self.get_axis_style()["yfontcolour"])
+
+
+    def _plot_paratext(self):
+        """Internal method. Draws paratext (i.e., text around the axis) including title and subtitle."""
+
+        self.fig._subtitle = None
+        if self.get_fig_style()["title"] is not None:
+            self.fig.suptitle(self.get_fig_style()["title"],
+                              fontsize=self.get_fig_style()["titlefontsize"],
+                              color=self.get_fig_style()["titlecolour"],
+                              fontfamily=self.get_fig_style()["fontfamily"],
+                              horizontalalignment="center",
+                              verticalalignment="bottom",
+                              )
+
+        if self.get_fig_style()["subtitle"] is not None:
+            self.fig._subtitle = matplotlib.text.Text(text=self.get_fig_style()["subtitle"],
+                                                    fontsize=self.get_fig_style()["subtitlefontsize"],
+                                                    color=self.get_fig_style()["subtitlecolour"],
+                                                    fontfamily=self.get_fig_style()["fontfamily"],
+                                                    horizontalalignment="center",
+                                                    verticalalignment="bottom",
+                                                    )
+            self.fig.add_artist(self.fig._subtitle)
+
+
     def _plot_axes(self):
         """Internal method. Renders and applies plot labels/title and axes settings according to stored style configuration."""
         if not self.get_axis_style()["yaxisshow"]: self.ax.yaxis.set_visible(False)
@@ -337,35 +392,10 @@ class StackedBarplot():
         if not self.get_fig_style()["spinedisplay"][2]: self.ax.spines['right'].set_visible(False)
         if not self.get_fig_style()["spinedisplay"][3]: self.ax.spines['bottom'].set_visible(False)
 
-        if self.get_fig_style()["title"] is not None:
-            self.ax.set_title(self.get_fig_style()["title"],
-                              fontsize=self.get_fig_style()["titlefontsize"],
-                              color=self.get_fig_style()["titlecolour"],
-                              fontfamily=self.get_fig_style()["fontfamily"],
-                              )
-        if self.get_axis_title_style()["xlabel"] is not None:
-            self.ax.set_xlabel(self.get_axis_title_style()["xlabel"],
-                               fontsize=self.get_axis_title_style()["axislabelfontsize"],
-                               color=self.get_axis_title_style()["axislabelfontcolour"],
-                               fontfamily=self.get_fig_style()["fontfamily"])
-        if self.get_axis_title_style()["ylabel"] is not None:
-            self.ax.set_ylabel(self.get_axis_title_style()["ylabel"],
-                               fontsize=self.get_axis_title_style()["axislabelfontsize"],
-                               color=self.get_axis_title_style()["axislabelfontcolour"],
-                               fontfamily=self.get_fig_style()["fontfamily"])
-
-        self.ax.tick_params(axis='y', which='major', left=False, right=False)
-
-        if self.get_axis_style()["xfontcolour"] is not None:
-            #Assumption made that bottom spine colour should match x axis tick colour?
-            self.ax.spines["bottom"].set_color(self.get_axis_style()["xfontcolour"])
-            self.ax.tick_params(axis='x', colors=self.get_axis_style()["xfontcolour"])
-        if self.get_axis_style()["yfontcolour"] is not None:
-            self.ax.tick_params(axis='y', colors=self.get_axis_style()["yfontcolour"])
-
 
     def _plot_legend(self):
         """Internal method. Renders a plot legend according to stored style configuration."""
+        self._init_legend_markers()
         if "horizontal" in self.get_legend_style()["placement"]: ncol = len(self.series_labels)
         else: ncol = 1
 
