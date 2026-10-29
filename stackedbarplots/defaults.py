@@ -35,6 +35,7 @@ Typical usage example:
 
 import warnings
 import matplotlib.lines as mlines
+
 from .tools import ColourGradient
 
 __all__ = [
@@ -149,6 +150,7 @@ class DEFAULT_BAR_VAL_LABEL_STYLE:
     expel_squeezed_ends:bool = True
 
 
+
 class DEFAULT_FIG_STYLE:
     """Default style class for general figure style.
 
@@ -165,7 +167,9 @@ class DEFAULT_FIG_STYLE:
     subtitle:str = None
     subtitle_font_size:int = 12
     subtitle_colour = "black"
-    font_family:str = "sans-serif"
+    font_family:str = "Liberation Sans"
+    font_weight:int = 400
+    title_weight:int = 700
     background_colour = "#ffffff"
     sorted:str = None #Can be None, "sum-asc", "sum-desc", "avg-asc", "avg-desc", "lhlf-asc", "lhlf-desc", "rhlf-asc", "rhlf-desc"
     spine_display:tuple[bool, bool, bool, bool] = (False, False, False, False) #left, top, right, bottom
@@ -279,10 +283,12 @@ class StackedPlotStyle:
             "title": DEFAULT_FIG_STYLE.title,
             "titlefontsize": DEFAULT_FIG_STYLE.title_font_size,
             "titlecolour": DEFAULT_FIG_STYLE.title_colour,
-            "fontfamily": DEFAULT_FIG_STYLE.font_family,
             "subtitle": DEFAULT_FIG_STYLE.subtitle,
             "subtitlefontsize": DEFAULT_FIG_STYLE.subtitle_font_size,
             "subtitlecolour": DEFAULT_FIG_STYLE.subtitle_colour,
+            "fontfamily": DEFAULT_FIG_STYLE.font_family,
+            "fontweight": DEFAULT_FIG_STYLE.font_weight,
+            "titleweight": DEFAULT_FIG_STYLE.title_weight,
             "size": DEFAULT_FIG_STYLE.size,
             "backgroundcolour": DEFAULT_FIG_STYLE.background_colour,
             "sorted": DEFAULT_FIG_STYLE.sorted,
@@ -475,7 +481,9 @@ class StackedPlotStyle:
                     subtitle:str = None,
                     subtitle_font_size:int = None,
                     subtitle_colour:str = None,
-                    font_family:str = "Arial",
+                    font_family:str = None,
+                    font_weight:int = None,
+                    title_weight:int = None,
                     fig_size:tuple[int, int] = None,
                     background_colour:str = None,
                     sorted:str = None,
@@ -491,6 +499,8 @@ class StackedPlotStyle:
             subtitle_colour: The colour of the plot subtitle.
             font_family: The font family for all text used in the plot. User must select from
                 a list of font families (installed on user's machine).
+            font_weight: The font weight for all text used in the plot (excluding title).
+            title_weight: The font weight for the figure title.
             fig_size: Tuple of integers representing the width and height of the figure in pixels.
             background_colour: The background colour of the figure.
             sorted: Whether the displayed categories should be ordered. Must be either 
@@ -509,6 +519,8 @@ class StackedPlotStyle:
         if subtitle_font_size is not None: self.__fig_style["subtitlefontsize"] = subtitle_font_size
         if subtitle_colour is not None: self.__fig_style["subtitlecolour"] = subtitle_colour
         if font_family is not None: self.__fig_style["fontfamily"] = font_family
+        if font_weight is not None: self.__fig_style["fontweight"] = font_weight
+        if title_weight is not None: self.__fig_style["titleweight"] = title_weight
         if fig_size is not None:
             if not isinstance(fig_size, tuple) or len(fig_size) != 2:
                 raise ValueError("Argument fig_size must be a tuple of two integers representing the width and height of the figure.")

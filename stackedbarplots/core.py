@@ -9,18 +9,25 @@ maintain a one-to-one relationship.
 
 import os
 import warnings
-import matplotlib.pyplot as plt
+from pathlib import Path
+
 import matplotlib.lines as mlines
+import matplotlib.pyplot as plt
 import matplotlib.text
+from matplotlib import font_manager
 
-from .tools import cumu2d, ChartDataSorting
-from .defaults import StackedPlotStyle, DEFAULT_LEGEND_STYLE, DEFAULT_BAR_STYLE
+from .defaults import DEFAULT_BAR_STYLE, DEFAULT_LEGEND_STYLE, StackedPlotStyle
 from .layout import StackedBarLayoutEngine
-
+from .tools import ChartDataSorting, cumu2d
 
 __all__ = [
     "StackedBarplot"
 ]
+
+
+font_manager.fontManager.addfont(str(Path(os.path.dirname(os.path.realpath(__file__)), "fonts/LiberationSans-Regular.ttf"))) #Can this be outside the class?
+font_manager.fontManager.addfont(str(Path(os.path.dirname(os.path.realpath(__file__)), "fonts/LiberationSans-Bold.ttf")))
+font_manager.fontManager.addfont(str(Path(os.path.dirname(os.path.realpath(__file__)), "fonts/LiberationSans-Italic.ttf")))
 
 
 
@@ -86,7 +93,7 @@ class StackedBarplot():
 
 
     def set_style(self, style:StackedPlotStyle):
-        """Applies a given StackedPlotStyle object to the current StackedBarplot plot.
+        """Applies a given StackedPlotStyle object to the current StackedBarplot plot, and sets plot default styles.
         
         Args:
             style: Given StackedPlotStyle object that should be applied to the StackedBarplot plot.
@@ -96,6 +103,11 @@ class StackedBarplot():
 
         #Bar colours must be generated after the data is provided, as the number of colours must match the number of categories
         self.style.bar_colours.gradient(len(self.series_labels), DEFAULT_BAR_STYLE.start_colour, DEFAULT_BAR_STYLE.end_colour, DEFAULT_BAR_STYLE.mid_colour)
+
+        plt.rcParams["font.family"] = self.get_fig_style()["fontfamily"]
+        plt.rcParams["font.weight"] = self.get_fig_style()["fontweight"]
+        plt.rcParams["axes.labelweight"] = self.get_fig_style()["fontweight"]
+        plt.rcParams["figure.titleweight"] = self.get_fig_style()["titleweight"]
 
 
     def render(self):
@@ -233,7 +245,6 @@ class StackedBarplot():
                                  label=colname,
                                  zorder=1)
 
-        for tick in self.ax.get_yticklabels(): tick.set_fontfamily(self.style.get_fig_style()["fontfamily"])
         self.fig.set_facecolor(self.style.get_fig_style()["backgroundcolour"])
         self.ax.set_facecolor(self.style.get_fig_style()["backgroundcolour"])
 
@@ -283,7 +294,6 @@ class StackedBarplot():
                     ha=ha, va="center",
                     fontsize=self.get_bar_val_label_style()["fontsize"],
                     color=font_colour,
-                    fontfamily=self.get_fig_style()["fontfamily"],
                     annotation_clip=False
                     )
 
@@ -327,14 +337,14 @@ class StackedBarplot():
                                labelpad=0,
                                fontsize=self.get_axis_title_style()["axislabelfontsize"],
                                color=self.get_axis_title_style()["axislabelfontcolour"],
-                               fontfamily=self.get_fig_style()["fontfamily"])
+                               )
 
         if self.get_axis_title_style()["ylabel"] is not None:
             self.ax.set_ylabel(self.get_axis_title_style()["ylabel"],
                                labelpad=0,
                                fontsize=self.get_axis_title_style()["axislabelfontsize"],
                                color=self.get_axis_title_style()["axislabelfontcolour"],
-                               fontfamily=self.get_fig_style()["fontfamily"])
+                               )
 
         self.ax.tick_params(axis='y', which='major', left=False, right=False)
 
@@ -354,7 +364,6 @@ class StackedBarplot():
             self.fig.suptitle(self.get_fig_style()["title"],
                               fontsize=self.get_fig_style()["titlefontsize"],
                               color=self.get_fig_style()["titlecolour"],
-                              fontfamily=self.get_fig_style()["fontfamily"],
                               horizontalalignment="center",
                               verticalalignment="bottom",
                               )
@@ -363,7 +372,6 @@ class StackedBarplot():
             self.fig._subtitle = matplotlib.text.Text(text=self.get_fig_style()["subtitle"],
                                                     fontsize=self.get_fig_style()["subtitlefontsize"],
                                                     color=self.get_fig_style()["subtitlecolour"],
-                                                    fontfamily=self.get_fig_style()["fontfamily"],
                                                     horizontalalignment="center",
                                                     verticalalignment="bottom",
                                                     )
@@ -383,9 +391,9 @@ class StackedBarplot():
                 self.ax.xaxis.set_major_formatter(lambda x, pos: self.get_axis_style()["xaxisformat"].format(abs(x))) #Absolute x ticks
             else:
                 self.ax.xaxis.set_major_formatter(lambda x, pos: self.get_axis_style()["xaxisformat"].format(x))
-            self.ax.tick_params(axis='x', labelsize=int(self.get_axis_style()["xfontsize"]), labelfontfamily=self.get_fig_style()["fontfamily"])
+            self.ax.tick_params(axis='x', labelsize=int(self.get_axis_style()["xfontsize"]))
 
-        self.ax.tick_params(axis='y', labelsize=int(self.get_axis_style()["yfontsize"]), labelfontfamily=self.get_fig_style()["fontfamily"])
+        self.ax.tick_params(axis='y', labelsize=int(self.get_axis_style()["yfontsize"]))
 
         if not self.get_fig_style()["spinedisplay"][0]: self.ax.spines['left'].set_visible(False)
         if not self.get_fig_style()["spinedisplay"][1]: self.ax.spines['top'].set_visible(False)
