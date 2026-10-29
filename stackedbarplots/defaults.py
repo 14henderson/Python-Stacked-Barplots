@@ -150,7 +150,6 @@ class DEFAULT_BAR_VAL_LABEL_STYLE:
     expel_squeezed_ends:bool = True
 
 
-
 class DEFAULT_FIG_STYLE:
     """Default style class for general figure style.
 
@@ -162,11 +161,11 @@ class DEFAULT_FIG_STYLE:
 
     size:tuple[int, int] = None #Can be None (auto scaling), or an integer tuple. In pixels. #TODO: Move to axis style as this is now the desired axis size?
     title:str = None
-    title_font_size:int = 12
-    title_colour = "black"
+    title_font_size:int = 20
+    title_colour = "#2c2c2c"
     subtitle:str = None
-    subtitle_font_size:int = 12
-    subtitle_colour = "black"
+    subtitle_font_size:int = 11
+    subtitle_colour = "#7E7D7D"
     font_family:str = "Liberation Sans"
     font_weight:int = 400
     title_weight:int = 700
@@ -425,7 +424,7 @@ class StackedPlotStyle:
     def set_bar_val_label_style(self,
                 font_size:int=None,
                 font_colour:str = None,
-                colour_invert:bool = False,
+                colour_invert:bool = None,
                 format:str = None,
                 align:str=None,
                 padding:float = None,
@@ -459,7 +458,7 @@ class StackedPlotStyle:
         if format is not None: self.__bar_val_label_style["format"] = format
         if hide_squeezed not in [None, "all", "inner-only"]:
             raise ValueError("Argument hide-squeezed must be either None, \"all\", or \"inner-only\".")
-        self.__bar_val_label_style["hidesqueezed"] = hide_squeezed
+        elif hide_squeezed is not None: self.__bar_val_label_style["hidesqueezed"] = hide_squeezed
         if expel_squeezed_ends is not None: self.__bar_val_label_style["expelsqueezedends"] = expel_squeezed_ends
         if align is not None:
             if align not in ["left", "centre", "right"]:
