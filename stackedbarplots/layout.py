@@ -138,7 +138,9 @@ class StackedBarLayoutEngine(matplotlib.layout_engine.LayoutEngine):
         if "above-horizontal" in self.plot.get_legend_style()["placement"]:
             self.plot.ax.get_legend().set_bbox_to_anchor(
                 list(DEFAULT_LEGEND_STYLE.placement_options[self.plot.get_legend_style()["placement"]][1]),
-                transform=mtransforms.offset_copy(self.plot.ax.transAxes, fig=fig, y=y_transform + 5, x=x_transform, units="dots"),
+                transform=mtransforms.offset_copy(
+                    mtransforms.blended_transform_factory(fig.transFigure, self.plot.ax.transAxes),
+                    fig=fig, y=y_transform + 5, x=x_transform, units="dots")
             )
         elif "below-horizontal" in self.plot.get_legend_style()["placement"]:
             m_bottom_padd = 0
@@ -153,7 +155,9 @@ class StackedBarLayoutEngine(matplotlib.layout_engine.LayoutEngine):
 
             self.plot.ax.get_legend().set_bbox_to_anchor(
                 list(DEFAULT_LEGEND_STYLE.placement_options[self.plot.get_legend_style()["placement"]][1]),
-                transform=mtransforms.offset_copy(self.plot.ax.transAxes, fig=fig, y=y_transform + (m_bottom_padd*-1), x = x_transform, units="dots"),
+                transform=mtransforms.offset_copy(
+                    mtransforms.blended_transform_factory(fig.transFigure, self.plot.ax.transAxes),
+                    fig=fig, y=y_transform + (m_bottom_padd*-1), x = x_transform, units="dots")
             )
         elif "right-vertical" in self.plot.get_legend_style()["placement"]:
             self.plot.ax.get_legend().set_bbox_to_anchor(
