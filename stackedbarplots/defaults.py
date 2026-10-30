@@ -188,11 +188,12 @@ class DEFAULT_LEGEND_STYLE:
 
     show:bool = False
     font_size:int = 8
-    font_colour = "black"
+    font_colour = "#2c2c2c"
     label_padding:float = 0.8
     marker_shape:str = "s" #see for different marker shapes https://matplotlib.org/stable/api/_as_gen/matplotlib.lines.Line2D.html
     border_colour = DEFAULT_FIG_STYLE.background_colour
     background_colour = DEFAULT_FIG_STYLE.background_colour
+    columns:int = None
     placement:str = "right-vertical"
     placement_options = {
         "right-vertical": ["upper left", (1, 1)],
@@ -300,6 +301,7 @@ class StackedPlotStyle:
             "fontcolour": DEFAULT_LEGEND_STYLE.font_colour,
             "backgroundcolour": DEFAULT_LEGEND_STYLE.background_colour,
             "bordercolour": DEFAULT_LEGEND_STYLE.border_colour,
+            "columns": DEFAULT_LEGEND_STYLE.columns,
             "placement": DEFAULT_LEGEND_STYLE.placement,
             "markershape": DEFAULT_LEGEND_STYLE.marker_shape,
             "markers": [],
@@ -561,6 +563,7 @@ class StackedPlotStyle:
                         font_colour:str = None,
                         background_colour:str = None,
                         border_colour:str = None,
+                        columns:int = None,
                         placement:str = None,
                         marker_shape:str = None,
                         transform:tuple[float, float] = None):
@@ -574,6 +577,7 @@ class StackedPlotStyle:
             font_colour: The color of the text in the legend.
             background_colour: The legend's background color.
             border_colour: The legend's background patch edge color.
+            columns: The number of columns in the legend.
             placement: String representing where around the figure the legend should be
                 displayed. {"right-vertical", "below-horizontal", "above-horizontal"}.
             marker_shape: Marker style string. {'*': 'star', '+': 'plus', 's':'square', 
@@ -588,6 +592,7 @@ class StackedPlotStyle:
         if font_colour is not None: self.__legend_style["fontcolour"] = font_colour
         if background_colour is not None: self.__legend_style["backgroundcolour"] = background_colour
         if border_colour is not None: self.__legend_style["bordercolour"] = border_colour
+        if columns is not None: self.__legend_style["columns"] = columns
         if placement is not None:
             if placement not in ["right-vertical", "below-horizontal", "above-horizontal"]:
                 raise ValueError("Placement must be either \"right-vertical\", \"below-horizontal\", \"above-horizontal\".")

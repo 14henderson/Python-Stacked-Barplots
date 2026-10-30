@@ -139,7 +139,7 @@ class StackedBarLayoutEngine(matplotlib.layout_engine.LayoutEngine):
             self.plot.ax.get_legend().set_bbox_to_anchor(
                 list(DEFAULT_LEGEND_STYLE.placement_options[self.plot.get_legend_style()["placement"]][1]),
                 transform=mtransforms.offset_copy(
-                    mtransforms.blended_transform_factory(fig.transFigure, self.plot.ax.transAxes),
+                    mtransforms.blended_transform_factory(fig.transFigure, self.plot.ax.transAxes), #This centres to fig not axes
                     fig=fig, y=y_transform + 5, x=x_transform, units="dots")
             )
         elif "below-horizontal" in self.plot.get_legend_style()["placement"]:
@@ -156,7 +156,7 @@ class StackedBarLayoutEngine(matplotlib.layout_engine.LayoutEngine):
             self.plot.ax.get_legend().set_bbox_to_anchor(
                 list(DEFAULT_LEGEND_STYLE.placement_options[self.plot.get_legend_style()["placement"]][1]),
                 transform=mtransforms.offset_copy(
-                    mtransforms.blended_transform_factory(fig.transFigure, self.plot.ax.transAxes),
+                    mtransforms.blended_transform_factory(fig.transFigure, self.plot.ax.transAxes),#This centres to fig not axes
                     fig=fig, y=y_transform + (m_bottom_padd*-1), x = x_transform, units="dots")
             )
         elif "right-vertical" in self.plot.get_legend_style()["placement"]:
@@ -191,8 +191,6 @@ class StackedBarLayoutEngine(matplotlib.layout_engine.LayoutEngine):
             fig._suptitle.set_position((fig.get_window_extent().width/2,
                                                    self.plot.ax.get_window_extent().y1+title_pad))
 
-            
-
 
     def size_figure(self, fig:Figure):
         """Sets the size of the figure.
@@ -223,9 +221,14 @@ class StackedBarLayoutEngine(matplotlib.layout_engine.LayoutEngine):
         title_left_over_px = self.plot.ax.get_window_extent().x0 - self.plot.fig._suptitle.get_window_extent().x0 if self.plot.get_fig_style()["title"] is not None else 0
         subtitle_left_over_px = self.plot.ax.get_window_extent().x0 - self.plot.fig._subtitle.get_window_extent().x0 if self.plot.get_fig_style()["subtitle"] is not None else 0
         if max([title_left_over_px, subtitle_left_over_px]) > m_left_px:
-            warnings.warn("Left margin of figure has been reset to accommodate long title.")
+            warnings.warn("Left margin of figure may have been adjusted to accommodate long title.")
             m_left_px = max([title_left_over_px, subtitle_left_over_px])
 
+        if self.plot.get_legend_style()["show"] and "horizontal" in self.plot.get_legend_style()["placement"]:
+            lgnd_artist = self.plot.ax.get_legend()
+            legend_left_over_px = self.plot.fig._suptitle.get_window_extent().x0 - lgnd_artist.get_window_extent().x0
+            if legend_left_over_px > m_left_px:
+                warnings.warn("Figure legend has overlapped edge of figure on a call to StackedBarLayoutEngine. Consider adjusting the number of columns used in the legend.")
 
         #Calculate right margin
         if self.plot.get_legend_style()["show"] and self.plot.get_legend_style()["placement"] == "right-vertical":
@@ -234,7 +237,7 @@ class StackedBarLayoutEngine(matplotlib.layout_engine.LayoutEngine):
         title_right_over_px = self.plot.fig._suptitle.get_window_extent().x1 - self.plot.ax.get_window_extent().x1 if self.plot.get_fig_style()["title"] is not None else 0
         subtitle_right_over_px = self.plot.fig._subtitle.get_window_extent().x1 - self.plot.ax.get_window_extent().x1 if self.plot.get_fig_style()["subtitle"] is not None else 0
         if max([title_right_over_px, subtitle_right_over_px]) > m_right_px:
-            warnings.warn("Right margin of figure has been reset to accommodate long title.")
+            warnings.warn("Right margin of figure may have been adjusted to accommodate long title.")
             m_right_px = max([title_right_over_px, subtitle_right_over_px])
 
         #Calculate top margin

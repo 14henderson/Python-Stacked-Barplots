@@ -381,8 +381,12 @@ class StackedBarplot():
     def _plot_legend(self):
         """Internal method. Renders a plot legend according to stored style configuration."""
         self._init_legend_markers()
-        if "horizontal" in self.get_legend_style()["placement"]: ncol = len(self.series_labels)
-        else: ncol = 1
+        if self.get_legend_style()["columns"] is not None:
+            ncol = self.get_legend_style()["columns"]
+        elif "horizontal" in self.get_legend_style()["placement"]:
+            ncol = len(self.series_labels)
+        else: 
+            ncol = 1
 
         self.ax.legend(handles=self.get_legend_style()["markers"],
                        ncol=ncol,
