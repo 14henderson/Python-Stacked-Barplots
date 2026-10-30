@@ -64,7 +64,7 @@ class Auto_Style_Calculations:
         Args:
             num_series: The number of series in each category inthe plot."""
         if num_series > 10: return 24
-        else: return (-0.198*num_series**2) + 4.23*num_series + .7212
+        else: return (-0.198*num_series**2) + 4.23*num_series
 
 
     @staticmethod
@@ -73,7 +73,7 @@ class Auto_Style_Calculations:
         Args:
             num_categories: The number of categories in the plot."""
         if num_categories > 25: return 31.5
-        else: return (-0.025*num_categories**2) + 1.2557*num_categories + 1.5726
+        else: return (-0.025*num_categories**2) + 1.2557*num_categories
 
 
 
@@ -146,8 +146,8 @@ class DEFAULT_BAR_VAL_LABEL_STYLE:
     align:str = "centre"
     colour_invert:bool = False
     padding:float = 5 #In display coordinates
-    hide_squeezed:str = "inner-only" #Can be None, "all", "inner-only"
-    expel_squeezed_ends:bool = True
+    hide_squeezed:str = "all" #Can be None, "all", "inner-only"
+    expel_squeezed_ends:bool = False
 
 
 class DEFAULT_FIG_STYLE:
