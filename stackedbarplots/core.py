@@ -311,7 +311,7 @@ class StackedBarplot():
 
         if self.get_axis_title_style()["xlabel"] is not None:
             self.ax.set_xlabel(self.get_axis_title_style()["xlabel"],
-                               labelpad=0,
+                               labelpad=5,
                                fontsize=self.get_axis_title_style()["axislabelfontsize"],
                                color=self.get_axis_title_style()["axislabelfontcolour"],
                                )

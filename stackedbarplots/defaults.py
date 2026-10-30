@@ -108,7 +108,7 @@ class DEFAULT_AXIS_TITLE_STYLE:
     x_label:str = None
     y_label:str = None
     axis_label_font_size:int = 12
-    axis_label_font_colour = "black"
+    axis_label_font_colour = "#2c2c2c"
 
 
 class DEFAULT_BAR_STYLE:
@@ -141,7 +141,7 @@ class DEFAULT_BAR_VAL_LABEL_STYLE:
     default."""
 
     font_size:int = 10
-    font_colour = "black"
+    font_colour = "#2c2c2c"
     format:str = "{0:.1f}"
     align:str = "centre"
     colour_invert:bool = False

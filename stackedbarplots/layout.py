@@ -71,6 +71,7 @@ class StackedBarLayoutEngine(matplotlib.layout_engine.LayoutEngine):
 
     def layout_bar_labels(self, fig:Figure):
         """Layout figure bar value annotations."""
+
         x_pixels_per_unit = self.plot.ax.transData.get_matrix()[0, 0]
         padding_data_coords = self.plot.get_bar_val_label_style()["padding"]/x_pixels_per_unit
 
@@ -81,6 +82,7 @@ class StackedBarLayoutEngine(matplotlib.layout_engine.LayoutEngine):
 
                 y = rect.get_y() + rect.get_height() / 2 #Center annotation object to the bar vertically
                 an = self.plot.ax._bar_labels[series_index][category_index]
+                an.set_ha("center")
 
                 #Set general purpose bar value annotation padding
                 if self.plot.get_bar_val_label_style()["align"] == "centre":
@@ -93,10 +95,10 @@ class StackedBarLayoutEngine(matplotlib.layout_engine.LayoutEngine):
                 an.xy = (x, y)
 
                 #3 of padding added to font. If font isn't centered, font padding also needs to be to font width when calculating overlap with bar.
-                if self.plot.get_bar_val_label_style()["align"] != "centre": 
-                    font_width = abs(an.get_window_extent().width) + self.plot.get_bar_val_label_style()["padding"] + 3
-                else: 
-                    font_width = abs(an.get_window_extent().width) + 3
+                if self.plot.get_bar_val_label_style()["align"] != "centre":
+                    font_width = abs(an.get_window_extent().width) + self.plot.get_bar_val_label_style()["padding"] + 5
+                else:
+                    font_width = abs(an.get_window_extent().width) + 5
                 bar_width = abs(rect.get_window_extent().width)
 
                 #Threshold for first and last bar on a row; if value is below threshold, move label to outside of bar
@@ -104,17 +106,16 @@ class StackedBarLayoutEngine(matplotlib.layout_engine.LayoutEngine):
                     if series_index == 0 and font_width > bar_width:
                         an.set_ha("right")
                         an.xy = (rect.get_x() - padding_data_coords, y)
-                        an.set_color(self.plot.get_bar_val_label_style()["fontcolour"])
 
                         #If the annotation has been placed overlapping with category ticks, the category ticks are padded by the required amount.
                         if an.get_window_extent().x0 < self.plot.ax.get_window_extent().x0:
                             shift_px = self.plot.ax.get_window_extent().x0 - an.get_window_extent().x0
                             self.plot.ax.tick_params(axis="y", pad=shift_px)
 
+
                     elif series_index == len(self.plot.series_labels)-1 and font_width > bar_width:
                         an.set_ha("left")
                         an.xy = (rect.get_x() + rect.get_width() + padding_data_coords, y)
-                        an.set_color(self.plot.get_bar_val_label_style()["fontcolour"])
 
                 #Hide bar data annotation if squeezed and style dictates it is to be hidden.
                 if self.plot.get_bar_val_label_style()["hidesqueezed"] is not None:
@@ -185,6 +186,8 @@ class StackedBarLayoutEngine(matplotlib.layout_engine.LayoutEngine):
             fig._suptitle.set_transform(mtransforms.IdentityTransform())
             fig._suptitle.set_position((fig.get_window_extent().width/2,
                                                    self.plot.ax.get_window_extent().y1+title_pad))
+
+            
 
 
     def size_figure(self, fig:Figure):
