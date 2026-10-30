@@ -220,9 +220,22 @@ class StackedBarLayoutEngine(matplotlib.layout_engine.LayoutEngine):
             min_x0 = min(label.get_window_extent().x0 for label in labels)
             m_left_px += self.plot.ax.get_window_extent().x0 - min_x0
 
+        title_left_over_px = self.plot.ax.get_window_extent().x0 - self.plot.fig._suptitle.get_window_extent().x0 if self.plot.get_fig_style()["title"] is not None else 0
+        subtitle_left_over_px = self.plot.ax.get_window_extent().x0 - self.plot.fig._subtitle.get_window_extent().x0 if self.plot.get_fig_style()["subtitle"] is not None else 0
+        if max([title_left_over_px, subtitle_left_over_px]) > m_left_px:
+            warnings.warn("Left margin of figure has been reset to accommodate long title.")
+            m_left_px = max([title_left_over_px, subtitle_left_over_px])
+
+
         #Calculate right margin
         if self.plot.get_legend_style()["show"] and self.plot.get_legend_style()["placement"] == "right-vertical":
             m_right_px += self.plot.ax.get_legend().get_window_extent().x1 - self.plot.ax.get_window_extent().x1
+
+        title_right_over_px = self.plot.fig._suptitle.get_window_extent().x1 - self.plot.ax.get_window_extent().x1 if self.plot.get_fig_style()["title"] is not None else 0
+        subtitle_right_over_px = self.plot.fig._subtitle.get_window_extent().x1 - self.plot.ax.get_window_extent().x1 if self.plot.get_fig_style()["subtitle"] is not None else 0
+        if max([title_right_over_px, subtitle_right_over_px]) > m_right_px:
+            warnings.warn("Right margin of figure has been reset to accommodate long title.")
+            m_right_px = max([title_right_over_px, subtitle_right_over_px])
 
         #Calculate top margin
         if self.plot.get_fig_style()["title"] is not None:
