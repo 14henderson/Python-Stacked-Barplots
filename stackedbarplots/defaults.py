@@ -107,8 +107,8 @@ class DEFAULT_AXIS_TITLE_STYLE:
     style of X and Y axis labels. None value indicates no label."""
     x_label:str = None
     y_label:str = None
-    axis_label_font_size:int = 12
-    axis_label_font_colour = "#2c2c2c"
+    axis_label_font_size:int = 10
+    axis_label_font_colour = "#7E7D7D"
 
 
 class DEFAULT_BAR_STYLE:
@@ -161,11 +161,11 @@ class DEFAULT_FIG_STYLE:
 
     size:tuple[int, int] = None #Can be None (auto scaling), or an integer tuple. In pixels. #TODO: Move to axis style as this is now the desired axis size?
     title:str = None
-    title_font_size:int = 20
+    title_font_size:int = 18
     title_colour = "#2c2c2c"
     title_wrap:bool = True
     subtitle:str = None
-    subtitle_font_size:int = 11
+    subtitle_font_size:int = 10
     subtitle_colour = "#7E7D7D"
     subtitle_wrap:bool = True
     font_family:str = "Liberation Sans"
