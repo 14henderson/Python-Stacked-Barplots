@@ -385,7 +385,7 @@ class StackedBarplot():
             ncol = self.get_legend_style()["columns"]
         elif "horizontal" in self.get_legend_style()["placement"]:
             ncol = len(self.series_labels)
-        else: 
+        else:
             ncol = 1
 
         self.ax.legend(handles=self.get_legend_style()["markers"],

@@ -46,7 +46,6 @@ __all__ = [
 
 
 #TODO: Calculate in pixels rather than cm.
-#TODO: Re-calculate as these are now estimated axes sizes not figure sizes.
 class Auto_Style_Calculations:
     """Class holding static methods relating to calculations for default 
     style values. In particular, where the style value is contingent on
@@ -595,7 +594,6 @@ class StackedPlotStyle:
             transform: Allows the user to make minor adjustments to the legend's placement
                 after placement choice. Must be tuple of length 2 representing a transform in X and Y axis in dots/pixels. 
         """
-        #TODO: finalise method argument documentation relating to legend placement.
         if show is not None: self.__legend_style["show"] = show
         if font_size is not None: self.__legend_style["fontsize"] = font_size
         if padding is not None: self.__legend_style["padding"] = padding

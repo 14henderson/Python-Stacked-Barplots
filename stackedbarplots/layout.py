@@ -299,7 +299,6 @@ class StackedBarLayoutEngine(matplotlib.layout_engine.LayoutEngine):
         return m_top_px + desired_ax_height + m_bottom_px
 
 
-
     def size_figure(self, fig:Figure):
         """Sets the size of the figure.
         
