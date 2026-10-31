@@ -1,7 +1,12 @@
-# pylint: disable=multiple-statements,too-many-positional-arguments,redefined-outer-name,missing-function-docstring,missing-class-docstring,line-too-long,disable=consider-using-enumerate
+# pylint: disable=multiple-statements,too-many-positional-arguments,redefined-outer-name,missing-function-docstring,missing-class-docstring,line-too-long,disable=consider-using-enumerate,invalid-name
 
-import unittest, inspect
-from stackedbarplots.defaults import *
+import inspect
+import unittest
+
+import matplotlib.pyplot as plt
+from matplotlib import font_manager
+
+from stackedbarplots.plots import basic
 
 
 class Test_Default_Fields(unittest.TestCase):
@@ -14,6 +19,33 @@ class Test_Default_Fields(unittest.TestCase):
                 if not inspect.ismethod(i[1]):
                     total += 1
         return total
+
+    def test_font_family(self):
+        """Unit test to check that default font family is applied to all text elements."""
+
+        results = {"Category 1": [10, 5, 2, 3, 11], "Category 2": [4, 2, 2, 9, 12], "Category 3": [11, 12, 2, 3, 4]}
+        series_labels = ["Series 1", "Series 2", "Series 3", "Series 4", "Series 5"]
+
+        basic_plot = basic(results, series_labels, title="Test title", subtitle="Test subtitle")
+        basic_plot.set_axis_title_style(x_label = "Test x label", y_label = "Test y labels")
+
+        basic_plot.render()
+
+        dflt_font_name = font_manager.FontProperties(fname=str("stackedbarplots/fonts/LiberationSans-Regular.ttf")).get_name()
+
+        self.assertEqual(dflt_font_name, basic_plot.fig._subtitle.get_fontfamily()[0])
+        self.assertEqual(dflt_font_name, basic_plot.fig._suptitle.get_fontfamily()[0])
+
+        self.assertEqual(dflt_font_name, basic_plot.ax.xaxis.label.get_fontfamily()[0])
+        self.assertEqual(dflt_font_name, basic_plot.ax.yaxis.label.get_fontfamily()[0])
+
+        self.assertEqual(dflt_font_name, basic_plot.ax.get_xticklabels()[0].get_fontfamily()[0])
+        self.assertEqual(dflt_font_name, basic_plot.ax.get_yticklabels()[0].get_fontfamily()[0])
+
+        plt.close(basic_plot.fig)
+        del basic_plot
+
+
 
 
     # def test_attribute_length(self):

@@ -35,6 +35,7 @@ Typical usage example:
 
 import warnings
 import matplotlib.lines as mlines
+
 from .tools import ColourGradient
 
 __all__ = [
@@ -45,14 +46,13 @@ __all__ = [
 
 
 #TODO: Calculate in pixels rather than cm.
-#TODO: Re-calculate as these are now estimated axes sizes not figure sizes.
 class Auto_Style_Calculations:
     """Class holding static methods relating to calculations for default 
     style values. In particular, where the style value is contingent on
     chart data (e.g., figure height calculate from number of categories)"""
 
     #Padding around figure (in pixels)
-    fig_left_pad = 10
+    fig_left_pad = 30
     fig_top_pad = 10
     fig_right_pad = 10
     fig_bottom_pad = 10
@@ -63,7 +63,7 @@ class Auto_Style_Calculations:
         Args:
             num_series: The number of series in each category inthe plot."""
         if num_series > 10: return 24
-        else: return (-0.198*num_series**2) + 4.23*num_series + .7212
+        else: return (-0.198*num_series**2) + 4.23*num_series
 
 
     @staticmethod
@@ -72,7 +72,7 @@ class Auto_Style_Calculations:
         Args:
             num_categories: The number of categories in the plot."""
         if num_categories > 25: return 31.5
-        else: return (-0.025*num_categories**2) + 1.2557*num_categories + 1.5726
+        else: return (-0.025*num_categories**2) + 1.2557*num_categories
 
 
 
@@ -106,8 +106,8 @@ class DEFAULT_AXIS_TITLE_STYLE:
     style of X and Y axis labels. None value indicates no label."""
     x_label:str = None
     y_label:str = None
-    axis_label_font_size:int = 12
-    axis_label_font_colour = "black"
+    axis_label_font_size:int = 10
+    axis_label_font_colour = "#7E7D7D"
 
 
 class DEFAULT_BAR_STYLE:
@@ -140,13 +140,13 @@ class DEFAULT_BAR_VAL_LABEL_STYLE:
     default."""
 
     font_size:int = 10
-    font_colour = "black"
+    font_colour = "#2c2c2c"
     format:str = "{0:.1f}"
     align:str = "centre"
     colour_invert:bool = False
     padding:float = 5 #In display coordinates
-    hide_squeezed:str = "inner-only" #Can be None, "all", "inner-only"
-    expel_squeezed_ends:bool = True
+    hide_squeezed:str = "all" #Can be None, "all", "inner-only"
+    expel_squeezed_ends:bool = False
 
 
 class DEFAULT_FIG_STYLE:
@@ -160,12 +160,16 @@ class DEFAULT_FIG_STYLE:
 
     size:tuple[int, int] = None #Can be None (auto scaling), or an integer tuple. In pixels. #TODO: Move to axis style as this is now the desired axis size?
     title:str = None
-    title_font_size:int = 12
-    title_colour = "black"
+    title_font_size:int = 18
+    title_colour = "#2c2c2c"
+    title_wrap:bool = True
     subtitle:str = None
-    subtitle_font_size:int = 12
-    subtitle_colour = "black"
-    font_family:str = "sans-serif"
+    subtitle_font_size:int = 10
+    subtitle_colour = "#7E7D7D"
+    subtitle_wrap:bool = True
+    font_family:str = "Liberation Sans"
+    font_weight:int = 400
+    title_weight:int = 700
     background_colour = "#ffffff"
     sorted:str = None #Can be None, "sum-asc", "sum-desc", "avg-asc", "avg-desc", "lhlf-asc", "lhlf-desc", "rhlf-asc", "rhlf-desc"
     spine_display:tuple[bool, bool, bool, bool] = (False, False, False, False) #left, top, right, bottom
@@ -185,11 +189,12 @@ class DEFAULT_LEGEND_STYLE:
 
     show:bool = False
     font_size:int = 8
-    font_colour = "black"
+    font_colour = "#2c2c2c"
     label_padding:float = 0.8
     marker_shape:str = "s" #see for different marker shapes https://matplotlib.org/stable/api/_as_gen/matplotlib.lines.Line2D.html
     border_colour = DEFAULT_FIG_STYLE.background_colour
     background_colour = DEFAULT_FIG_STYLE.background_colour
+    columns:int = None
     placement:str = "right-vertical"
     placement_options = {
         "right-vertical": ["upper left", (1, 1)],
@@ -279,10 +284,14 @@ class StackedPlotStyle:
             "title": DEFAULT_FIG_STYLE.title,
             "titlefontsize": DEFAULT_FIG_STYLE.title_font_size,
             "titlecolour": DEFAULT_FIG_STYLE.title_colour,
-            "fontfamily": DEFAULT_FIG_STYLE.font_family,
+            "titlewrap": DEFAULT_FIG_STYLE.title_wrap,
             "subtitle": DEFAULT_FIG_STYLE.subtitle,
             "subtitlefontsize": DEFAULT_FIG_STYLE.subtitle_font_size,
             "subtitlecolour": DEFAULT_FIG_STYLE.subtitle_colour,
+            "subtitlewrap": DEFAULT_FIG_STYLE.subtitle_wrap,
+            "fontfamily": DEFAULT_FIG_STYLE.font_family,
+            "fontweight": DEFAULT_FIG_STYLE.font_weight,
+            "titleweight": DEFAULT_FIG_STYLE.title_weight,
             "size": DEFAULT_FIG_STYLE.size,
             "backgroundcolour": DEFAULT_FIG_STYLE.background_colour,
             "sorted": DEFAULT_FIG_STYLE.sorted,
@@ -295,6 +304,7 @@ class StackedPlotStyle:
             "fontcolour": DEFAULT_LEGEND_STYLE.font_colour,
             "backgroundcolour": DEFAULT_LEGEND_STYLE.background_colour,
             "bordercolour": DEFAULT_LEGEND_STYLE.border_colour,
+            "columns": DEFAULT_LEGEND_STYLE.columns,
             "placement": DEFAULT_LEGEND_STYLE.placement,
             "markershape": DEFAULT_LEGEND_STYLE.marker_shape,
             "markers": [],
@@ -419,7 +429,7 @@ class StackedPlotStyle:
     def set_bar_val_label_style(self,
                 font_size:int=None,
                 font_colour:str = None,
-                colour_invert:bool = False,
+                colour_invert:bool = None,
                 format:str = None,
                 align:str=None,
                 padding:float = None,
@@ -453,7 +463,7 @@ class StackedPlotStyle:
         if format is not None: self.__bar_val_label_style["format"] = format
         if hide_squeezed not in [None, "all", "inner-only"]:
             raise ValueError("Argument hide-squeezed must be either None, \"all\", or \"inner-only\".")
-        self.__bar_val_label_style["hidesqueezed"] = hide_squeezed
+        elif hide_squeezed is not None: self.__bar_val_label_style["hidesqueezed"] = hide_squeezed
         if expel_squeezed_ends is not None: self.__bar_val_label_style["expelsqueezedends"] = expel_squeezed_ends
         if align is not None:
             if align not in ["left", "centre", "right"]:
@@ -472,10 +482,14 @@ class StackedPlotStyle:
                     title:str = None,
                     title_font_size:int = None,
                     title_colour:str = None,
+                    title_wrap:bool = None,
                     subtitle:str = None,
                     subtitle_font_size:int = None,
                     subtitle_colour:str = None,
-                    font_family:str = "Arial",
+                    subtitle_wrap:bool = None,
+                    font_family:str = None,
+                    font_weight:int = None,
+                    title_weight:int = None,
                     fig_size:tuple[int, int] = None,
                     background_colour:str = None,
                     sorted:str = None,
@@ -486,11 +500,15 @@ class StackedPlotStyle:
             title: The title of the plot.
             title_font_size: Plot title font size in points.
             title_colour: The colour of the plot title.
+            title_wrap: Bool representing if an oversized title text should be wrapped.
             subttile: The subtitle of the plot.
             subtitle_font_size: Plot subtitle font size in points.
             subtitle_colour: The colour of the plot subtitle.
+            subtitle_wrap: Bool representing if an oversized subtitle text should be wrapped.
             font_family: The font family for all text used in the plot. User must select from
                 a list of font families (installed on user's machine).
+            font_weight: The font weight for all text used in the plot (excluding title).
+            title_weight: The font weight for the figure title.
             fig_size: Tuple of integers representing the width and height of the figure in pixels.
             background_colour: The background colour of the figure.
             sorted: Whether the displayed categories should be ordered. Must be either 
@@ -505,10 +523,14 @@ class StackedPlotStyle:
         if title is not None: self.__fig_style["title"] = title
         if title_font_size is not None: self.__fig_style["titlefontsize"] = title_font_size
         if title_colour is not None: self.__fig_style["titlecolour"] = title_colour
+        if title_wrap is not None: self.__fig_style["titlewrap"] = title_wrap
         if subtitle is not None: self.__fig_style["subtitle"] = subtitle
         if subtitle_font_size is not None: self.__fig_style["subtitlefontsize"] = subtitle_font_size
         if subtitle_colour is not None: self.__fig_style["subtitlecolour"] = subtitle_colour
+        if subtitle_wrap is not None: self.__fig_style["subtitlewrap"] = subtitle_wrap
         if font_family is not None: self.__fig_style["fontfamily"] = font_family
+        if font_weight is not None: self.__fig_style["fontweight"] = font_weight
+        if title_weight is not None: self.__fig_style["titleweight"] = title_weight
         if fig_size is not None:
             if not isinstance(fig_size, tuple) or len(fig_size) != 2:
                 raise ValueError("Argument fig_size must be a tuple of two integers representing the width and height of the figure.")
@@ -550,6 +572,7 @@ class StackedPlotStyle:
                         font_colour:str = None,
                         background_colour:str = None,
                         border_colour:str = None,
+                        columns:int = None,
                         placement:str = None,
                         marker_shape:str = None,
                         transform:tuple[float, float] = None):
@@ -563,6 +586,7 @@ class StackedPlotStyle:
             font_colour: The color of the text in the legend.
             background_colour: The legend's background color.
             border_colour: The legend's background patch edge color.
+            columns: The number of columns in the legend.
             placement: String representing where around the figure the legend should be
                 displayed. {"right-vertical", "below-horizontal", "above-horizontal"}.
             marker_shape: Marker style string. {'*': 'star', '+': 'plus', 's':'square', 
@@ -570,13 +594,13 @@ class StackedPlotStyle:
             transform: Allows the user to make minor adjustments to the legend's placement
                 after placement choice. Must be tuple of length 2 representing a transform in X and Y axis in dots/pixels. 
         """
-        #TODO: finalise method argument documentation relating to legend placement.
         if show is not None: self.__legend_style["show"] = show
         if font_size is not None: self.__legend_style["fontsize"] = font_size
         if padding is not None: self.__legend_style["padding"] = padding
         if font_colour is not None: self.__legend_style["fontcolour"] = font_colour
         if background_colour is not None: self.__legend_style["backgroundcolour"] = background_colour
         if border_colour is not None: self.__legend_style["bordercolour"] = border_colour
+        if columns is not None: self.__legend_style["columns"] = columns
         if placement is not None:
             if placement not in ["right-vertical", "below-horizontal", "above-horizontal"]:
                 raise ValueError("Placement must be either \"right-vertical\", \"below-horizontal\", \"above-horizontal\".")

@@ -1,4 +1,4 @@
-# pylint: disable=multiple-statements,too-many-positional-arguments,redefined-outer-name,missing-function-docstring,missing-class-docstring,line-too-long,disable=consider-using-enumerate
+# pylint: disable=multiple-statements,too-many-positional-arguments,redefined-outer-name,missing-function-docstring,missing-class-docstring,line-too-long,disable=consider-using-enumerate,protected-access
 
 import unittest
 import matplotlib
@@ -231,6 +231,32 @@ class CoreClassTest(unittest.TestCase):
         del test_plot
 
 
+    def test_plot_title(self):
+        results = {"Category 1": [10, 5, 3, 11], "Category 2": [4, 2, 9, 12], "Category 3": [11, 12, 3, 4]}
+        series_labels = ["Series 1", "Series 2", "Series 3", "Series 4"]
+        test_plot = StackedBarplot(data=results, series_labels=series_labels)
+        test_plot.set_fig_style(
+            title="This is a long test title for unit test purposes--it will be repeated twice. This is a long test title for unit test purposes--it will be repeated twice.",
+            subtitle="This is a long test subtitle for unit test purposes--it will be repeated twice. This is a long test subtitle for unit test purposes--it will be repeated twice."
+            )
+
+        for title_size in [40, 20, 10]:
+            for title_colour in ["black", "red"]:
+                for wrap in [False, True]:
+                    test_plot.set_fig_style(title_font_size=title_size, title_colour=title_colour, title_wrap=wrap)
+                    test_plot.render()
+
+        for subtitle_size in [40, 20, 10]:
+            for subtitle_colour in ["black", "red"]:
+                for wrap in [False, True]:
+                    test_plot.set_fig_style(subtitle_font_size=subtitle_size, subtitle_colour=subtitle_colour, subtitle_wrap=wrap)
+                    test_plot.render()
+
+        if self.show_plots: test_plot.show()
+        plt.close(test_plot.fig)
+        del test_plot
+
+
 
 
 class CoreStyleTest(unittest.TestCase):
@@ -240,6 +266,28 @@ class CoreStyleTest(unittest.TestCase):
     user is able to modify, and whether they are plotted
     in the figure axis. Focusses on logic errors, rather
     than runtime errors."""
+
+    def test_hide_squeezed_uses_final_bar_width(self):
+        test_plot = StackedBarplot(
+            data={"Category": [60, 1, 25, 14]},
+            series_labels=["Series 1", "Series 2", "Series 3", "Series 4"]
+        )
+        test_plot.set_bar_val_label_style(
+            font_size=20,
+            padding=12,
+            hide_squeezed="all",
+            expel_squeezed_ends=False
+        )
+
+        test_plot.render()
+
+        labels = {label.get_text(): label for label in test_plot.ax.texts}
+        self.assertFalse(labels["1.0"].get_visible())
+        self.assertTrue(labels["60.0"].get_visible())
+
+        plt.close(test_plot.fig)
+        del test_plot
+
 
     def test_style_bar_font(self):
         results = {"Category 1": [10, 5, 3, 11], "Category 2": [4, 2, 9, 12], "Category 3": [11, 12, 3, 4]}
@@ -342,7 +390,7 @@ class CoreStyleTest(unittest.TestCase):
         self.assertEqual(test_plot.fig._suptitle.get_color(), title_colour,
                          "Attribute title_colour not being applied.")
         self.assertEqual(test_plot.fig._suptitle.get_fontfamily()[0], font_family,
-                         "Attribute font_family not being applied.")
+                         "Attribute font_family not being applied for title.")
         self.assertEqual(test_plot.fig._subtitle.get_text(), subtitle,
                          "Attribute subtitle not being applied.")
         self.assertEqual(test_plot.fig._subtitle.get_fontsize(), subtitle_font_size,
@@ -350,7 +398,7 @@ class CoreStyleTest(unittest.TestCase):
         self.assertEqual(test_plot.fig._subtitle.get_color(), subtitle_colour,
                          "Attribute subtitle_colour not being applied.")
         self.assertEqual(test_plot.fig._subtitle.get_fontfamily()[0], font_family,
-                         "Attribute font_family not being applied.")
+                         "Attribute font_family not being applied for plot subtitle.")
         self.assertEqual(test_plot.ax.spines['left'].get_visible(), spine_display[0],
                          "Left spine showing/not showing against defined style.")
         self.assertEqual(test_plot.ax.spines['top'].get_visible(), spine_display[1],

@@ -13,6 +13,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import warnings
+import textwrap
 import matplotlib.layout_engine
 from matplotlib.figure import Figure
 import matplotlib.transforms as mtransforms
@@ -37,9 +38,10 @@ class StackedBarLayoutEngine(matplotlib.layout_engine.LayoutEngine):
     hook (see https://matplotlib.org/stable/api/layout_engine_api.html). The 
     execution of this layout engine follows a specific pipeline:
 
-    1. align the plot legend with the rest of the figure decorations,
-    2. align the plot's paratext (i.e., title and subtitle), and
-    3. calculate the margins and overall size of the figure.
+    1. Align bar value annotations,
+    2. align the plot legend with the rest of the figure decorations,
+    3. align the plot's paratext (i.e., title and subtitle), and
+    4. calculate the margins and overall size of the figure.
     """
     def __init__(self, plot:StackedBarplot) -> None:
         super().__init__()
@@ -52,8 +54,21 @@ class StackedBarLayoutEngine(matplotlib.layout_engine.LayoutEngine):
 
     def execute(self, fig:Figure) -> None:
         """Perform layout algorithm and move and resize axis and axis elements accordingly."""
+        self.layout_bar_labels(fig)
+
         if self.plot.get_legend_style()["show"]: self.layout_legend(fig)
+
+        self.fig_size_settings["raw_left_margin"] = self.calc_left_margin(fig)
+        self.fig_size_settings["raw_right_margin"] = self.calc_right_margin(fig)
+        self.fig_size_settings["fig_width_px"] = self.calc_fig_width(fig)
+
+        #Figure paratext calculated after figure width (to calculate required text wrapping)
         if self.plot.get_fig_style()["title"] is not None or self.plot.get_fig_style()["subtitle"]: self.layout_paratext(fig)
+
+        self.fig_size_settings["raw_top_margin"] = self.calc_top_margin(fig)
+        self.fig_size_settings["raw_bottom_margin"] = self.calc_bottom_margin(fig)
+        self.fig_size_settings["fig_height_px"] = self.calc_fig_height(fig)
+
         self.size_figure(fig)
 
 
@@ -67,6 +82,66 @@ class StackedBarLayoutEngine(matplotlib.layout_engine.LayoutEngine):
         raise NotImplementedError
 
 
+    def layout_bar_labels(self, fig:Figure):
+        """Layout figure bar value annotations."""
+
+        x_pixels_per_unit = self.plot.ax.transData.get_matrix()[0, 0]
+        padding_data_coords = self.plot.get_bar_val_label_style()["padding"]/x_pixels_per_unit
+
+        for series_index, c in enumerate(self.plot.ax.containers):
+
+            #Positioning bar value labels
+            for category_index, (rect, val) in enumerate(zip(c.patches, c.datavalues)):
+
+                y = rect.get_y() + rect.get_height() / 2 #Center annotation object to the bar vertically
+                an = self.plot.ax._bar_labels[series_index][category_index]
+                an.set_ha("center")
+
+                #Set general purpose bar value annotation padding
+                if self.plot.get_bar_val_label_style()["align"] == "centre":
+                    x = rect.get_x() + rect.get_width() / 2
+                elif self.plot.get_bar_val_label_style()["align"] == "left":
+                    x = rect.get_x() + padding_data_coords
+                elif self.plot.get_bar_val_label_style()["align"] == "right":
+                    x = rect.get_x() + rect.get_width() - padding_data_coords
+                else: raise ValueError("Incompatible value for bar value label alignment.")
+                an.xy = (x, y)
+
+                #3 of padding added to font. If font isn't centered, font padding also needs to be to font width when calculating overlap with bar.
+                if self.plot.get_bar_val_label_style()["align"] != "centre":
+                    font_width = abs(an.get_window_extent().width) + self.plot.get_bar_val_label_style()["padding"] + 5
+                else:
+                    font_width = abs(an.get_window_extent().width) + 5
+                bar_width = abs(rect.get_window_extent().width)
+
+                #Threshold for first and last bar on a row; if value is below threshold, move label to outside of bar
+                if self.plot.get_bar_val_label_style()["expelsqueezedends"] is True:
+                    if series_index == 0 and font_width > bar_width:
+                        an.set_ha("right")
+                        an.xy = (rect.get_x() - padding_data_coords, y)
+
+                        #If the annotation has been placed overlapping with category ticks, the category ticks are padded by the required amount.
+                        if an.get_window_extent().x0 < self.plot.ax.get_window_extent().x0:
+                            shift_px = self.plot.ax.get_window_extent().x0 - an.get_window_extent().x0
+                            self.plot.ax.tick_params(axis="y", pad=shift_px)
+
+
+                    elif series_index == len(self.plot.series_labels)-1 and font_width > bar_width:
+                        an.set_ha("left")
+                        an.xy = (rect.get_x() + rect.get_width() + padding_data_coords, y)
+
+                #Hide bar data annotation if squeezed and style dictates it is to be hidden.
+                if self.plot.get_bar_val_label_style()["hidesqueezed"] is not None:
+                    if self.plot.get_bar_val_label_style()["hidesqueezed"] == "all" and font_width > bar_width:
+                        an.set_visible(False)
+                    elif self.plot.get_bar_val_label_style()["hidesqueezed"] == "inner-only" and (series_index not in (0, len(self.plot.series_labels)-1)) and font_width > bar_width:
+                        an.set_visible(False)
+                    else:
+                        an.set_visible(True)
+                else:
+                    an.set_visible(True)
+
+
     def layout_legend(self, fig:Figure) -> None:
         """Layout plot legend to not overlap with plot peritext."""
 
@@ -76,7 +151,9 @@ class StackedBarLayoutEngine(matplotlib.layout_engine.LayoutEngine):
         if "above-horizontal" in self.plot.get_legend_style()["placement"]:
             self.plot.ax.get_legend().set_bbox_to_anchor(
                 list(DEFAULT_LEGEND_STYLE.placement_options[self.plot.get_legend_style()["placement"]][1]),
-                transform=mtransforms.offset_copy(self.plot.ax.transAxes, fig=fig, y=y_transform + 5, x=x_transform, units="dots"),
+                transform=mtransforms.offset_copy(
+                    mtransforms.blended_transform_factory(fig.transFigure, self.plot.ax.transAxes), #This centres to fig not axes
+                    fig=fig, y=y_transform + 5, x=x_transform, units="dots")
             )
         elif "below-horizontal" in self.plot.get_legend_style()["placement"]:
             m_bottom_padd = 0
@@ -91,7 +168,9 @@ class StackedBarLayoutEngine(matplotlib.layout_engine.LayoutEngine):
 
             self.plot.ax.get_legend().set_bbox_to_anchor(
                 list(DEFAULT_LEGEND_STYLE.placement_options[self.plot.get_legend_style()["placement"]][1]),
-                transform=mtransforms.offset_copy(self.plot.ax.transAxes, fig=fig, y=y_transform + (m_bottom_padd*-1), x = x_transform, units="dots"),
+                transform=mtransforms.offset_copy(
+                    mtransforms.blended_transform_factory(fig.transFigure, self.plot.ax.transAxes),#This centres to fig not axes
+                    fig=fig, y=y_transform + (m_bottom_padd*-1), x = x_transform, units="dots")
             )
         elif "right-vertical" in self.plot.get_legend_style()["placement"]:
             self.plot.ax.get_legend().set_bbox_to_anchor(
@@ -107,11 +186,19 @@ class StackedBarLayoutEngine(matplotlib.layout_engine.LayoutEngine):
             subtitle_pad = 0
             if self.plot.get_legend_style()["show"] and "above-horizontal" in self.plot.get_legend_style()["placement"]:
                 subtitle_pad += self.plot.ax.get_legend().get_window_extent().y1 - self.plot.ax.get_window_extent().y1
-                subtitle_pad += 10 #Add extra padding between legend and subtitle
+                subtitle_pad += 20 #Add extra padding between legend and subtitle
 
             fig._subtitle.set_transform(mtransforms.IdentityTransform())
-            fig._subtitle.set_position((fig.get_window_extent().width/2,
-                                                self.plot.ax.get_window_extent().y1+subtitle_pad))
+            fig._subtitle.set_position((Auto_Style_Calculations.fig_left_pad, self.plot.ax.get_window_extent().y1+subtitle_pad))
+
+            if self.plot.get_fig_style()["subtitlewrap"]:
+                wrap_len = len(self.plot.get_fig_style()["subtitle"])
+                while fig._subtitle.get_window_extent().width + Auto_Style_Calculations.fig_left_pad > self.fig_size_settings["fig_width_px"]:
+                    warnings.warn("Subtitle text beign wrapped to fit in figure size. To wrap subtitle at user-defined point in text, use '\n' in subtitle text.")
+                    wrap_len -= 5
+                    new_text = "\n".join(textwrap.wrap(self.plot.get_fig_style()["subtitle"], wrap_len))
+                    fig._subtitle.set_text(new_text)
+
 
         if self.plot.get_fig_style()["title"] is not None:
             title_pad = 0
@@ -122,8 +209,94 @@ class StackedBarLayoutEngine(matplotlib.layout_engine.LayoutEngine):
                 title_pad += self.plot.ax.get_legend().get_window_extent().y1 - self.plot.ax.get_window_extent().y1
 
             fig._suptitle.set_transform(mtransforms.IdentityTransform())
-            fig._suptitle.set_position((fig.get_window_extent().width/2,
-                                                   self.plot.ax.get_window_extent().y1+title_pad))
+            fig._suptitle.set_position((Auto_Style_Calculations.fig_left_pad, self.plot.ax.get_window_extent().y1+title_pad))
+
+            if self.plot.get_fig_style()["titlewrap"]:
+                wrap_len = len(self.plot.get_fig_style()["title"])
+                while fig._suptitle.get_window_extent().width + Auto_Style_Calculations.fig_left_pad > self.fig_size_settings["fig_width_px"]:
+                    warnings.warn("Title text beign wrapped to fit in figure size. To wrap title at user-defined point in text, use '\n' in title text.")
+                    wrap_len -= 5
+                    new_text = "\n".join(textwrap.wrap(self.plot.get_fig_style()["title"], wrap_len))
+                    fig._suptitle.set_text(new_text)
+
+
+    def calc_left_margin(self, fig:Figure) -> int:
+        """Calculates the size of the margin between the left of the axes and the left of the figure."""
+        m_left_px = 0
+        if self.plot.get_axis_title_style()["ylabel"] is not None:
+            m_left_px += self.plot.ax.get_window_extent().x0 - self.plot.ax.yaxis.label.get_tightbbox().x0
+        else:
+            labels = [label for label in self.plot.ax.get_yticklabels() if label.get_visible()]
+            min_x0 = min(label.get_window_extent().x0 for label in labels)
+            m_left_px += self.plot.ax.get_window_extent().x0 - min_x0
+
+        if self.plot.get_legend_style()["show"] and "horizontal" in self.plot.get_legend_style()["placement"]:
+            lgnd_artist = self.plot.ax.get_legend()
+            legend_left_over_px = self.plot.fig.get_window_extent().x0 - lgnd_artist.get_window_extent().x0
+            if legend_left_over_px > m_left_px:
+                warnings.warn("Figure legend has overlapped edge of figure on a call to StackedBarLayoutEngine. Consider adjusting the number of columns used in the legend.")
+        return m_left_px
+
+
+    def calc_right_margin(self, fig:Figure) -> int:
+        """Calculates the size of the margin between the right of the axes and the right of the figure."""
+        m_right_px = 0
+        if self.plot.get_legend_style()["show"] and self.plot.get_legend_style()["placement"] == "right-vertical":
+            m_right_px += self.plot.ax.get_legend().get_window_extent().x1 - self.plot.ax.get_window_extent().x1
+
+        return m_right_px
+
+
+    def calc_top_margin(self, fig:Figure) -> int:
+        """Calculates the size of the margin between the top of the axes and the top of the figure."""
+        m_top_px = 0
+        if self.plot.get_fig_style()["title"] is not None:
+            m_top_px += self.plot.fig._suptitle.get_window_extent().y1 - self.plot.ax.get_window_extent().y1
+        elif self.plot.get_fig_style()["subtitle"] is not None:
+            m_top_px += self.plot.fig._subtitle.get_window_extent().y1 - self.plot.ax.get_window_extent().y1
+        elif self.plot.get_legend_style()["show"] and self.plot.get_legend_style()["placement"] == "above-horizontal":
+            m_top_px += self.plot.ax.get_legend().get_window_extent().y1 - self.plot.ax.get_window_extent().y1
+        return m_top_px
+
+
+    def calc_bottom_margin(self, fig:Figure) -> int:
+        """Calculates the size of the margin between the bottom of the axes and the bottom of the figure."""
+        m_bottom_px = 0
+        if self.plot.get_legend_style()["show"] and self.plot.get_legend_style()["placement"] == "below-horizontal":
+            m_bottom_px += self.plot.ax.get_window_extent().y0 - self.plot.ax.get_legend().get_window_extent().y0
+        elif self.plot.get_axis_title_style()["xlabel"] is not None:
+            m_bottom_px += self.plot.ax.get_window_extent().y0 - self.plot.ax.xaxis.label.get_window_extent().y0
+        else:
+            labels = [label for label in self.plot.ax.get_xticklabels() if label.get_visible()]
+            min_y0 = min(label.get_window_extent().y0 for label in labels)
+            m_bottom_px += self.plot.ax.get_window_extent().y0 - min_y0
+        return m_bottom_px
+
+
+    def calc_fig_width(self, fig:Figure) -> int:
+        """Calculates the width of the figure."""
+        if self.plot.get_fig_style()["size"] is None:
+            desired_ax_width = Auto_Style_Calculations.calc_axis_width(len(self.plot.series_labels))*fig.dpi/2.54
+        else:
+            desired_ax_width = self.plot.get_fig_style()["size"][0]
+
+        m_left_px = self.fig_size_settings["raw_left_margin"] + Auto_Style_Calculations.fig_left_pad
+        m_right_px = self.fig_size_settings["raw_right_margin"] + Auto_Style_Calculations.fig_right_pad
+
+        return m_left_px + desired_ax_width + m_right_px
+
+
+    def calc_fig_height(self, fig:Figure) -> int:
+        """Calculates the height of the figure."""
+        if self.plot.get_fig_style()["size"] is None:
+            desired_ax_height = Auto_Style_Calculations.calc_axis_height(len(self.plot.category_headings))*fig.dpi/2.54
+        else:
+            desired_ax_height = self.plot.get_fig_style()["size"][1]
+
+        m_top_px = self.fig_size_settings["raw_top_margin"] + Auto_Style_Calculations.fig_top_pad
+        m_bottom_px = self.fig_size_settings["raw_bottom_margin"] + Auto_Style_Calculations.fig_bottom_pad
+
+        return m_top_px + desired_ax_height + m_bottom_px
 
 
     def size_figure(self, fig:Figure):
@@ -142,48 +315,10 @@ class StackedBarLayoutEngine(matplotlib.layout_engine.LayoutEngine):
             desired_ax_width = self.plot.get_fig_style()["size"][0]
             desired_ax_height = self.plot.get_fig_style()["size"][1]
 
-        m_left_px, m_right_px, m_top_px, m_bottom_px = 0, 0, 0, 0
-
-        #Calculate left margin
-        if self.plot.get_axis_title_style()["ylabel"] is not None:
-            m_left_px += self.plot.ax.get_window_extent().x0 - self.plot.ax.yaxis.label.get_tightbbox().x0
-        else:
-            labels = [label for label in self.plot.ax.get_yticklabels() if label.get_visible()]
-            min_x0 = min(label.get_window_extent().x0 for label in labels)
-            m_left_px += self.plot.ax.get_window_extent().x0 - min_x0
-
-        #Calculate right margin
-        if self.plot.get_legend_style()["show"] and self.plot.get_legend_style()["placement"] == "right-vertical":
-            m_right_px += self.plot.ax.get_legend().get_window_extent().x1 - self.plot.ax.get_window_extent().x1
-
-        #Calculate top margin
-        if self.plot.get_fig_style()["title"] is not None:
-            m_top_px += self.plot.fig._suptitle.get_window_extent().y1 - self.plot.ax.get_window_extent().y1
-        elif self.plot.get_fig_style()["subtitle"] is not None:
-            m_top_px += self.plot.fig._subtitle.get_window_extent().y1 - self.plot.ax.get_window_extent().y1
-        elif self.plot.get_legend_style()["show"] and self.plot.get_legend_style()["placement"] == "above-horizontal":
-            m_top_px += self.plot.ax.get_legend().get_window_extent().y1 - self.plot.ax.get_window_extent().y1
-
-        #Calculate bottom margin
-        if self.plot.get_legend_style()["show"] and self.plot.get_legend_style()["placement"] == "below-horizontal":
-            m_bottom_px += self.plot.ax.get_window_extent().y0 - self.plot.ax.get_legend().get_window_extent().y0
-        elif self.plot.get_axis_title_style()["xlabel"] is not None:
-            m_bottom_px += self.plot.ax.get_window_extent().y0 - self.plot.ax.xaxis.label.get_window_extent().y0
-        else:
-            labels = [label for label in self.plot.ax.get_xticklabels() if label.get_visible()]
-            min_y0 = min(label.get_window_extent().y0 for label in labels)
-            m_bottom_px += self.plot.ax.get_window_extent().y0 - min_y0
-
-        #print(f"Axis bounds: {self.plot.ax.get_window_extent().bounds}")
-        #print(f"Bottom margin: {m_bottom_px}, Left m: {m_left_px}, Top m: {m_top_px}, Right m: {m_right_px}")
-
-        m_left_px += Auto_Style_Calculations.fig_left_pad
-        m_right_px += Auto_Style_Calculations.fig_right_pad
-        m_top_px += Auto_Style_Calculations.fig_top_pad
-        m_bottom_px += Auto_Style_Calculations.fig_bottom_pad
-
-        self.fig_size_settings["fig_width_px"] = m_left_px + desired_ax_width + m_right_px
-        self.fig_size_settings["fig_height_px"] = m_top_px + desired_ax_height + m_bottom_px
+        m_left_px = self.fig_size_settings["raw_left_margin"] + Auto_Style_Calculations.fig_left_pad
+        m_right_px = self.fig_size_settings["raw_right_margin"] + Auto_Style_Calculations.fig_right_pad
+        m_top_px = self.fig_size_settings["raw_top_margin"] + Auto_Style_Calculations.fig_top_pad
+        m_bottom_px = self.fig_size_settings["raw_bottom_margin"] + Auto_Style_Calculations.fig_bottom_pad
 
         #See https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots_adjust.html
         self.fig_size_settings["left"] = m_left_px/self.fig_size_settings["fig_width_px"]

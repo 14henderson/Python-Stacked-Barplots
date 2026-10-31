@@ -63,7 +63,7 @@ def basic(
         subtitle:str = None,
         fig_size:tuple[int, int] = None,
         font_size:int = None,
-        font_colour:str = DEFAULT_BAR_VAL_LABEL_STYLE.font_colour,
+        font_colour:str = DEFAULT_BAR_VAL_LABEL_STYLE.font_colour, #TODO: This only applies to bar value annotations and shouldn't use default var like this.
         data_label_format:str = DEFAULT_BAR_VAL_LABEL_STYLE.format,
         data_label_align:str = DEFAULT_BAR_VAL_LABEL_STYLE.align,
         bar_colours:ColourGradient = None,
