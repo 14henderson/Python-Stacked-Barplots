@@ -53,7 +53,7 @@ class Auto_Style_Calculations:
     chart data (e.g., figure height calculate from number of categories)"""
 
     #Padding around figure (in pixels)
-    fig_left_pad = 10
+    fig_left_pad = 30
     fig_top_pad = 10
     fig_right_pad = 10
     fig_bottom_pad = 10
@@ -163,9 +163,11 @@ class DEFAULT_FIG_STYLE:
     title:str = None
     title_font_size:int = 20
     title_colour = "#2c2c2c"
+    title_wrap:bool = True
     subtitle:str = None
     subtitle_font_size:int = 11
     subtitle_colour = "#7E7D7D"
+    subtitle_wrap:bool = True
     font_family:str = "Liberation Sans"
     font_weight:int = 400
     title_weight:int = 700
@@ -283,9 +285,11 @@ class StackedPlotStyle:
             "title": DEFAULT_FIG_STYLE.title,
             "titlefontsize": DEFAULT_FIG_STYLE.title_font_size,
             "titlecolour": DEFAULT_FIG_STYLE.title_colour,
+            "titlewrap": DEFAULT_FIG_STYLE.title_wrap,
             "subtitle": DEFAULT_FIG_STYLE.subtitle,
             "subtitlefontsize": DEFAULT_FIG_STYLE.subtitle_font_size,
             "subtitlecolour": DEFAULT_FIG_STYLE.subtitle_colour,
+            "subtitlewrap": DEFAULT_FIG_STYLE.subtitle_wrap,
             "fontfamily": DEFAULT_FIG_STYLE.font_family,
             "fontweight": DEFAULT_FIG_STYLE.font_weight,
             "titleweight": DEFAULT_FIG_STYLE.title_weight,
@@ -479,9 +483,11 @@ class StackedPlotStyle:
                     title:str = None,
                     title_font_size:int = None,
                     title_colour:str = None,
+                    title_wrap:bool = None,
                     subtitle:str = None,
                     subtitle_font_size:int = None,
                     subtitle_colour:str = None,
+                    subtitle_wrap:bool = None,
                     font_family:str = None,
                     font_weight:int = None,
                     title_weight:int = None,
@@ -495,9 +501,11 @@ class StackedPlotStyle:
             title: The title of the plot.
             title_font_size: Plot title font size in points.
             title_colour: The colour of the plot title.
+            title_wrap: Bool representing if an oversized title text should be wrapped.
             subttile: The subtitle of the plot.
             subtitle_font_size: Plot subtitle font size in points.
             subtitle_colour: The colour of the plot subtitle.
+            subtitle_wrap: Bool representing if an oversized subtitle text should be wrapped.
             font_family: The font family for all text used in the plot. User must select from
                 a list of font families (installed on user's machine).
             font_weight: The font weight for all text used in the plot (excluding title).
@@ -516,9 +524,11 @@ class StackedPlotStyle:
         if title is not None: self.__fig_style["title"] = title
         if title_font_size is not None: self.__fig_style["titlefontsize"] = title_font_size
         if title_colour is not None: self.__fig_style["titlecolour"] = title_colour
+        if title_wrap is not None: self.__fig_style["titlewrap"] = title_wrap
         if subtitle is not None: self.__fig_style["subtitle"] = subtitle
         if subtitle_font_size is not None: self.__fig_style["subtitlefontsize"] = subtitle_font_size
         if subtitle_colour is not None: self.__fig_style["subtitlecolour"] = subtitle_colour
+        if subtitle_wrap is not None: self.__fig_style["subtitlewrap"] = subtitle_wrap
         if font_family is not None: self.__fig_style["fontfamily"] = font_family
         if font_weight is not None: self.__fig_style["fontweight"] = font_weight
         if title_weight is not None: self.__fig_style["titleweight"] = title_weight

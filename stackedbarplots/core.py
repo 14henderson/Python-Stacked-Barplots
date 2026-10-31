@@ -341,7 +341,7 @@ class StackedBarplot():
             self.fig.suptitle(self.get_fig_style()["title"],
                               fontsize=self.get_fig_style()["titlefontsize"],
                               color=self.get_fig_style()["titlecolour"],
-                              horizontalalignment="center",
+                              horizontalalignment="left",
                               verticalalignment="bottom",
                               )
 
@@ -349,7 +349,7 @@ class StackedBarplot():
             self.fig._subtitle = matplotlib.text.Text(text=self.get_fig_style()["subtitle"],
                                                     fontsize=self.get_fig_style()["subtitlefontsize"],
                                                     color=self.get_fig_style()["subtitlecolour"],
-                                                    horizontalalignment="center",
+                                                    horizontalalignment="left",
                                                     verticalalignment="bottom",
                                                     )
             self.fig.add_artist(self.fig._subtitle)
