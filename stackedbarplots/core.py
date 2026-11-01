@@ -13,12 +13,11 @@ from pathlib import Path
 
 import matplotlib.lines as mlines
 import matplotlib.pyplot as plt
-import matplotlib.ticker as ticker
 import matplotlib.text
 from matplotlib import font_manager
 
 
-from .defaults import DEFAULT_BAR_STYLE, DEFAULT_LEGEND_STYLE, DEFAULT_AXIS_STYLE, StackedPlotStyle
+from .defaults import DEFAULT_BAR_STYLE, DEFAULT_LEGEND_STYLE, StackedPlotStyle
 from .layout import StackedBarLayoutEngine
 from .tools import ChartDataSorting, cumu2d
 
