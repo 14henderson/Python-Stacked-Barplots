@@ -97,6 +97,8 @@ class DEFAULT_AXIS_STYLE:
     y_font_colour = "#2c2c2c"
     x_axis_format:str = "{0:.0f}"
     x_axis_abs:bool = False
+    x_axis_gridlines:bool = True
+    x_axis_gridlines_colour = "#E4E4E4"
 
 
 class DEFAULT_AXIS_TITLE_STYLE:
@@ -255,7 +257,9 @@ class StackedPlotStyle:
             "xaxisformat": DEFAULT_AXIS_STYLE.x_axis_format,
             "xaxisshow": DEFAULT_AXIS_STYLE.x_axis_show,
             "yaxisshow": DEFAULT_AXIS_STYLE.y_axis_show,
-            "xaxisabs": DEFAULT_AXIS_STYLE.x_axis_abs
+            "xaxisabs": DEFAULT_AXIS_STYLE.x_axis_abs,
+            "xaxisgridlines": DEFAULT_AXIS_STYLE.x_axis_gridlines,
+            "xaxisgridlinescolour": DEFAULT_AXIS_STYLE.x_axis_gridlines_colour
         }
         self.__axis_title_style = {
             "xlabel": DEFAULT_AXIS_TITLE_STYLE.x_label,
@@ -334,7 +338,9 @@ class StackedPlotStyle:
                         x_axis_format:str = None,
                         x_axis_show:bool = None,
                         y_axis_show:bool = None,
-                        x_axis_abs:bool = None):
+                        x_axis_abs:bool = None,
+                        x_axis_gridlines:bool = None,
+                        x_axis_gridlines_colour = None):
         """Update StackedBarplot axis style configuration.
 
         Args:
@@ -344,7 +350,7 @@ class StackedPlotStyle:
             x_font_size: X axis tick label font size in points or as a string (e.g., 'large').
             y_font_size: Y axis tick label font size in points or as a string (e.g., 'large').
             x_font_colour: X axis tick label font colour.
-            y_font_colour: X axis tick label font colour.
+            y_font_colour: Y axis tick label font colour.
             x_axis_format: format()-style format string for x axis ticks. Default '{0}'. Format
                 string can also round to (e.g., 1) decimal place(s) with '{0:.1}'. A suffix can
                 be added using (for example) '{0}%'. See Python documentation for more inforamtion 
@@ -352,6 +358,8 @@ class StackedPlotStyle:
             x_axis_show: Boolean flag for if the x axis should show (default True).
             y_axis_show: Boolean flag for if the y axis should show (default True).
             x_axis_abs: Boolean flag for if negative X axis ticks should remain positive (default False).
+            x_axis_gridlines: Boolean flag for if x axis ticks should stretch the whole height of the figure.
+            x_axis_gridlines_colour: Colour of stretched x axis ticks.
         """
         if x_lim is not None: self.__axis_style["xlim"] = x_lim
         if step is not None: self.__axis_style["step"] = step
@@ -363,6 +371,8 @@ class StackedPlotStyle:
         if x_axis_show is not None: self.__axis_style["xaxisshow"] = x_axis_show
         if y_axis_show is not None: self.__axis_style["yaxisshow"] = y_axis_show
         if x_axis_abs is not None: self.__axis_style["xaxisabs"] = x_axis_abs
+        if x_axis_gridlines is not None: self.__axis_style["xaxisgridlines"] = x_axis_gridlines
+        if x_axis_gridlines_colour is not None: self.__axis_style["xaxisgridlinescolour"] = x_axis_gridlines_colour
         self.unrendered_changes = True
 
 

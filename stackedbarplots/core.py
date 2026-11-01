@@ -13,10 +13,12 @@ from pathlib import Path
 
 import matplotlib.lines as mlines
 import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
 import matplotlib.text
 from matplotlib import font_manager
 
-from .defaults import DEFAULT_BAR_STYLE, DEFAULT_LEGEND_STYLE, StackedPlotStyle
+
+from .defaults import DEFAULT_BAR_STYLE, DEFAULT_LEGEND_STYLE, DEFAULT_AXIS_STYLE, StackedPlotStyle
 from .layout import StackedBarLayoutEngine
 from .tools import ChartDataSorting, cumu2d
 
@@ -257,6 +259,14 @@ class StackedBarplot():
         self.ax.set_facecolor(self.style.get_fig_style()["backgroundcolour"])
 
         if self.style.get_vert_line_style()["show"]: self.ax.axvline(0, linestyle="--", color="black", alpha=0.25, zorder=0)
+
+        if self.get_axis_style()["xaxisgridlines"]:
+            self.ax.tick_params(axis='x', which="major", tick1On=False, tick2On=False)
+            self.ax.set_axisbelow(True)
+            self.ax.grid(visible=True, axis="x", zorder=-1, which="major", color=DEFAULT_AXIS_STYLE.x_axis_gridlines_colour)
+        else:
+            self.ax.tick_params(axis='x', which="major", tick1On=True, tick2On=False)
+            self.ax.grid(visible=False, axis="x")
 
 
     def _plot_bar_labels(self):
