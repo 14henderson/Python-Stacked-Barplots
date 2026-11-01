@@ -263,7 +263,7 @@ class StackedBarplot():
         if self.get_axis_style()["xaxisgridlines"]:
             self.ax.tick_params(axis='x', which="major", tick1On=False, tick2On=False)
             self.ax.set_axisbelow(True)
-            self.ax.grid(visible=True, axis="x", zorder=-1, which="major", color=DEFAULT_AXIS_STYLE.x_axis_gridlines_colour)
+            self.ax.grid(visible=True, axis="x", zorder=-1, which="major", color=self.get_axis_style()["xaxisgridlinescolour"])
         else:
             self.ax.tick_params(axis='x', which="major", tick1On=True, tick2On=False)
             self.ax.grid(visible=False, axis="x")
