@@ -102,8 +102,10 @@ class StackedBarLayoutEngine(matplotlib.layout_engine.LayoutEngine):
                     x = rect.get_x() + rect.get_width() / 2
                 elif self.plot.get_bar_val_label_style()["align"] == "left":
                     x = rect.get_x() + padding_data_coords
+                    an.set_ha("left")
                 elif self.plot.get_bar_val_label_style()["align"] == "right":
                     x = rect.get_x() + rect.get_width() - padding_data_coords
+                    an.set_ha("right")
                 else: raise ValueError("Incompatible value for bar value label alignment.")
                 an.xy = (x, y)
 
