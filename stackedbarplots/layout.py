@@ -95,6 +95,7 @@ class StackedBarLayoutEngine(matplotlib.layout_engine.LayoutEngine):
 
                 y = rect.get_y() + rect.get_height() / 2 #Center annotation object to the bar vertically
                 an = self.plot.ax._bar_labels[series_index][category_index]
+                an.set_visible(True) #Temporarily set to visible to do bounding box calculations.
                 an.set_ha("center")
 
                 #Set general purpose bar value annotation padding
@@ -109,7 +110,7 @@ class StackedBarLayoutEngine(matplotlib.layout_engine.LayoutEngine):
                 else: raise ValueError("Incompatible value for bar value label alignment.")
                 an.xy = (x, y)
 
-                #3 of padding added to font. If font isn't centered, font padding also needs to be to font width when calculating overlap with bar.
+                #5 of padding added to font. If font isn't centered, font padding also needs to be to font width when calculating overlap with bar.
                 if self.plot.get_bar_val_label_style()["align"] != "centre":
                     font_width = abs(an.get_window_extent().width) + self.plot.get_bar_val_label_style()["padding"] + 5
                 else:
