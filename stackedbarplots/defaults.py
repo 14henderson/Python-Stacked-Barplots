@@ -329,6 +329,7 @@ class StackedPlotStyle:
 
 
     def set_axis_style(self,
+                        *,
                         x_lim:tuple[int, int] = None,
                         step:int = None,
                         x_font_size:int = None,
@@ -382,6 +383,7 @@ class StackedPlotStyle:
 
 
     def set_axis_title_style(self,
+                            *,
                             x_label:str = None,
                             y_label:str = None,
                             axis_label_font_size:int = None,
@@ -408,6 +410,7 @@ class StackedPlotStyle:
 
 
     def set_bar_style(self,
+                    *,
                     bar_height:int = None,
                     align:str = None,
                     bar_gradient:ColourGradient = None):
@@ -437,6 +440,7 @@ class StackedPlotStyle:
 
 
     def set_bar_val_label_style(self,
+                *,
                 font_size:int=None,
                 font_colour:str = None,
                 colour_invert:bool = None,
@@ -489,6 +493,7 @@ class StackedPlotStyle:
 
 
     def set_fig_style(self,
+                    *,
                     title:str = None,
                     title_font_size:int = None,
                     title_colour:str = None,
@@ -576,6 +581,7 @@ class StackedPlotStyle:
 
 
     def set_legend_style(self,
+                        *,
                         show:bool = None,
                         font_size:int = None,
                         padding:float = None,
@@ -629,6 +635,7 @@ class StackedPlotStyle:
 
 
     def set_vert_line_style(self,
+                    *,
                     show:bool = None,
                     line_style:str = None,
                     colour:str = None,
