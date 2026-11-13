@@ -8,6 +8,9 @@ from matplotlib.testing.compare import compare_images
 from stackedbarplots.core import StackedBarplot
 from stackedbarplots.tools import ColourGradient
 
+
+
+
 class CorePlotStyleTest(unittest.TestCase):
     """Unit tests for plot style functionality.
     Unit tests are designed not to be comprehensive
@@ -20,15 +23,26 @@ class CorePlotStyleTest(unittest.TestCase):
         self.EXPECTED_PLOTS_DIR = "expected_plots"
         self.TEST_PLOTS_DIR = "test_plots"
 
+
     def compare_figs(self, plot:StackedBarplot, filename:str) -> None:
-        expected_plot_uri = os.path.join(os.path.dirname(os.path.realpath(__file__)), self.EXPECTED_PLOTS_DIR, filename)
-        test_plot_uri = os.path.join(os.path.dirname(os.path.realpath(__file__)), self.TEST_PLOTS_DIR, filename)
+        expected_plot_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), self.EXPECTED_PLOTS_DIR)
+        test_plot_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), self.TEST_PLOTS_DIR)
+
+        if not os.path.isdir(expected_plot_dir):
+            os.mkdir(expected_plot_dir)
+
+        if not os.path.isdir(test_plot_dir):
+            os.mkdir(test_plot_dir)
+
+        expected_plot_uri = os.path.join(expected_plot_dir, filename)
+        test_plot_uri = os.path.join(test_plot_dir, filename)
 
         if self.override_expected_plots: plot.save(expected_plot_uri)
         plot.save(test_plot_uri)
         compare_images(expected_plot_uri,
                        test_plot_uri,
                        tol=0.1)
+
 
     def test_vis_bar_font(self):
         results = {"Category 1": [10, 5, 3, 11], "Category 2": [4, 2, 9, 12], "Category 3": [11, 12, 3, 4]}
@@ -55,6 +69,7 @@ class CorePlotStyleTest(unittest.TestCase):
         plt.close(bar_font_plot.fig)
         del bar_font_plot
 
+
     def test_vis_bar(self):
         results = {"Category 1": [10, 5, 3, 11], "Category 2": [4, 2, 9, 12], "Category 3": [11, 12, 3, 4]}
         series_labels = ["Series 1", "Series 2", "Series 3", "Series 4"]
@@ -77,6 +92,7 @@ class CorePlotStyleTest(unittest.TestCase):
         if self.show_plots: bar_plot.show()
         plt.close(bar_plot.fig)
         del bar_plot
+
 
     def test_vis_fig(self):
         results = {"Category 1": [10, 5, 3, 11], "Category 2": [4, 2, 9, 12], "Category 3": [11, 12, 3, 4]}
@@ -136,6 +152,7 @@ class CorePlotStyleTest(unittest.TestCase):
         plt.close(axis_plot.fig)
         del axis_plot
 
+
     def test_vis_axis_title(self):
         results = {"Category 1": [10, 5, 3, 11], "Category 2": [4, 2, 9, 12], "Category 3": [11, 12, 3, 4]}
         series_labels = ["Series 1", "Series 2", "Series 3", "Series 4"]
@@ -178,6 +195,7 @@ class CorePlotStyleTest(unittest.TestCase):
         if self.show_plots: legend_plot.show()
         plt.close(legend_plot.fig)
         del legend_plot
+
 
     def test_vis_vert_line(self):
         results = {"Category 1": [10, 5, 3, 11], "Category 2": [4, 2, 9, 12], "Category 3": [11, 12, 3, 4]}

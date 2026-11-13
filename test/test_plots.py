@@ -22,15 +22,26 @@ class PlotsMethodTest(unittest.TestCase):
         self.EXPECTED_PLOTS_DIR = "expected_plots"
         self.TEST_PLOTS_DIR = "test_plots"
 
+
     def compare_figs(self, plot:StackedBarplot, filename:str) -> None:
-        expected_plot_uri = os.path.join(os.path.dirname(os.path.realpath(__file__)), self.EXPECTED_PLOTS_DIR, filename)
-        test_plot_uri = os.path.join(os.path.dirname(os.path.realpath(__file__)), self.TEST_PLOTS_DIR, filename)
+        expected_plot_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), self.EXPECTED_PLOTS_DIR)
+        test_plot_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), self.TEST_PLOTS_DIR)
+
+        if not os.path.isdir(expected_plot_dir):
+            os.mkdir(expected_plot_dir)
+
+        if not os.path.isdir(test_plot_dir):
+            os.mkdir(test_plot_dir)
+
+        expected_plot_uri = os.path.join(expected_plot_dir, filename)
+        test_plot_uri = os.path.join(test_plot_dir, filename)
 
         if self.override_expected_plots: plot.save(expected_plot_uri)
         plot.save(test_plot_uri)
         compare_images(expected_plot_uri,
                        test_plot_uri,
                        tol=0.1)
+
 
     def test_custom(self):
         """Custom unit test to allow developers to quickly test the plotting methods with their own data and settings."""
@@ -49,6 +60,7 @@ class PlotsMethodTest(unittest.TestCase):
 
             plt.close(basic_plot.fig)
             del basic_plot
+
 
     def test_basic(self):
         results = {"Category 1": [10, 5, 3, 11], "Category 2": [4, 2, 9, 12], "Category 3": [11, 12, 3, 4]}
