@@ -18,7 +18,9 @@ class PlotsMethodTest(unittest.TestCase):
         self.show_plots = False
         self.override_expected_plots = False
         self.EXPECTED_PLOTS_DIR = "./test/expected_plots/"
+        self.SAVE_EXPECTED_PLOTS_DIR = "../test/expected_plots/"
         self.TEST_PLOTS_DIR = "./test/test_plots/"
+        self.SAVE_TEST_PLOTS_DIR = "../test/test_plots/"
 
     def test_custom(self):
         """Custom unit test to allow developers to quickly test the plotting methods with their own data and settings."""
@@ -51,13 +53,13 @@ class PlotsMethodTest(unittest.TestCase):
         self.assertGreaterEqual(len(axis_rects), len(series_labels)*len(results.keys()),
                                 "Error in bar plotting. Stacked barchart figure as more rects than data requires.")
 
-        basic_plot.save("../test/test_plots/test_basic_plot.png")
+        if self.override_expected_plots: basic_plot.save(self.SAVE_EXPECTED_PLOTS_DIR + "test_basic_plot.png")
+        basic_plot.save(self.SAVE_TEST_PLOTS_DIR + "test_basic_plot.png")
         compare_images(self.TEST_PLOTS_DIR + "test_basic_plot.png",
                        self.EXPECTED_PLOTS_DIR + "test_basic_plot.png",
                        tol=0.1)
 
         if self.show_plots: basic_plot.show()
-        if self.override_expected_plots: basic_plot.save(self.EXPECTED_PLOTS_DIR + "test_basic_plot.png")
         plt.close(basic_plot.fig)
         del basic_plot
 
@@ -74,14 +76,13 @@ class PlotsMethodTest(unittest.TestCase):
         self.assertGreaterEqual(len(axis_rects), len(series_labels_2)*len(results_2.keys()),
                                 "Error in bar plotting. Stacked barchart figure as more rects than data requires.")
 
-        centre_plot.save("../test/test_plots/test_centred_plot.png")
+        if self.override_expected_plots: centre_plot.save(self.SAVE_EXPECTED_PLOTS_DIR + "test_centred_plot.png")
+        centre_plot.save(self.SAVE_TEST_PLOTS_DIR + "test_centred_plot.png")
         compare_images(self.TEST_PLOTS_DIR + "test_centred_plot.png",
                        self.EXPECTED_PLOTS_DIR + "test_centred_plot.png",
                        tol=0.1)
 
-
         if self.show_plots: centre_plot.show()
-        if self.override_expected_plots: centre_plot.save(self.EXPECTED_PLOTS_DIR + "test_centred_plot.png")
         plt.close(centre_plot.fig)
         del centre_plot
 
@@ -102,16 +103,15 @@ class PlotsMethodTest(unittest.TestCase):
                 cat_total = sum(cat_data)
                 for ser_val, norm_val in zip(cat_data, norm_data):
                     self.assertAlmostEqual(norm_val, (ser_val/cat_total)*100, 5) #Check normalisation to 5 decimal places.
-
         norm_plot.render()
 
-        norm_plot.save("../test/test_plots/test_norm_plot.png")
+        if self.override_expected_plots: norm_plot.save(self.SAVE_EXPECTED_PLOTS_DIR + "test_norm_plot.png")
+        norm_plot.save(self.SAVE_TEST_PLOTS_DIR + "test_norm_plot.png")
         compare_images(self.TEST_PLOTS_DIR + "test_norm_plot.png",
                        self.EXPECTED_PLOTS_DIR + "test_norm_plot.png",
                        tol=0.1)
 
         if self.show_plots: norm_plot.show()
-        if self.override_expected_plots: norm_plot.save(self.EXPECTED_PLOTS_DIR + "test_norm_plot.png")
         plt.close(norm_plot.fig)
         del norm_plot
 
@@ -132,15 +132,14 @@ class PlotsMethodTest(unittest.TestCase):
                 cat_total = sum(cat_data)
                 for ser_val, norm_val in zip(cat_data, norm_data):
                     self.assertAlmostEqual(norm_val, (ser_val/cat_total)*100, 5) #Check normalisation to 5 decimal places.
-
         norm_plot_centre.render()
 
-        norm_plot_centre.save("../test/test_plots/test_norm_centre_plot.png")
+        if self.override_expected_plots: norm_plot_centre.save(self.SAVE_EXPECTED_PLOTS_DIR + "test_norm_centre_plot.png")
+        norm_plot_centre.save(self.SAVE_TEST_PLOTS_DIR + "test_norm_centre_plot.png")
         compare_images(self.TEST_PLOTS_DIR + "test_norm_centre_plot.png",
                        self.EXPECTED_PLOTS_DIR + "test_norm_centre_plot.png",
                        tol=0.1)
 
         if self.show_plots: norm_plot_centre.show()
-        if self.override_expected_plots: norm_plot_centre.save(self.EXPECTED_PLOTS_DIR + "test_norm_centre_plot.png")
         plt.close(norm_plot_centre.fig)
         del norm_plot_centre
