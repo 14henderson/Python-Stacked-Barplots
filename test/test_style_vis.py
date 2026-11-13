@@ -1,5 +1,6 @@
 # pylint: disable=multiple-statements,too-many-positional-arguments,redefined-outer-name,missing-function-docstring,missing-class-docstring,line-too-long,disable=consider-using-enumerate
 
+import os
 import unittest
 import matplotlib.pyplot as plt
 from matplotlib.testing.compare import compare_images
@@ -16,10 +17,18 @@ class CorePlotStyleTest(unittest.TestCase):
     def setUp(self):
         self.show_plots = False
         self.override_expected_plots = False
-        self.EXPECTED_PLOTS_DIR = "./test/expected_plots/"
-        self.SAVE_EXPECTED_PLOTS_DIR = "../test/expected_plots/"
-        self.TEST_PLOTS_DIR = "./test/test_plots/"
-        self.SAVE_TEST_PLOTS_DIR = "../test/test_plots/"
+        self.EXPECTED_PLOTS_DIR = "expected_plots"
+        self.TEST_PLOTS_DIR = "test_plots"
+
+    def compare_figs(self, plot:StackedBarplot, filename:str) -> None:
+        expected_plot_uri = os.path.join(os.path.dirname(os.path.realpath(__file__)), self.EXPECTED_PLOTS_DIR, filename)
+        test_plot_uri = os.path.join(os.path.dirname(os.path.realpath(__file__)), self.TEST_PLOTS_DIR, filename)
+
+        if self.override_expected_plots: plot.save(expected_plot_uri)
+        plot.save(test_plot_uri)
+        compare_images(expected_plot_uri,
+                       test_plot_uri,
+                       tol=0.1)
 
     def test_vis_bar_font(self):
         results = {"Category 1": [10, 5, 3, 11], "Category 2": [4, 2, 9, 12], "Category 3": [11, 12, 3, 4]}
@@ -40,11 +49,7 @@ class CorePlotStyleTest(unittest.TestCase):
                                        padding=padding)
         bar_font_plot.render()
 
-        if self.override_expected_plots: bar_font_plot.save(self.SAVE_EXPECTED_PLOTS_DIR + "bar_font_plot.png")
-        bar_font_plot.save(self.SAVE_TEST_PLOTS_DIR + "bar_font_plot.png")
-        compare_images(self.TEST_PLOTS_DIR + "bar_font_plot.png",
-                       self.EXPECTED_PLOTS_DIR + "bar_font_plot.png",
-                       tol=0.1)
+        self.compare_figs(bar_font_plot, "bar_font_plot.png")
 
         if self.show_plots: bar_font_plot.show()
         plt.close(bar_font_plot.fig)
@@ -67,11 +72,7 @@ class CorePlotStyleTest(unittest.TestCase):
         bar_plot.set_fig_style(sorted="sum-desc")
         bar_plot.render()
 
-        if self.override_expected_plots: bar_plot.save(self.SAVE_EXPECTED_PLOTS_DIR + "bar_plot.png")
-        bar_plot.save(self.SAVE_TEST_PLOTS_DIR + "bar_plot.png")
-        compare_images(self.TEST_PLOTS_DIR + "bar_plot.png",
-                       self.EXPECTED_PLOTS_DIR + "bar_plot.png",
-                       tol=0.1)
+        self.compare_figs(bar_plot, "bar_plot.png")
 
         if self.show_plots: bar_plot.show()
         plt.close(bar_plot.fig)
@@ -102,11 +103,7 @@ class CorePlotStyleTest(unittest.TestCase):
                                 spine_display=spine_display)
         fig_plot.render()
 
-        if self.override_expected_plots: fig_plot.save(self.SAVE_EXPECTED_PLOTS_DIR + "fig_plot.png")
-        fig_plot.save(self.SAVE_TEST_PLOTS_DIR + "fig_plot.png")
-        compare_images(self.TEST_PLOTS_DIR + "fig_plot.png",
-                       self.EXPECTED_PLOTS_DIR + "fig_plot.png",
-                       tol=0.1)
+        self.compare_figs(fig_plot, "fig_plot.png")
 
         if self.show_plots: fig_plot.show()
         plt.close(fig_plot.fig)
@@ -133,11 +130,7 @@ class CorePlotStyleTest(unittest.TestCase):
                                  x_axis_abs=x_axis_abs)
         axis_plot.render()
 
-        if self.override_expected_plots: axis_plot.save(self.SAVE_EXPECTED_PLOTS_DIR + "axis_plot.png")
-        axis_plot.save(self.SAVE_TEST_PLOTS_DIR + "axis_plot.png")
-        compare_images(self.TEST_PLOTS_DIR + "axis_plot.png",
-                       self.EXPECTED_PLOTS_DIR + "axis_plot.png",
-                       tol=0.1)
+        self.compare_figs(axis_plot, "axis_plot.png")
 
         if self.show_plots: axis_plot.show()
         plt.close(axis_plot.fig)
@@ -157,11 +150,7 @@ class CorePlotStyleTest(unittest.TestCase):
                                        axis_label_font_colour=label_colour)
         axis_title_plot.render()
 
-        if self.override_expected_plots: axis_title_plot.save(self.SAVE_EXPECTED_PLOTS_DIR + "axis_title_plot.png")
-        axis_title_plot.save(self.SAVE_TEST_PLOTS_DIR + "axis_title_plot.png")
-        compare_images(self.TEST_PLOTS_DIR + "axis_title_plot.png",
-                       self.EXPECTED_PLOTS_DIR + "axis_title_plot.png",
-                       tol=0.1)
+        self.compare_figs(axis_title_plot, "axis_title_plot.png")
 
         if self.show_plots: axis_title_plot.show()
         plt.close(axis_title_plot.fig)
@@ -184,11 +173,7 @@ class CorePlotStyleTest(unittest.TestCase):
                                    transform=(.1, -.1))
         legend_plot.render()
 
-        if self.override_expected_plots: legend_plot.save(self.SAVE_EXPECTED_PLOTS_DIR + "legend_plot.png")
-        legend_plot.save(self.SAVE_TEST_PLOTS_DIR + "legend_plot.png")
-        compare_images(self.TEST_PLOTS_DIR + "legend_plot.png",
-                       self.EXPECTED_PLOTS_DIR + "legend_plot.png",
-                       tol=0.1)
+        self.compare_figs(legend_plot, "legend_plot.png")
 
         if self.show_plots: legend_plot.show()
         plt.close(legend_plot.fig)
@@ -206,11 +191,7 @@ class CorePlotStyleTest(unittest.TestCase):
                                       z_order="front")
         vert_line_plot.render()
 
-        if self.override_expected_plots: vert_line_plot.save(self.SAVE_EXPECTED_PLOTS_DIR + "vert_line_plot.png")
-        vert_line_plot.save(self.SAVE_TEST_PLOTS_DIR + "vert_line_plot.png")
-        compare_images(self.TEST_PLOTS_DIR + "vert_line_plot.png",
-                       self.EXPECTED_PLOTS_DIR + "vert_line_plot.png",
-                       tol=0.1)
+        self.compare_figs(vert_line_plot, "vert_line_plot.png")
 
         if self.show_plots: vert_line_plot.show()
         plt.close(vert_line_plot.fig)

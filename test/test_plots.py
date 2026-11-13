@@ -1,11 +1,13 @@
 # pylint: disable=multiple-statements,too-many-positional-arguments,redefined-outer-name,missing-function-docstring,missing-class-docstring,line-too-long,disable=consider-using-enumerate
 
+import os
 import unittest
 import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.testing.compare import compare_images
 
 from stackedbarplots.plots import basic, centred, normalised, normalised_centred
+from stackedbarplots.core import StackedBarplot
 
 class PlotsMethodTest(unittest.TestCase):
     """Very basic unit tests for basic(), centred(),
@@ -17,10 +19,18 @@ class PlotsMethodTest(unittest.TestCase):
     def setUp(self):
         self.show_plots = False
         self.override_expected_plots = False
-        self.EXPECTED_PLOTS_DIR = "./test/expected_plots/"
-        self.SAVE_EXPECTED_PLOTS_DIR = "../test/expected_plots/"
-        self.TEST_PLOTS_DIR = "./test/test_plots/"
-        self.SAVE_TEST_PLOTS_DIR = "../test/test_plots/"
+        self.EXPECTED_PLOTS_DIR = "expected_plots"
+        self.TEST_PLOTS_DIR = "test_plots"
+
+    def compare_figs(self, plot:StackedBarplot, filename:str) -> None:
+        expected_plot_uri = os.path.join(os.path.dirname(os.path.realpath(__file__)), self.EXPECTED_PLOTS_DIR, filename)
+        test_plot_uri = os.path.join(os.path.dirname(os.path.realpath(__file__)), self.TEST_PLOTS_DIR, filename)
+
+        if self.override_expected_plots: plot.save(expected_plot_uri)
+        plot.save(test_plot_uri)
+        compare_images(expected_plot_uri,
+                       test_plot_uri,
+                       tol=0.1)
 
     def test_custom(self):
         """Custom unit test to allow developers to quickly test the plotting methods with their own data and settings."""
@@ -52,12 +62,9 @@ class PlotsMethodTest(unittest.TestCase):
         axis_rects = list(filter(lambda actor: isinstance(actor, matplotlib.patches.Rectangle), axis_objs))
         self.assertGreaterEqual(len(axis_rects), len(series_labels)*len(results.keys()),
                                 "Error in bar plotting. Stacked barchart figure as more rects than data requires.")
+        basic_plot.render()
 
-        if self.override_expected_plots: basic_plot.save(self.SAVE_EXPECTED_PLOTS_DIR + "test_basic_plot.png")
-        basic_plot.save(self.SAVE_TEST_PLOTS_DIR + "test_basic_plot.png")
-        compare_images(self.TEST_PLOTS_DIR + "test_basic_plot.png",
-                       self.EXPECTED_PLOTS_DIR + "test_basic_plot.png",
-                       tol=0.1)
+        self.compare_figs(basic_plot, "test_basic_plot.png")
 
         if self.show_plots: basic_plot.show()
         plt.close(basic_plot.fig)
@@ -76,11 +83,7 @@ class PlotsMethodTest(unittest.TestCase):
         self.assertGreaterEqual(len(axis_rects), len(series_labels_2)*len(results_2.keys()),
                                 "Error in bar plotting. Stacked barchart figure as more rects than data requires.")
 
-        if self.override_expected_plots: centre_plot.save(self.SAVE_EXPECTED_PLOTS_DIR + "test_centred_plot.png")
-        centre_plot.save(self.SAVE_TEST_PLOTS_DIR + "test_centred_plot.png")
-        compare_images(self.TEST_PLOTS_DIR + "test_centred_plot.png",
-                       self.EXPECTED_PLOTS_DIR + "test_centred_plot.png",
-                       tol=0.1)
+        self.compare_figs(centre_plot, "test_centre_plot.png")
 
         if self.show_plots: centre_plot.show()
         plt.close(centre_plot.fig)
@@ -105,11 +108,7 @@ class PlotsMethodTest(unittest.TestCase):
                     self.assertAlmostEqual(norm_val, (ser_val/cat_total)*100, 5) #Check normalisation to 5 decimal places.
         norm_plot.render()
 
-        if self.override_expected_plots: norm_plot.save(self.SAVE_EXPECTED_PLOTS_DIR + "test_norm_plot.png")
-        norm_plot.save(self.SAVE_TEST_PLOTS_DIR + "test_norm_plot.png")
-        compare_images(self.TEST_PLOTS_DIR + "test_norm_plot.png",
-                       self.EXPECTED_PLOTS_DIR + "test_norm_plot.png",
-                       tol=0.1)
+        self.compare_figs(norm_plot, "test_norm_plot.png")
 
         if self.show_plots: norm_plot.show()
         plt.close(norm_plot.fig)
@@ -134,11 +133,7 @@ class PlotsMethodTest(unittest.TestCase):
                     self.assertAlmostEqual(norm_val, (ser_val/cat_total)*100, 5) #Check normalisation to 5 decimal places.
         norm_plot_centre.render()
 
-        if self.override_expected_plots: norm_plot_centre.save(self.SAVE_EXPECTED_PLOTS_DIR + "test_norm_centre_plot.png")
-        norm_plot_centre.save(self.SAVE_TEST_PLOTS_DIR + "test_norm_centre_plot.png")
-        compare_images(self.TEST_PLOTS_DIR + "test_norm_centre_plot.png",
-                       self.EXPECTED_PLOTS_DIR + "test_norm_centre_plot.png",
-                       tol=0.1)
+        self.compare_figs(norm_plot_centre, "test_norm_plot_centre.png")
 
         if self.show_plots: norm_plot_centre.show()
         plt.close(norm_plot_centre.fig)
