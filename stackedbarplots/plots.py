@@ -64,7 +64,7 @@ def basic(
         fig_size:tuple[int, int] = None,
         font_size:int = None,
         font_colour:str = DEFAULT_BAR_VAL_LABEL_STYLE.font_colour, #TODO: This only applies to bar value annotations and shouldn't use default var like this.
-        data_label_format:str = DEFAULT_BAR_VAL_LABEL_STYLE.format,
+        data_label_format:str = DEFAULT_BAR_VAL_LABEL_STYLE.format, #TODO: Not sure this is the best way to define this?
         data_label_align:str = DEFAULT_BAR_VAL_LABEL_STYLE.align,
         bar_colours:ColourGradient = None,
         legend_placement:str = None,
@@ -111,7 +111,7 @@ def basic(
     plot.set_style(local_style)
 
     plot.set_axis_style(x_lim=x_axis_lim, step=x_axis_step)
-    plot.set_bar_style(align="left", bar_height=bar_height)
+    plot.set_bar_style(bar_height=bar_height)
     if bar_colours is not None: plot.set_bar_style(bar_gradient=bar_colours)
 
     plot.set_fig_style(title=title,
@@ -121,8 +121,7 @@ def basic(
     plot.set_bar_val_label_style(font_size=font_size,
                               font_colour=font_colour,
                               format=data_label_format,
-                              align=data_label_align,
-                              expel_squeezed_ends=True)
+                              align=data_label_align)
 
     if legend_placement is not None:
         plot.set_legend_style(show=True,

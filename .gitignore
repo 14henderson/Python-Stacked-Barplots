@@ -180,3 +180,6 @@ cython_debug/
 .cursorignore
 .cursorindexingignore
 .vscode/settings.json
+
+#Unit test plots saved
+test/test_plots/*.png
