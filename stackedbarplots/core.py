@@ -419,7 +419,7 @@ class StackedBarplot():
         elif self.get_vert_line_style()["zorder"] == "behind": z = 0
         else: raise ValueError("Vertical line zorder must be either 'front' or 'behind'.")
 
-        self.ax.axvline(0,
+        self.ax.vert_line = self.ax.axvline(0,
                         linestyle=self.get_vert_line_style()["linestyle"],
                         color=self.get_vert_line_style()["colour"],
                         alpha=self.get_vert_line_style()["alpha"],

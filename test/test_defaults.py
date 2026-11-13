@@ -217,30 +217,157 @@ class Test_Default_Bar_Val_Label_Style(unittest.TestCase):
         self.assertGreaterEqual(test_plot.ax.texts[-1].get_window_extent().x0, test_plot.ax.patches[0].get_window_extent().x1)
 
 
+class Test_Default_Fig_Style(unittest.TestCase):
+    """Unit tests for DEFAULT_FIG_STYLE class in defaults.py.
+    Style settings that are set None by default are not tested."""
+
+    def setUp(self):
+        results = {"Category 1": [10, 5, 2, 3, 11], "Category 2": [4, 2, 2, 9, 12], "Category 3": [11, 12, 2, 3, 4]}
+        series_labels = ["Series 1", "Series 2", "Series 3", "Series 4", "Series 5"]
+
+        self.basic_plot = basic(results, series_labels)
+        self.basic_plot.set_fig_style(title="Test title", subtitle="Test subtitle")
+        self.basic_plot.render()
+
+    def test_title_font_size(self):
+        self.assertEqual(self.basic_plot.fig._suptitle.get_fontsize(), DEFAULT_FIG_STYLE.title_font_size)
+
+    def test_title_colour(self):
+        self.assertEqual(self.basic_plot.fig._suptitle.get_color(), DEFAULT_FIG_STYLE.title_colour)
+
+    def test_title_wrap(self):
+        self.basic_plot.set_fig_style(title="Test title that is long enough to require wrapping. Test title that is long enough to require wrapping.")
+        self.basic_plot.render()
+        self.assertTrue("\n" in self.basic_plot.fig._suptitle.get_text())
+
+    def test_subtitle_font_size(self):
+        self.assertEqual(self.basic_plot.fig._subtitle.get_fontsize(), DEFAULT_FIG_STYLE.subtitle_font_size)
+
+    def test_subtitle_colour(self):
+        self.assertEqual(self.basic_plot.fig._subtitle.get_color(), DEFAULT_FIG_STYLE.subtitle_colour)
+
+    def test_subtitle_wrap(self):
+        self.basic_plot.set_fig_style(subtitle="Test subtitle that is long enough to require wrapping. Test subtitle that is long enough to require wrapping. Test subtitle that is long enough to require wrapping. Test subtitle that is long enough to require wrapping.")
+        self.basic_plot.render()
+        self.assertTrue("\n" in self.basic_plot.fig._subtitle.get_text())
+
+    def test_font_family(self):
+        texty_results = {"Category 1": [10, 5, 2, 3, 11], "Category 2": [4, 2, 2, 9, 12], "Category 3": [11, 12, 2, 3, 4]}
+        texty_series_labels = ["Series 1", "Series 2", "Series 3", "Series 4", "Series 5"]
+
+        texty_basic_plot = basic(texty_results, texty_series_labels)
+        texty_basic_plot.set_fig_style(title="Test title", subtitle="Test subtitle")
+        texty_basic_plot.set_axis_title_style(x_label = "Test x label", y_label = "Test y labels")
+        texty_basic_plot.set_legend_style(show=True)
+        texty_basic_plot.render()
+
+        self.assertEqual(DEFAULT_FIG_STYLE.font_family, texty_basic_plot.fig._suptitle.get_fontfamily()[0])
+        self.assertEqual(DEFAULT_FIG_STYLE.font_family, texty_basic_plot.fig._subtitle.get_fontfamily()[0])
+        self.assertEqual(DEFAULT_FIG_STYLE.font_family, texty_basic_plot.ax.xaxis.label.get_fontfamily()[0])
+        self.assertEqual(DEFAULT_FIG_STYLE.font_family, texty_basic_plot.ax.yaxis.label.get_fontfamily()[0])
+        self.assertEqual(DEFAULT_FIG_STYLE.font_family, texty_basic_plot.ax.get_xticklabels()[0].get_fontfamily()[0])
+        self.assertEqual(DEFAULT_FIG_STYLE.font_family, texty_basic_plot.ax.get_yticklabels()[0].get_fontfamily()[0])
+        self.assertEqual(DEFAULT_FIG_STYLE.font_family, texty_basic_plot.ax.get_legend().get_texts()[0].get_fontfamily()[0])
+
+    def test_font_weight(self):
+        texty_results = {"Category 1": [10, 5, 2, 3, 11], "Category 2": [4, 2, 2, 9, 12], "Category 3": [11, 12, 2, 3, 4]}
+        texty_series_labels = ["Series 1", "Series 2", "Series 3", "Series 4", "Series 5"]
+
+        texty_basic_plot = basic(texty_results, texty_series_labels)
+        texty_basic_plot.set_fig_style(title="Test title", subtitle="Test subtitle")
+        texty_basic_plot.set_axis_title_style(x_label = "Test x label", y_label = "Test y labels")
+        texty_basic_plot.set_legend_style(show=True)
+        texty_basic_plot.render()
+
+        self.assertEqual(DEFAULT_FIG_STYLE.font_weight, texty_basic_plot.fig._subtitle.get_fontweight())
+        self.assertEqual(DEFAULT_FIG_STYLE.font_weight, texty_basic_plot.ax.xaxis.label.get_fontweight())
+        self.assertEqual(DEFAULT_FIG_STYLE.font_weight, texty_basic_plot.ax.yaxis.label.get_fontweight())
+        self.assertEqual(DEFAULT_FIG_STYLE.font_weight, texty_basic_plot.ax.get_xticklabels()[0].get_fontweight())
+        self.assertEqual(DEFAULT_FIG_STYLE.font_weight, texty_basic_plot.ax.get_yticklabels()[0].get_fontweight())
+        self.assertEqual(DEFAULT_FIG_STYLE.font_weight, texty_basic_plot.ax.get_legend().get_texts()[0].get_fontweight())
+
+    def test_title_weight(self):
+        self.assertEqual(DEFAULT_FIG_STYLE.title_weight, self.basic_plot.fig._suptitle.get_fontweight())
+
+    def test_background_colour(self):
+        pass
+        #self.assertEqual(DEFAULT_FIG_STYLE.background_colour, self.basic_plot.fig.get_facecolor())
+        #TODO: Different data types used for colour (default sets as #ffffff but matplotlib returns tuple).
+
+    def test_spine_display(self):
+        self.assertEqual(DEFAULT_FIG_STYLE.spine_display[1], self.basic_plot.ax.spines["top"].get_visible())
+        self.assertEqual(DEFAULT_FIG_STYLE.spine_display[3], self.basic_plot.ax.spines["bottom"].get_visible())
+        self.assertEqual(DEFAULT_FIG_STYLE.spine_display[0], self.basic_plot.ax.spines["left"].get_visible())
+        self.assertEqual(DEFAULT_FIG_STYLE.spine_display[2], self.basic_plot.ax.spines["right"].get_visible())
 
 
+class Test_Default_Legend_Style(unittest.TestCase):
+    """Unit tests for DEFAULT_LEGEND_STYLE class in defaults.py.
+    Style settings that are set None by default are not tested."""
 
-#TODO: Check if default vals are actually set
+    def setUp(self):
+        results = {"Category 1": [10, 5, 2, 3, 11], "Category 2": [4, 2, 2, 9, 12], "Category 3": [11, 12, 2, 3, 4]}
+        series_labels = ["Series 1", "Series 2", "Series 3", "Series 4", "Series 5"]
+
+        self.basic_plot = basic(results, series_labels)
+        self.basic_plot.set_legend_style(show=True)
+        self.basic_plot.render()
+
+    def test_font_size(self):
+        self.assertEqual(self.basic_plot.ax.get_legend().get_texts()[0].get_fontsize(), DEFAULT_LEGEND_STYLE.font_size)
+
+    def test_font_colour(self):
+        pass
+        #self.assertEqual(self.basic_plot.ax.get_legend().get_texts()[0].get_color(), DEFAULT_LEGEND_STYLE.font_colour)
+        #TODO: Different data types used for colour (default sets as #ffffff but matplotlib returns tuple).
+
+    def test_left_padding(self):
+        pass
+        #TODO: Padding between legend marks/labels is defined in font-sized units, but read in dots by .get_window_extent()
+
+    def test_marker_shape(self):
+        pass
+        #TODO: How to test marker shape?
+
+    def test_border_colour(self):
+        pass
+        #self.assertEqual(self.basic_plot.ax.get_legend().get_frame().get_edgecolor(), DEFAULT_LEGEND_STYLE.border_colour)
+        #TODO: Different data types used for colour (default sets as #ffffff but matplotlib returns tuple).
+
+    def test_background_colour(self):
+        pass
+        #self.assertEqual(self.basic_plot.ax.get_legend().get_frame().get_facecolor(), DEFAULT_LEGEND_STYLE.background_colour)
+        #TODO: Different data types used for colour (default sets as #ffffff but matplotlib returns tuple).
+
+    def test_placement(self):
+        pass
+        #self.assertEqual(self.basic_plot.ax.get_legend().get_bbox_to_anchor()., DEFAULT_LEGEND_STYLE.placement_options[DEFAULT_LEGEND_STYLE.placement][0])
+        #TODO: How to test placement? get_bbox_to_anchor() returns a Bbox object, but placement_options is a tuple of floats.
 
 
-    # def test_attribute_length(self):
-    #     """Count whether the number of default attributes defined in the 
-    #     DEFAULT_ class matches the numner of attributes stored in the 
-    #     StackedPlotStyle object. assertLessEqual() is used, as StackedPlotStyle
-    #     may require additional attributes for functionality."""
-    #     style_obj = StackedPlotStyle()
+class Test_Default_Vert_line_Style(unittest.TestCase):
+    """Unit tests for DEFAULT_VERTLINE_STYLE class in defaults.py.
+    Style settings that are set None by default are not tested."""
 
-    #     self.assertLessEqual(self.get_attributes_len(DEFAULT_BAR_FONT_STYLE), len(style_obj.__bar_font_style.keys()),
-    #                          "Error: Is StackedPlotStyle missing dict keys related to DEFAULT_BAR_FONT_STYLE?")
-    #     self.assertLessEqual(self.get_attributes_len(DEFAULT_BAR_STYLE), len(style_obj.__bar_style.keys()),
-    #                          "Error: Is StackedPlotStyle missing dict keys related to DEFAULT_BAR_STYLE?")
-    #     self.assertLessEqual(self.get_attributes_len(DEFAULT_FIG_STYLE), len(style_obj.__fig_style.keys()),
-    #                          "Error: Is StackedPlotStyle missing dict keys related to DEFAULT_FIG_STYLE?")
-    #     self.assertLessEqual(self.get_attributes_len(DEFAULT_AXIS_STYLE), len(style_obj.__axis_style.keys()),
-    #                          "Error: Is StackedPlotStyle missing dict keys related to DEFAULT_AXIS_STYLE?")
-    #     self.assertLessEqual(self.get_attributes_len(DEFAULT_AXIS_TITLE_STYLE), len(style_obj.__axis_title_style.keys()),
-    #                          "Error: Is StackedPlotStyle missing dict keys related to DEFAULT_AXIS_TITLE_STYLE?")
-    #     self.assertLessEqual(self.get_attributes_len(DEFAULT_LEGEND_STYLE), len(style_obj.__legend_style.keys()),
-    #                          "Error: Is StackedPlotStyle missing dict keys related to DEFAULT_LEGEND_STYLE?")
-    #     self.assertLessEqual(self.get_attributes_len(DEFAULT_VERTLINE_STYLE), len(style_obj.__vert_line_style.keys()),
-    #                          "Error: Is StackedPlotStyle missing dict keys related to DEFAULT_VERTLINE_STYLE?")
+    def setUp(self):
+        results = {"Category 1": [10, 5, 2, 3, 11], "Category 2": [4, 2, 2, 9, 12], "Category 3": [11, 12, 2, 3, 4]}
+        series_labels = ["Series 1", "Series 2", "Series 3", "Series 4", "Series 5"]
+
+        self.basic_plot = basic(results, series_labels)
+        self.basic_plot.set_vert_line_style(show=True)
+        self.basic_plot.render()
+
+    def test_line_style(self):
+        self.assertEqual(self.basic_plot.ax.vert_line.get_linestyle(), DEFAULT_VERTLINE_STYLE.line_style)
+
+    def test_line_colour(self):
+        self.assertEqual(self.basic_plot.ax.vert_line.get_color(), DEFAULT_VERTLINE_STYLE.colour)
+
+    def test_line_alpha(self):
+        self.assertEqual(self.basic_plot.ax.vert_line.get_alpha(), DEFAULT_VERTLINE_STYLE.alpha)
+
+    def test_z_order(self):
+        z = -1
+        if self.basic_plot.get_vert_line_style()["zorder"] == "front": z = 2
+        elif self.basic_plot.get_vert_line_style()["zorder"] == "behind": z = 0
+        self.assertEqual(self.basic_plot.ax.vert_line.get_zorder(), z)
