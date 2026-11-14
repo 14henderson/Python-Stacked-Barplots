@@ -59,18 +59,19 @@ __all__ = [
 def basic(
         data:dict[str, list[float]],
         series_labels:list[str],
+        *,
         title:str = None,
         subtitle:str = None,
         fig_size:tuple[int, int] = None,
         font_size:int = None,
-        font_colour:str = DEFAULT_BAR_VAL_LABEL_STYLE.font_colour, #TODO: This only applies to bar value annotations and shouldn't use default var like this.
-        data_label_format:str = DEFAULT_BAR_VAL_LABEL_STYLE.format, #TODO: Not sure this is the best way to define this?
-        data_label_align:str = DEFAULT_BAR_VAL_LABEL_STYLE.align,
+        font_colour:str = None,
+        data_label_format:str = None,
+        data_label_align:str = None,
         bar_colours:ColourGradient = None,
         legend_placement:str = None,
         x_axis_lim:tuple[int, int] = None,
         x_axis_step:int = None,
-        bar_height:float = DEFAULT_BAR_STYLE.height
+        bar_height:float = None
         ) -> StackedBarplot:
     """
     Draw a simple left-aligned horizontal stacked bar chart.
@@ -110,41 +111,45 @@ def basic(
     plot = StackedBarplot(data, series_labels)
     plot.set_style(local_style)
 
-    plot.set_axis_style(x_lim=x_axis_lim, step=x_axis_step)
-    plot.set_bar_style(bar_height=bar_height)
+    if title is not None: plot.set_fig_style(title=title)
+    if subtitle is not None: plot.set_fig_style(subtitle=subtitle)
+    if fig_size is not None: plot.set_fig_style(size=fig_size)
+
+    if font_size is not None: plot.set_bar_val_label_style(font_size=font_size)
+    if font_colour is not None: plot.set_bar_val_label_style(font_colour=font_colour)
+    if data_label_format is not None: plot.set_bar_val_label_style(format=data_label_format)
+    if data_label_align is not None: plot.set_bar_val_label_style(align=data_label_align)
+
     if bar_colours is not None: plot.set_bar_style(bar_gradient=bar_colours)
-
-    plot.set_fig_style(title=title,
-                       subtitle=subtitle,
-                       fig_size=fig_size)
-
-    plot.set_bar_val_label_style(font_size=font_size,
-                              font_colour=font_colour,
-                              format=data_label_format,
-                              align=data_label_align)
 
     if legend_placement is not None:
         plot.set_legend_style(show=True,
                               placement=legend_placement,
                               font_size=font_size)
 
+    if x_axis_lim is not None: plot.set_axis_style(x_lim=x_axis_lim)
+    if x_axis_step is not None: plot.set_axis_style(step=x_axis_step)
+    if bar_height is not None: plot.set_bar_style(bar_height=bar_height)
+
     return plot
+
 
 def centred(
         data:dict[str, list[float]],
         series_labels:list[str],
+        *,
         title:str = None,
         subtitle:str = None,
         fig_size:tuple[int, int] = None,
-        font_size:int = DEFAULT_BAR_VAL_LABEL_STYLE.font_size,
-        font_colour:str = DEFAULT_BAR_VAL_LABEL_STYLE.font_colour,
-        data_label_format:str = DEFAULT_BAR_VAL_LABEL_STYLE.format,
-        data_label_align:str = DEFAULT_BAR_VAL_LABEL_STYLE.align,
+        font_size:int = None,
+        font_colour:str = None,
+        data_label_format:str = None,
+        data_label_align:str = None,
         bar_colours:ColourGradient = None,
         legend_placement:str = None,
         x_axis_lim:tuple[int, int] = None,
         x_axis_step:int = None,
-        bar_height:float = DEFAULT_BAR_STYLE.height
+        bar_height:float = None
         ) -> StackedBarplot:
     """
     Draw a simple centre-aligned horizontal stacked bar chart with central dividing line.
@@ -184,46 +189,50 @@ def centred(
     plot = StackedBarplot(data, series_labels)
     plot.set_style(local_style)
 
-    plot.set_axis_style(x_lim=x_axis_lim, step=x_axis_step)
-    plot.set_bar_style(align="centre", bar_height=bar_height)
-    if bar_colours is not None: plot.set_bar_style(bar_gradient=bar_colours)
+    plot.set_bar_style(align="centre")
     plot.set_vert_line_style(show=True)
+    plot.set_bar_val_label_style(expel_squeezed_ends=True)
 
-    plot.set_fig_style(title=title,
-                       subtitle=subtitle,
-                       fig_size=fig_size)
+    if title is not None: plot.set_fig_style(title=title)
+    if subtitle is not None: plot.set_fig_style(subtitle=subtitle)
+    if fig_size is not None: plot.set_fig_style(size=fig_size)
 
-    plot.set_bar_val_label_style(font_size=font_size,
-                              font_colour=font_colour,
-                              format=data_label_format,
-                              align=data_label_align,
-                              expel_squeezed_ends=True)
+    if font_size is not None: plot.set_bar_val_label_style(font_size=font_size)
+    if font_colour is not None: plot.set_bar_val_label_style(font_colour=font_colour)
+    if data_label_format is not None: plot.set_bar_val_label_style(format=data_label_format)
+    if data_label_align is not None: plot.set_bar_val_label_style(align=data_label_align)
+
+    if bar_colours is not None: plot.set_bar_style(bar_gradient=bar_colours)
 
     if legend_placement is not None:
         plot.set_legend_style(show=True,
                               placement=legend_placement,
                               font_size=font_size)
 
-    return plot
+    if x_axis_lim is not None: plot.set_axis_style(x_lim=x_axis_lim)
+    if x_axis_step is not None: plot.set_axis_style(step=x_axis_step)
+    if bar_height is not None: plot.set_bar_style(bar_height=bar_height)
 
+    return plot
 
 
 def normalised(
         data:dict[str, list[float]],
         series_labels:list[str],
+        *,
         title:str = None,
         subtitle:str = None,
         fig_size:tuple[int, int] = None,
-        font_size:int = DEFAULT_BAR_VAL_LABEL_STYLE.font_size,
-        font_colour:str = DEFAULT_BAR_VAL_LABEL_STYLE.font_colour,
+        font_size:int = None,
+        font_colour:str = None,
         data_label_format:str = "{0:.1f}%",
-        data_label_align:str = DEFAULT_BAR_VAL_LABEL_STYLE.align,
+        data_label_align:str = None,
         bar_colours:ColourGradient = None,
         legend_placement:str = None,
         x_axis_lim:tuple[int, int] = (0, 100),
         x_axis_step:int = 10,
         x_axis_abs = True,
-        bar_height:float = DEFAULT_BAR_STYLE.height
+        bar_height:float = None
         ) -> StackedBarplot:
     """
     Draw a simple normalised horizontal stacked bar chart with data values given as percentages.
@@ -268,47 +277,51 @@ def normalised(
     plot = StackedBarplot(norm_data, series_labels)
     plot.set_style(local_style)
 
-    plot.set_axis_style(x_lim=x_axis_lim,
-                        step=x_axis_step,
-                        x_axis_format="{0}%",
-                        x_axis_abs=x_axis_abs)
+    plot.set_axis_style(x_axis_format="{0}%")
+    plot.set_bar_style(align="left")
+    plot.set_bar_val_label_style(expel_squeezed_ends=True)
 
-    plot.set_bar_style(align="left", bar_height=bar_height)
+    if title is not None: plot.set_fig_style(title=title)
+    if subtitle is not None: plot.set_fig_style(subtitle=subtitle)
+    if fig_size is not None: plot.set_fig_style(size=fig_size)
+
+    if font_size is not None: plot.set_bar_val_label_style(font_size=font_size)
+    if font_colour is not None: plot.set_bar_val_label_style(font_colour=font_colour)
+    if data_label_format is not None: plot.set_bar_val_label_style(format=data_label_format)
+    if data_label_align is not None: plot.set_bar_val_label_style(align=data_label_align)
+
     if bar_colours is not None: plot.set_bar_style(bar_gradient=bar_colours)
-
-    plot.set_fig_style(title=title,
-                       subtitle=subtitle,
-                       fig_size=fig_size)
-
-    plot.set_bar_val_label_style(font_size=font_size,
-                                font_colour=font_colour,
-                                format=data_label_format,
-                                align=data_label_align,
-                                expel_squeezed_ends=True)
 
     if legend_placement is not None:
         plot.set_legend_style(show=True,
-                                placement=legend_placement,
-                                font_size=font_size)
+                              placement=legend_placement,
+                              font_size=font_size)
+
+    if x_axis_lim is not None: plot.set_axis_style(x_lim=x_axis_lim)
+    if x_axis_step is not None: plot.set_axis_style(step=x_axis_step)
+    if bar_height is not None: plot.set_bar_style(bar_height=bar_height)
+    if x_axis_abs is not None: plot.set_axis_style(x_axis_abs=x_axis_abs)
 
     return plot
+
 
 def normalised_centred(
         data:dict[str, list[float]],
         series_labels:list[str],
+        *,
         title:str = None,
         subtitle:str = None,
         fig_size:tuple[int, int] = None,
-        font_size:int = DEFAULT_BAR_VAL_LABEL_STYLE.font_size,
-        font_colour:str = DEFAULT_BAR_VAL_LABEL_STYLE.font_colour,
+        font_size:int = None,
+        font_colour:str = None,
         data_label_format:str = "{0:.1f}%",
-        data_label_align:str = DEFAULT_BAR_VAL_LABEL_STYLE.align,
+        data_label_align:str = None,
         bar_colours:ColourGradient = None,
         legend_placement:str = None,
         x_axis_lim:tuple[int, int] = None,
         x_axis_step:int = 10,
         x_axis_abs = True,
-        bar_height:float = DEFAULT_BAR_STYLE.height
+        bar_height:float = None
         ) -> StackedBarplot:
     """
     Draw a simple normalised, centred horizontal stacked bar chart with data values given as percentages.
@@ -349,33 +362,34 @@ def normalised_centred(
     #Normalises data
     norm_data = {lab: [(cum/sum(category))*100 for cum in category] for lab, category in data.items()}
 
-
     local_style = StackedPlotStyle()
     plot = StackedBarplot(norm_data, series_labels)
     plot.set_style(local_style)
 
-    plot.set_axis_style(x_lim=x_axis_lim,
-                        step=x_axis_step,
-                        x_axis_format="{0}%",
-                        x_axis_abs=x_axis_abs)
-
-    plot.set_bar_style(align="centre", bar_height=bar_height)
-    if bar_colours is not None: plot.set_bar_style(bar_gradient=bar_colours)
+    plot.set_axis_style(x_axis_format="{0}%")
+    plot.set_bar_style(align="centre")
     plot.set_vert_line_style(show=True)
+    plot.set_bar_val_label_style(expel_squeezed_ends=True)
 
-    plot.set_fig_style(title=title,
-                       subtitle=subtitle,
-                       fig_size=fig_size)
+    if title is not None: plot.set_fig_style(title=title)
+    if subtitle is not None: plot.set_fig_style(subtitle=subtitle)
+    if fig_size is not None: plot.set_fig_style(size=fig_size)
 
-    plot.set_bar_val_label_style(font_size=font_size,
-                                font_colour=font_colour,
-                                format=data_label_format,
-                                align=data_label_align,
-                                expel_squeezed_ends=True)
+    if font_size is not None: plot.set_bar_val_label_style(font_size=font_size)
+    if font_colour is not None: plot.set_bar_val_label_style(font_colour=font_colour)
+    if data_label_format is not None: plot.set_bar_val_label_style(format=data_label_format)
+    if data_label_align is not None: plot.set_bar_val_label_style(align=data_label_align)
+
+    if bar_colours is not None: plot.set_bar_style(bar_gradient=bar_colours)
 
     if legend_placement is not None:
         plot.set_legend_style(show=True,
-                                placement=legend_placement,
-                                font_size=font_size)
+                              placement=legend_placement,
+                              font_size=font_size)
+
+    if x_axis_lim is not None: plot.set_axis_style(x_lim=x_axis_lim)
+    if x_axis_step is not None: plot.set_axis_style(step=x_axis_step)
+    if bar_height is not None: plot.set_bar_style(bar_height=bar_height)
+    if x_axis_abs is not None: plot.set_axis_style(x_axis_abs=x_axis_abs)
 
     return plot
