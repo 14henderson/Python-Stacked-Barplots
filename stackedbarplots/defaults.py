@@ -44,6 +44,7 @@ __all__ = [
     "DEFAULT_VERTLINE_STYLE", "Auto_Style_Calculations"
 ]
 
+_UNSET = object() #see https://peps.python.org/pep-0661/
 
 #TODO: Calculate in pixels rather than cm.
 class Auto_Style_Calculations:
@@ -330,18 +331,18 @@ class StackedPlotStyle:
 
     def set_axis_style(self,
                         *,
-                        x_lim:tuple[int, int] = None,
-                        step:int = None,
-                        x_font_size:int = None,
-                        y_font_size:int = None,
-                        x_font_colour:str = None,
-                        y_font_colour:str = None,
-                        x_axis_format:str = None,
-                        x_axis_show:bool = None,
-                        y_axis_show:bool = None,
-                        x_axis_abs:bool = None,
-                        x_axis_gridlines:bool = None,
-                        x_axis_gridlines_colour = None):
+                        x_lim:tuple[int, int] = _UNSET,
+                        step:int = _UNSET,
+                        x_font_size:int = _UNSET,
+                        y_font_size:int = _UNSET,
+                        x_font_colour:str = _UNSET,
+                        y_font_colour:str = _UNSET,
+                        x_axis_format:str = _UNSET,
+                        x_axis_show:bool = _UNSET,
+                        y_axis_show:bool = _UNSET,
+                        x_axis_abs:bool = _UNSET,
+                        x_axis_gridlines:bool = _UNSET,
+                        x_axis_gridlines_colour = _UNSET):
         """Update StackedBarplot axis style configuration.
 
         Args:
@@ -362,18 +363,18 @@ class StackedPlotStyle:
             x_axis_gridlines: Boolean flag for if x axis ticks should stretch the whole height of the figure.
             x_axis_gridlines_colour: Colour of stretched x axis ticks.
         """
-        if x_lim is not None: self.__axis_style["xlim"] = x_lim
-        if step is not None: self.__axis_style["step"] = step
-        if x_font_size is not None: self.__axis_style["xfontsize"] = x_font_size
-        if y_font_size is not None: self.__axis_style["yfontsize"] = y_font_size
-        if x_font_colour is not None: self.__axis_style["xfontcolour"] = x_font_colour
-        if y_font_colour is not None: self.__axis_style["yfontcolour"] = y_font_colour
-        if x_axis_format is not None: self.__axis_style["xaxisformat"] = x_axis_format
-        if x_axis_show is not None: self.__axis_style["xaxisshow"] = x_axis_show
-        if y_axis_show is not None: self.__axis_style["yaxisshow"] = y_axis_show
-        if x_axis_abs is not None: self.__axis_style["xaxisabs"] = x_axis_abs
-        if x_axis_gridlines is not None: self.__axis_style["xaxisgridlines"] = x_axis_gridlines
-        if x_axis_gridlines_colour is not None: self.__axis_style["xaxisgridlinescolour"] = x_axis_gridlines_colour
+        if x_lim is not _UNSET: self.__axis_style["xlim"] = x_lim
+        if step is not _UNSET: self.__axis_style["step"] = step
+        if x_font_size is not _UNSET: self.__axis_style["xfontsize"] = x_font_size
+        if y_font_size is not _UNSET: self.__axis_style["yfontsize"] = y_font_size
+        if x_font_colour is not _UNSET: self.__axis_style["xfontcolour"] = x_font_colour
+        if y_font_colour is not _UNSET: self.__axis_style["yfontcolour"] = y_font_colour
+        if x_axis_format is not _UNSET: self.__axis_style["xaxisformat"] = x_axis_format
+        if x_axis_show is not _UNSET: self.__axis_style["xaxisshow"] = x_axis_show
+        if y_axis_show is not _UNSET: self.__axis_style["yaxisshow"] = y_axis_show
+        if x_axis_abs is not _UNSET: self.__axis_style["xaxisabs"] = x_axis_abs
+        if x_axis_gridlines is not _UNSET: self.__axis_style["xaxisgridlines"] = x_axis_gridlines
+        if x_axis_gridlines_colour is not _UNSET: self.__axis_style["xaxisgridlinescolour"] = x_axis_gridlines_colour
         self.unrendered_changes = True
 
 
@@ -384,10 +385,10 @@ class StackedPlotStyle:
 
     def set_axis_title_style(self,
                             *,
-                            x_label:str = None,
-                            y_label:str = None,
-                            axis_label_font_size:int = None,
-                            axis_label_font_colour:str = None):
+                            x_label:str = _UNSET,
+                            y_label:str = _UNSET,
+                            axis_label_font_size:int = _UNSET,
+                            axis_label_font_colour:str = _UNSET):
         """Update StackedBarplot axis title style configuration.
 
         Args:
@@ -396,11 +397,11 @@ class StackedPlotStyle:
             axis_label_font_size: Axes label font size in points or as a string (e.g., 'large').
             axis_label_font_colour: Axes font colour.
         """
-        if x_label is not None: self.__axis_title_style["xlabel"] = x_label
-        if y_label is not None: self.__axis_title_style["ylabel"] = y_label
-        if axis_label_font_size is not None:
+        if x_label is not _UNSET: self.__axis_title_style["xlabel"] = x_label
+        if y_label is not _UNSET: self.__axis_title_style["ylabel"] = y_label
+        if axis_label_font_size is not _UNSET:
             self.__axis_title_style["axislabelfontsize"] = axis_label_font_size
-        if axis_label_font_colour is not None:
+        if axis_label_font_colour is not _UNSET:
             self.__axis_title_style["axislabelfontcolour"] = axis_label_font_colour
         self.unrendered_changes = True
 
@@ -411,9 +412,9 @@ class StackedPlotStyle:
 
     def set_bar_style(self,
                     *,
-                    bar_height:int = None,
-                    align:str = None,
-                    bar_gradient:ColourGradient = None):
+                    bar_height:int = _UNSET,
+                    align:str = _UNSET,
+                    bar_gradient:ColourGradient = _UNSET):
         """Update StackedBarplot bar style configuration.
 
         Args:
@@ -423,12 +424,12 @@ class StackedPlotStyle:
             bar_gradient: ColourGradient object, containing colours matching the number of 
                 series in each category.
         """
-        if bar_height is not None: self.__bar_style["height"] = bar_height
-        if align is not None:
+        if bar_height is not _UNSET: self.__bar_style["height"] = bar_height
+        if align is not _UNSET:
             if align not in ["left", "centre"]:
                 raise ValueError("Argument align must be either None, \"left\", or \"centre\".")
             self.__bar_style["align"] = align
-        if bar_gradient is not None:
+        if bar_gradient is not _UNSET:
             if not isinstance(bar_gradient, ColourGradient): raise ValueError("Argument bar_gradient must be of type ColourGradient.")
             self.bar_colours = bar_gradient
         self.unrendered_changes = True
@@ -441,14 +442,14 @@ class StackedPlotStyle:
 
     def set_bar_val_label_style(self,
                 *,
-                font_size:int=None,
-                font_colour:str = None,
-                colour_invert:bool = None,
-                format:str = None,
-                align:str=None,
-                padding:float = None,
-                hide_squeezed:str = None,
-                expel_squeezed_ends:bool = None
+                font_size:int=_UNSET,
+                font_colour:str = _UNSET,
+                colour_invert:bool = _UNSET,
+                format:str = _UNSET,
+                align:str=_UNSET,
+                padding:float = _UNSET,
+                hide_squeezed:str = _UNSET,
+                expel_squeezed_ends:bool = _UNSET
                 ):
         """Update StackedBarplot bar text style configuration.
 
@@ -471,19 +472,19 @@ class StackedPlotStyle:
                 should be moved outside the bar for better clarity (i.e., to the left or right of the
                 while category bars) if the annotation is wider than its bar.
         """
-        if font_size is not None: self.__bar_val_label_style["fontsize"] = font_size
-        if font_colour is not None: self.__bar_val_label_style["fontcolour"] = font_colour
-        if colour_invert is not None: self.__bar_val_label_style["colourinvert"] = colour_invert
-        if format is not None: self.__bar_val_label_style["format"] = format
-        if hide_squeezed not in [None, "all", "inner-only"]:
+        if font_size is not _UNSET: self.__bar_val_label_style["fontsize"] = font_size
+        if font_colour is not _UNSET: self.__bar_val_label_style["fontcolour"] = font_colour
+        if colour_invert is not _UNSET: self.__bar_val_label_style["colourinvert"] = colour_invert
+        if format is not _UNSET: self.__bar_val_label_style["format"] = format
+        if hide_squeezed not in [_UNSET, None, "all", "inner-only"]:
             raise ValueError("Argument hide-squeezed must be either None, \"all\", or \"inner-only\".")
-        elif hide_squeezed is not None: self.__bar_val_label_style["hidesqueezed"] = hide_squeezed
-        if expel_squeezed_ends is not None: self.__bar_val_label_style["expelsqueezedends"] = expel_squeezed_ends
-        if align is not None:
+        elif hide_squeezed is not _UNSET: self.__bar_val_label_style["hidesqueezed"] = hide_squeezed
+        if expel_squeezed_ends is not _UNSET: self.__bar_val_label_style["expelsqueezedends"] = expel_squeezed_ends
+        if align is not _UNSET:
             if align not in ["left", "centre", "right"]:
                 raise ValueError("Argument align must be either \"left\", \"centre\", or \"right\".")
             self.__bar_val_label_style["align"] = align
-        if padding is not None: self.__bar_val_label_style["padding"] = padding
+        if padding is not _UNSET: self.__bar_val_label_style["padding"] = padding
         self.unrendered_changes = True
 
 
@@ -494,21 +495,21 @@ class StackedPlotStyle:
 
     def set_fig_style(self,
                     *,
-                    title:str = None,
-                    title_font_size:int = None,
-                    title_colour:str = None,
-                    title_wrap:bool = None,
-                    subtitle:str = None,
-                    subtitle_font_size:int = None,
-                    subtitle_colour:str = None,
-                    subtitle_wrap:bool = None,
-                    font_family:str = None,
-                    font_weight:int = None,
-                    title_weight:int = None,
-                    fig_size:tuple[int, int] = None,
-                    background_colour:str = None,
-                    sorted:str = None,
-                    spine_display:tuple[bool, bool, bool, bool] = None):
+                    title:str = _UNSET,
+                    title_font_size:int = _UNSET,
+                    title_colour:str = _UNSET,
+                    title_wrap:bool = _UNSET,
+                    subtitle:str = _UNSET,
+                    subtitle_font_size:int = _UNSET,
+                    subtitle_colour:str = _UNSET,
+                    subtitle_wrap:bool = _UNSET,
+                    font_family:str = _UNSET,
+                    font_weight:int = _UNSET,
+                    title_weight:int = _UNSET,
+                    fig_size:tuple[int, int] = _UNSET,
+                    background_colour:str = _UNSET,
+                    sorted:str = _UNSET,
+                    spine_display:tuple[bool, bool, bool, bool] = _UNSET):
         """Update StackedBarplot general figure style configuration.
 
         Args:
@@ -535,29 +536,29 @@ class StackedPlotStyle:
             spine_display: Tuple of booleans representing the four figure spines. Ordered as 
                 (left, top, right, bottom).
         """
-        if title is not None: self.__fig_style["title"] = title
-        if title_font_size is not None: self.__fig_style["titlefontsize"] = title_font_size
-        if title_colour is not None: self.__fig_style["titlecolour"] = title_colour
-        if title_wrap is not None: self.__fig_style["titlewrap"] = title_wrap
-        if subtitle is not None: self.__fig_style["subtitle"] = subtitle
-        if subtitle_font_size is not None: self.__fig_style["subtitlefontsize"] = subtitle_font_size
-        if subtitle_colour is not None: self.__fig_style["subtitlecolour"] = subtitle_colour
-        if subtitle_wrap is not None: self.__fig_style["subtitlewrap"] = subtitle_wrap
-        if font_family is not None: self.__fig_style["fontfamily"] = font_family
-        if font_weight is not None: self.__fig_style["fontweight"] = font_weight
-        if title_weight is not None: self.__fig_style["titleweight"] = title_weight
-        if fig_size is not None:
+        if title is not _UNSET: self.__fig_style["title"] = title
+        if title_font_size is not _UNSET: self.__fig_style["titlefontsize"] = title_font_size
+        if title_colour is not _UNSET: self.__fig_style["titlecolour"] = title_colour
+        if title_wrap is not _UNSET: self.__fig_style["titlewrap"] = title_wrap
+        if subtitle is not _UNSET: self.__fig_style["subtitle"] = subtitle
+        if subtitle_font_size is not _UNSET: self.__fig_style["subtitlefontsize"] = subtitle_font_size
+        if subtitle_colour is not _UNSET: self.__fig_style["subtitlecolour"] = subtitle_colour
+        if subtitle_wrap is not _UNSET: self.__fig_style["subtitlewrap"] = subtitle_wrap
+        if font_family is not _UNSET: self.__fig_style["fontfamily"] = font_family
+        if font_weight is not _UNSET: self.__fig_style["fontweight"] = font_weight
+        if title_weight is not _UNSET: self.__fig_style["titleweight"] = title_weight
+        if fig_size is not _UNSET:
             if not isinstance(fig_size, tuple) or len(fig_size) != 2:
                 raise ValueError("Argument fig_size must be a tuple of two integers representing the width and height of the figure.")
             elif fig_size[0] < 500:
                 warnings.warn("An axis width below 500px can result in a larger than expected margin at right of figure.")
             self.__fig_style["size"] = fig_size
-        if background_colour is not None: self.__fig_style["backgroundcolour"] = background_colour
-        if sorted is not None: #sum-asc, sum-desc, avg-asc, avg-desc, lhlf-asc, lhlf-desc, rhlf-asc, rhlf-desc
+        if background_colour is not _UNSET: self.__fig_style["backgroundcolour"] = background_colour
+        if sorted is not _UNSET: #sum-asc, sum-desc, avg-asc, avg-desc, lhlf-asc, lhlf-desc, rhlf-asc, rhlf-desc
             if sorted not in [None, "sum-asc", "sum-desc", "avg-asc", "avg-desc", "lhlf-asc", "lhlf-desc", "rhlf-asc", "rhlf-desc"]:
                 raise ValueError("Argument sorted must be either None, sum-asc, sum-desc, avg-asc, avg-desc, lhlf-asc, lhlf-desc, rhlf-asc, or rhlf-desc.")
             self.__fig_style["sorted"] = sorted
-        if spine_display is not None:
+        if spine_display is not _UNSET:
             if not isinstance(spine_display, tuple) or len(spine_display) != 4:
                 raise ValueError("Argument spine_display must be a tuple of four boolean values representing the four figure spines.")
             self.__fig_style["spinedisplay"] = spine_display
@@ -582,16 +583,16 @@ class StackedPlotStyle:
 
     def set_legend_style(self,
                         *,
-                        show:bool = None,
-                        font_size:int = None,
-                        padding:float = None,
-                        font_colour:str = None,
-                        background_colour:str = None,
-                        border_colour:str = None,
-                        columns:int = None,
-                        placement:str = None,
-                        marker_shape:str = None,
-                        transform:tuple[float, float] = None):
+                        show:bool = _UNSET,
+                        font_size:int = _UNSET,
+                        padding:float = _UNSET,
+                        font_colour:str = _UNSET,
+                        background_colour:str = _UNSET,
+                        border_colour:str = _UNSET,
+                        columns:int = _UNSET,
+                        placement:str = _UNSET,
+                        marker_shape:str = _UNSET,
+                        transform:tuple[float, float] = _UNSET):
         """Update StackedBarplot legend style configuration.
 
         Args:
@@ -610,19 +611,19 @@ class StackedPlotStyle:
             transform: Allows the user to make minor adjustments to the legend's placement
                 after placement choice. Must be tuple of length 2 representing a transform in X and Y axis in dots/pixels. 
         """
-        if show is not None: self.__legend_style["show"] = show
-        if font_size is not None: self.__legend_style["fontsize"] = font_size
-        if padding is not None: self.__legend_style["padding"] = padding
-        if font_colour is not None: self.__legend_style["fontcolour"] = font_colour
-        if background_colour is not None: self.__legend_style["backgroundcolour"] = background_colour
-        if border_colour is not None: self.__legend_style["bordercolour"] = border_colour
-        if columns is not None: self.__legend_style["columns"] = columns
-        if placement is not None:
+        if show is not _UNSET: self.__legend_style["show"] = show
+        if font_size is not _UNSET: self.__legend_style["fontsize"] = font_size
+        if padding is not _UNSET: self.__legend_style["padding"] = padding
+        if font_colour is not _UNSET: self.__legend_style["fontcolour"] = font_colour
+        if background_colour is not _UNSET: self.__legend_style["backgroundcolour"] = background_colour
+        if border_colour is not _UNSET: self.__legend_style["bordercolour"] = border_colour
+        if columns is not _UNSET: self.__legend_style["columns"] = columns
+        if placement is not _UNSET:
             if placement not in ["right-vertical", "below-horizontal", "above-horizontal"]:
                 raise ValueError("Placement must be either \"right-vertical\", \"below-horizontal\", \"above-horizontal\".")
             self.__legend_style["placement"] = placement
-        if marker_shape is not None: self.__legend_style["markershape"] = marker_shape
-        if transform is not None:
+        if marker_shape is not _UNSET: self.__legend_style["markershape"] = marker_shape
+        if transform is not _UNSET:
             if not isinstance(transform, tuple) and len(transform) != 2:
                 raise ValueError("Argument transform must be tuple of length two representing transform in X and Y axis in dots/pixels.")
             self.__legend_style["transform"] = transform
@@ -636,11 +637,11 @@ class StackedPlotStyle:
 
     def set_vert_line_style(self,
                     *,
-                    show:bool = None,
-                    line_style:str = None,
-                    colour:str = None,
-                    alpha:float = None,
-                    z_order:str = None):
+                    show:bool = _UNSET,
+                    line_style:str = _UNSET,
+                    colour:str = _UNSET,
+                    alpha:float = _UNSET,
+                    z_order:str = _UNSET):
         """Update StackedBarplot central vertical line style configuration.
 
         Args:
@@ -652,14 +653,14 @@ class StackedPlotStyle:
             z_order: Whether the vertical line is displayed in front or behind the plot. Is
                 {"front", "behind"}.
         """
-        if show is not None: self.__vert_line_style["show"] = show
-        if line_style is not None: self.__vert_line_style["linestyle"] = line_style
-        if colour is not None: self.__vert_line_style["colour"] = colour
-        if alpha is not None:
+        if show is not _UNSET: self.__vert_line_style["show"] = show
+        if line_style is not _UNSET: self.__vert_line_style["linestyle"] = line_style
+        if colour is not _UNSET: self.__vert_line_style["colour"] = colour
+        if alpha is not _UNSET:
             if alpha < 0 or alpha > 1:
                 raise ValueError("Argument alpha must be a float between 0 and 1.")
             self.__vert_line_style["alpha"] = alpha
-        if z_order is not None:
+        if z_order is not _UNSET:
             if z_order not in ["front", "behind"]:
                 raise ValueError("Argument z_order must be a string with value of either \"front\" or \"behind\".")
             self.__vert_line_style["zorder"] = z_order

@@ -227,7 +227,7 @@ class StackedBarplot():
         offsets = [0]*len(self.data)
         if self.get_bar_style()["align"] == "centre":
             offsets = []
-            for(row_index, row) in enumerate(self.data):
+            for(row_index, _) in enumerate(self.data):
                 if len(self.series_labels) % 2 == 0:
                     offsets.append(sum(self.data[row_index][0:middle_index]))
                 else:
@@ -237,7 +237,7 @@ class StackedBarplot():
             widths = [bar_data[col_index] for bar_data in self.data]
             starts = [bar_data[col_index] for bar_data in data_cum]
 
-            for bar_index, width in enumerate(widths):
+            for bar_index, _ in enumerate(widths):
                 if self.get_bar_style()["align"] == "left":
                     starts[bar_index] = starts[bar_index]-widths[bar_index]
                 elif self.get_bar_style()["align"] == "centre":
@@ -276,7 +276,7 @@ class StackedBarplot():
             self.ax._bar_labels.append([])
 
             #Positioning bar value labels
-            for category_index, (rect, val) in enumerate(zip(c.patches, c.datavalues)):
+            for _, (rect, val) in enumerate(zip(c.patches, c.datavalues)):
                 text = str.format(self.get_bar_val_label_style()["format"], val)
 
                 ha = "center" #Point on the annotation object that is aligned to the given coordinates. Horizontal can change depending on whether annotations are left or right aligned.

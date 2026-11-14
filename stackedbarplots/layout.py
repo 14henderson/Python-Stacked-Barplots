@@ -91,7 +91,7 @@ class StackedBarLayoutEngine(matplotlib.layout_engine.LayoutEngine):
         for series_index, c in enumerate(self.plot.ax.containers):
 
             #Positioning bar value labels
-            for category_index, (rect, val) in enumerate(zip(c.patches, c.datavalues)):
+            for category_index, (rect, _) in enumerate(zip(c.patches, c.datavalues)):
 
                 y = rect.get_y() + rect.get_height() / 2 #Center annotation object to the bar vertically
                 an = self.plot.ax._bar_labels[series_index][category_index]
@@ -319,8 +319,8 @@ class StackedBarLayoutEngine(matplotlib.layout_engine.LayoutEngine):
             desired_ax_height = self.plot.get_fig_style()["size"][1]
 
         m_left_px = self.fig_size_settings["raw_left_margin"] + Auto_Style_Calculations.fig_left_pad
-        m_right_px = self.fig_size_settings["raw_right_margin"] + Auto_Style_Calculations.fig_right_pad
-        m_top_px = self.fig_size_settings["raw_top_margin"] + Auto_Style_Calculations.fig_top_pad
+        #m_right_px = self.fig_size_settings["raw_right_margin"] + Auto_Style_Calculations.fig_right_pad
+        #m_top_px = self.fig_size_settings["raw_top_margin"] + Auto_Style_Calculations.fig_top_pad
         m_bottom_px = self.fig_size_settings["raw_bottom_margin"] + Auto_Style_Calculations.fig_bottom_pad
 
         #See https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots_adjust.html
