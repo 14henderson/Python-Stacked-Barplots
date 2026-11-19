@@ -8,6 +8,7 @@ from matplotlib.testing.compare import compare_images
 
 from stackedbarplots.plots import basic, centred, normalised, normalised_centred
 from stackedbarplots.core import StackedBarplot
+from stackedbarplots.tools import ColourGradient
 
 class PlotsMethodTest(unittest.TestCase):
     """Very basic unit tests for basic(), centred(),
@@ -118,13 +119,37 @@ class PlotsMethodTest(unittest.TestCase):
                 cat_total = sum(cat_data)
                 for ser_val, norm_val in zip(cat_data, norm_data):
                     self.assertAlmostEqual(norm_val, (ser_val/cat_total)*100, 5) #Check normalisation to 5 decimal places.
-        norm_plot.render()
 
-        self.compare_figs(norm_plot, "test_norm_plot.png")
-
-        if self.show_plots: norm_plot.show()
         plt.close(norm_plot.fig)
         del norm_plot
+
+        pov_results = {"Sub-Saharan Africa": [43.3, 48.4, 7.5, 0.8],
+                          "MENA, Afghanistan and Pakistan": [14.5, 52.6, 24.1, 8.8],
+                          "World": [9.8, 41.7, 28.6, 19.9],
+                          "Latin America and Caribbean": [4, 26.7, 48.2, 21.1],
+                          "South Asia": [1.7, 81.9, 16, 0.4],
+                          "East Asia and Pacific": [1.6, 30.1, 47.9, 20.4],
+                          "North America": [0.9, 1, 10.1, 88],
+                          "Europe and Central Asia": [0.5, 5.7, 30.6, 63.2]}
+        pov_series = ["Below $3 a day", "\$3-\$10 a day", "\$10-\$30 a day", "Above $30 a day"]
+        custom_colours = ColourGradient()
+        custom_colours.set_colour_gradient_list([
+            (223, 71, 73),
+            (253, 190, 129),
+            (188, 225, 237),
+            (86, 149, 197)
+        ])
+
+        poverty_plot = normalised(pov_results, pov_series, bar_colours=custom_colours)
+        poverty_plot.set_legend_style(show=True)
+        poverty_plot.set_fig_style(title="Distribution of population between different poverty lines",
+                                   subtitle="This data is adjusted for inflation and differences in living costs between countries. See https://ourworldindata.org/grapher/distribution-of-population-between-different-poverty-thresholds-stacked-bar.")
+        poverty_plot.render()
+        self.compare_figs(poverty_plot, "test_norm_plot.png")
+
+        if self.show_plots: poverty_plot.show()
+        plt.close(poverty_plot.fig)
+        del poverty_plot
 
 
     def test_normalised_centred(self):
