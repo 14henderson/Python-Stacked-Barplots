@@ -55,7 +55,7 @@ class Auto_Style_Calculations:
     #Padding around figure (in pixels)
     fig_left_pad = 30
     fig_top_pad = 10
-    fig_right_pad = 10
+    fig_right_pad = 30
     fig_bottom_pad = 10
 
     @staticmethod
@@ -191,14 +191,14 @@ class DEFAULT_LEGEND_STYLE:
     accessibility. A 'placementtransform' is also given to adjust placement."""
 
     show:bool = False
-    font_size:int = 8
+    font_size:int = 9
     font_colour = "#2c2c2c"
     label_padding:float = 0.8
     marker_shape:str = "s" #see for different marker shapes https://matplotlib.org/stable/api/_as_gen/matplotlib.lines.Line2D.html
     border_colour = DEFAULT_FIG_STYLE.background_colour
     background_colour = DEFAULT_FIG_STYLE.background_colour
     columns:int = None
-    placement:str = "right-vertical"
+    placement:str = "above-horizontal"
     placement_options = {
         "right-vertical": ["upper left", (1, 1)],
         "left-vertical": ["upper right", (0, 1)],
@@ -219,7 +219,7 @@ class DEFAULT_VERTLINE_STYLE:
     line_style:str = "-"
     colour = "black"
     alpha:float = 1
-    z_order:str = "front" #Can be "front" or "behind"
+    z_order:str = "behind" #Can be "front" or "behind"
 
 
 

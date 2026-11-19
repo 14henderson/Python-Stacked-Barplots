@@ -278,7 +278,6 @@ def normalised(
 
     plot.set_axis_style(x_axis_format="{0}%")
     plot.set_bar_style(align="left")
-    plot.set_bar_val_label_style(expel_squeezed_ends=True)
 
     if title is not None: plot.set_fig_style(title=title)
     if subtitle is not None: plot.set_fig_style(subtitle=subtitle)
