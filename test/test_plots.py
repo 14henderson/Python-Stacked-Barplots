@@ -39,9 +39,8 @@ class PlotsMethodTest(unittest.TestCase):
 
         if self.override_expected_plots: plot.save(expected_plot_uri)
         plot.save(test_plot_uri)
-        compare_images(expected_plot_uri,
-                       test_plot_uri,
-                       tol=0.1)
+        if compare_images(expected_plot_uri, test_plot_uri, tol=0.1) is not None:
+            raise RuntimeError("Unit test error: Error in Figure alignment.")
 
 
     def test_custom(self):
