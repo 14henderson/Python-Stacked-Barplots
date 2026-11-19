@@ -63,24 +63,40 @@ class PlotsMethodTest(unittest.TestCase):
 
 
     def test_basic(self):
-        results = {"Category 1": [10, 5, 3, 11], "Category 2": [4, 2, 9, 12], "Category 3": [11, 12, 3, 4]}
-        series_labels = ["Series 1", "Series 2", "Series 3", "Series 4"]
+        results = {
+            "1980": [26.42, 33, 47.39], 
+            "1990": [39.61, 28.53, 43.60], 
+            "2000": [47.90, 29.87, 43.98],
+            "2010": [51.14, 28.10, 38.8],
+            "2020": [57.29, 29.88, 37.07]
+            }
+        series_labels = ["Poultry", "Pork", "Beef"]
+        custom_colours = ColourGradient()
+        custom_colours.set_colour_gradient_list([
+            (92, 128, 186),
+            (241, 137, 87),
+            (213, 81, 83)
+        ])
+        meat_plot = basic(results, series_labels, bar_colours=custom_colours)
+        meat_plot.render()
 
-        basic_plot = basic(results, series_labels)
-        basic_plot.render()
+        meat_plot.set_fig_style(title="Per capita meat consumption in the United States", subtitle="Average per capita meat availability, measured in kilograms per year. This data does not account for consumption-level waste, and therefore actual per capita intake will be slightly lower than meat availability. See https://ourworldindata.org/grapher/per-capita-meat-usa.")
+        meat_plot.set_legend_style(show=True)
+        meat_plot.set_bar_val_label_style(format="{0:.2f} kg")
+        meat_plot.set_axis_style(x_axis_format="{0:.0f} kg")
 
         #Check correct number of rects
-        axis_objs = basic_plot.ax.get_children()
+        axis_objs = meat_plot.ax.get_children()
         axis_rects = list(filter(lambda actor: isinstance(actor, matplotlib.patches.Rectangle), axis_objs))
         self.assertGreaterEqual(len(axis_rects), len(series_labels)*len(results.keys()),
                                 "Error in bar plotting. Stacked barchart figure as more rects than data requires.")
-        basic_plot.render()
+        meat_plot.render()
 
-        self.compare_figs(basic_plot, "test_basic_plot.png")
+        self.compare_figs(meat_plot, "test_basic_plot.png")
 
-        if self.show_plots: basic_plot.show()
-        plt.close(basic_plot.fig)
-        del basic_plot
+        if self.show_plots: meat_plot.show()
+        plt.close(meat_plot.fig)
+        del meat_plot
 
 
     def test_centred(self):
