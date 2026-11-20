@@ -107,6 +107,10 @@ class StackedBarplot():
         self.style.bar_colours.gradient(len(self.series_labels), DEFAULT_BAR_STYLE.start_colour, DEFAULT_BAR_STYLE.end_colour, DEFAULT_BAR_STYLE.mid_colour)
 
 
+    def set_custom_attributes(self):
+        self.fig._subtitle = None
+
+
     def render(self):
         """Renders the figure given current data and style configuration."""
         self._destroy_fig()
@@ -169,6 +173,7 @@ class StackedBarplot():
         self._plot_bar_labels()
         self._plot_axes()
         self._plot_peritext()
+        self.fig.canvas.draw()
 
         if self.get_legend_style()["show"]:
             self._plot_legend()
@@ -176,9 +181,7 @@ class StackedBarplot():
             self._plot_vert_line()
 
         self._plot_paratext()
-
         self.fig.canvas.draw()
-
 
 
     def _destroy_fig(self):
@@ -198,6 +201,7 @@ class StackedBarplot():
     def _plot_bars(self):
         """Internal method. Renders bars and category headings according to stored style configuration."""
         self.fig, self.ax = plt.subplots()
+        self.set_custom_attributes()
 
         layout_engine = StackedBarLayoutEngine(self)
         self.fig.set_layout_engine(layout_engine)
@@ -345,7 +349,6 @@ class StackedBarplot():
     def _plot_paratext(self):
         """Internal method. Draws paratext (i.e., text around the axis) including title and subtitle."""
 
-        self.fig._subtitle = None
         if self.get_fig_style()["title"] is not None:
             self.fig.suptitle(self.get_fig_style()["title"],
                               fontsize=self.get_fig_style()["titlefontsize"],
