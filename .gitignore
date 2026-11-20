@@ -182,4 +182,4 @@ cython_debug/
 .vscode/settings.json
 
 #Unit test plots saved
-test/test_plots/*.png
+test/graphical/test_plots/*.png
