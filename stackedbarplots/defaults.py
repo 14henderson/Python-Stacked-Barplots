@@ -485,6 +485,8 @@ class StackedPlotStyle:
                 raise ValueError("Argument align must be either \"left\", \"centre\", or \"right\".")
             self.__bar_val_label_style["align"] = align
         if padding is not _UNSET: self.__bar_val_label_style["padding"] = padding
+        if self.__bar_val_label_style["hidesqueezed"] == "all" and self.__bar_val_label_style["expelsqueezedends"]:
+            warnings.warn("Cannot apply 'expel_squeezed_ends' style when 'hide_squeezed' is set to [all].")
         self.unrendered_changes = True
 
 
