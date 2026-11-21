@@ -19,7 +19,7 @@ class GraphicalPlotsTest(unittest.TestCase):
 
     def setUp(self):
         self.show_plots = False
-        self.override_expected_plots = True
+        self.override_expected_plots = False
 
 
     def test_vis_basic(self):
@@ -54,9 +54,32 @@ class GraphicalPlotsTest(unittest.TestCase):
 
 
     def test_vis_centred(self):
-        results_2 = {"Category 1": [10, 5, 3, 11, 5], "Category 2": [4, 2, 9, 12, 3], "Category 3": [11, 12, 3, 4, 2]}
-        series_labels_2 = ["Series 1", "Series 2", "Series 3", "Series 4", "Series 5"]
-        centre_plot = centred(results_2, series_labels_2)
+        results = {
+            "United Kingdom": [14.9, 7.2, 10.7, 13.0, 10.8, 16.2, 12.1, 7.9, 4.9, 1.3, 1.0],
+            "France":         [13.8, 3.8,  9.4, 11.8, 10.6, 22.6, 10.9, 9.3, 5.6, 0.8, 1.5],
+            "Germany":        [11.3, 4.5,  6.4, 10.5,  9.8, 16.2, 11.6,12.7,11.5,3.5,2.3],
+            "Italy":          [10.4, 5.0,  8.1, 11.3, 14.4, 17.5, 14.8,10.6,5.9,1.0,1.2],
+            "Spain":          [14.9, 4.3,  6.4,  9.3, 10.8, 20.9, 12.4,10.4,7.5,1.3,1.7]
+        }
+
+        series_labels = [
+            "No trust at all",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "Complete trust"
+        ]
+        centre_plot = centred(results, series_labels, title="Trust in Country's Parliament", subtitle="European Social Survey Round 11. Respondent counts derived from published percentages and sample sizes. ESS round 11 - 2023. Social inequalities in health, Gender in contemporary Europe.")
+        centre_plot.set_legend_style(show=True)
+        centre_plot.set_bar_val_label_style(format="{0:.0f}%")
+        centre_plot.set_axis_style(x_axis_format="{0:.0f}%")
+        centre_plot.set_fig_style(sorted="lhlf-asc")
         centre_plot.render()
 
         compare_figs(centre_plot, "GraphPlots_centred.png", override=self.override_expected_plots)
@@ -106,9 +129,9 @@ class GraphicalPlotsTest(unittest.TestCase):
 
         custom_colours = ColourGradient()
         custom_colours.set_colour_gradient_list([
-            (255, 110, 110),
+            (99, 179, 93),
             (224, 224, 224),
-            (99, 179, 93)
+            (255, 110, 110)
         ])
 
         norm_plot_centre = normalised_centred(results, series_labels, bar_colours=custom_colours)
@@ -117,6 +140,7 @@ class GraphicalPlotsTest(unittest.TestCase):
         norm_plot_centre.set_bar_val_label_style(format="{0:.1f}%", expel_squeezed_ends=True, hide_squeezed="inner-only")
         norm_plot_centre.set_legend_style(show=True)
         norm_plot_centre.set_axis_title_style(x_label="Percentage of respondents")
+        norm_plot_centre.set_axis_style(x_lim=(-80, 80), step=20)
         norm_plot_centre.render()
 
         compare_figs(norm_plot_centre, "GraphPlots_normalised_centred.png", override=self.override_expected_plots)

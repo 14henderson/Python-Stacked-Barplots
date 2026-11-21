@@ -19,7 +19,7 @@ class GraphicalStylesTest(unittest.TestCase):
 
     def setUp(self):
         self.show_plots = False
-        self.override_expected_plots = True
+        self.override_expected_plots = False
 
 
     def test_vis_bar_font(self):
