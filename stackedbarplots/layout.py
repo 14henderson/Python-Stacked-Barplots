@@ -135,7 +135,9 @@ class StackedBarLayoutEngine(matplotlib.layout_engine.LayoutEngine):
 
                 #Threshold for first and last bar on a row; if value is below threshold, move label to outside of bar
                 if self.plot.get_bar_val_label_style()["expelsqueezedends"] is True:
+                    is_squeezed = False
                     if series_index == 0 and font_width > bar_width:
+                        is_squeezed = True
                         an.set_ha("right")
                         an.xy = (rect.get_x() - padding_data_coords, y)
 
@@ -146,8 +148,11 @@ class StackedBarLayoutEngine(matplotlib.layout_engine.LayoutEngine):
 
 
                     elif series_index == len(self.plot.series_labels)-1 and font_width > bar_width:
+                        is_squeezed = True
                         an.set_ha("left")
                         an.xy = (rect.get_x() + rect.get_width() + padding_data_coords, y)
+
+                    if is_squeezed: an.set_color(self.plot.get_bar_val_label_style()["fontcolour"]) #Reset colour (in case of colour invert)
 
                 #Hide bar data annotation if squeezed and style dictates it is to be hidden.
                 if self.plot.get_bar_val_label_style()["hidesqueezed"] is not None:
