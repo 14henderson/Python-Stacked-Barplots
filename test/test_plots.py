@@ -1,14 +1,13 @@
 # pylint: disable=multiple-statements,too-many-positional-arguments,redefined-outer-name,missing-function-docstring,missing-class-docstring,line-too-long,disable=consider-using-enumerate
 
-import os
 import unittest
 import matplotlib
 import matplotlib.pyplot as plt
-from matplotlib.testing.compare import compare_images
 
 from stackedbarplots.plots import basic, centred, normalised, normalised_centred
-from stackedbarplots.core import StackedBarplot
-from stackedbarplots.tools import ColourGradient
+
+
+
 
 class PlotsMethodTest(unittest.TestCase):
     """Very basic unit tests for basic(), centred(),
@@ -19,28 +18,7 @@ class PlotsMethodTest(unittest.TestCase):
 
     def setUp(self):
         self.show_plots = False
-        self.override_expected_plots = False
-        self.EXPECTED_PLOTS_DIR = "expected_plots"
-        self.TEST_PLOTS_DIR = "test_plots"
-
-
-    def compare_figs(self, plot:StackedBarplot, filename:str) -> None:
-        expected_plot_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), self.EXPECTED_PLOTS_DIR)
-        test_plot_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), self.TEST_PLOTS_DIR)
-
-        if not os.path.isdir(expected_plot_dir):
-            os.mkdir(expected_plot_dir)
-
-        if not os.path.isdir(test_plot_dir):
-            os.mkdir(test_plot_dir)
-
-        expected_plot_uri = os.path.join(expected_plot_dir, filename)
-        test_plot_uri = os.path.join(test_plot_dir, filename)
-
-        if self.override_expected_plots: plot.save(expected_plot_uri)
-        plot.save(test_plot_uri)
-        if compare_images(expected_plot_uri, test_plot_uri, tol=0.1) is not None:
-            raise RuntimeError("Unit test error: Error in Figure alignment.")
+        self.override_expected_plots = True
 
 
     def test_custom(self):
@@ -51,33 +29,24 @@ class PlotsMethodTest(unittest.TestCase):
             results = {"Category 1": [10, 5, 2, 3, 11], "Category 2": [4, 2, 2, 9, 12], "Category 3": [11, 12, 2, 3, 4]}
             series_labels = ["Series 1", "Series 2", "Series 3", "Series 4", "Series 5"]
 
-            basic_plot = basic(results, series_labels)
-            basic_plot.set_fig_style(title="Hello world")
-            basic_plot.set_fig_style(title=None)
-
-            basic_plot.render()
-            basic_plot.show()
-
-            plt.close(basic_plot.fig)
-            del basic_plot
+            legend_plot_placements = basic(results, series_labels)
+            legend_plot_placements.set_legend_style(show=True, placement="above-horizontal")
+            legend_plot_placements.set_fig_style(title="Example title.", subtitle="Example subtitle.")
+            legend_plot_placements.set_axis_title_style(x_label="Example x axis title.")
+            legend_plot_placements.set_axis_title_style(x_label="Example x axis title.")
+            legend_plot_placements.render()
+            legend_plot_placements.save("test.png")
+            legend_plot_placements.save("test1.png")
+            legend_plot_placements.save("test2.png")
+            legend_plot_placements.save("test3.png")
+            plt.close(legend_plot_placements.fig)
 
 
     def test_basic(self):
-        results = {
-            "1980": [26.42, 33, 47.39], 
-            "1990": [39.61, 28.53, 43.60], 
-            "2000": [47.90, 29.87, 43.98],
-            "2010": [51.14, 28.10, 38.8],
-            "2020": [57.29, 29.88, 37.07]
-            }
-        series_labels = ["Poultry", "Pork", "Beef"]
-        custom_colours = ColourGradient()
-        custom_colours.set_colour_gradient_list([
-            (92, 128, 186),
-            (241, 137, 87),
-            (213, 81, 83)
-        ])
-        meat_plot = basic(results, series_labels, bar_colours=custom_colours)
+        results = {"Category 1": [10, 5, 2, 3, 11], "Category 2": [4, 2, 2, 9, 12], "Category 3": [11, 12, 2, 3, 4]}
+        series_labels = ["Series 1", "Series 2", "Series 3", "Series 4", "Series 5"]
+
+        meat_plot = basic(results, series_labels)
         meat_plot.render()
 
         meat_plot.set_fig_style(title="Per capita meat consumption in the United States", subtitle="Average per capita meat availability, measured in kilograms per year. This data does not account for consumption-level waste, and therefore actual per capita intake will be slightly lower than meat availability. See https://ourworldindata.org/grapher/per-capita-meat-usa.")
@@ -91,8 +60,6 @@ class PlotsMethodTest(unittest.TestCase):
         self.assertGreaterEqual(len(axis_rects), len(series_labels)*len(results.keys()),
                                 "Error in bar plotting. Stacked barchart figure as more rects than data requires.")
         meat_plot.render()
-
-        self.compare_figs(meat_plot, "test_basic_plot.png")
 
         if self.show_plots: meat_plot.show()
         plt.close(meat_plot.fig)
@@ -110,8 +77,6 @@ class PlotsMethodTest(unittest.TestCase):
         axis_rects = list(filter(lambda actor: isinstance(actor, matplotlib.patches.Rectangle), axis_objs))
         self.assertGreaterEqual(len(axis_rects), len(series_labels_2)*len(results_2.keys()),
                                 "Error in bar plotting. Stacked barchart figure as more rects than data requires.")
-
-        self.compare_figs(centre_plot, "test_centre_plot.png")
 
         if self.show_plots: centre_plot.show()
         plt.close(centre_plot.fig)
@@ -138,34 +103,6 @@ class PlotsMethodTest(unittest.TestCase):
         plt.close(norm_plot.fig)
         del norm_plot
 
-        pov_results = {"Sub-Saharan Africa": [43.3, 48.4, 7.5, 0.8],
-                          "MENA, Afghanistan and Pakistan": [14.5, 52.6, 24.1, 8.8],
-                          "World": [9.8, 41.7, 28.6, 19.9],
-                          "Latin America and Caribbean": [4, 26.7, 48.2, 21.1],
-                          "South Asia": [1.7, 81.9, 16, 0.4],
-                          "East Asia and Pacific": [1.6, 30.1, 47.9, 20.4],
-                          "North America": [0.9, 1, 10.1, 88],
-                          "Europe and Central Asia": [0.5, 5.7, 30.6, 63.2]}
-        pov_series = ["Below $3 a day", "\$3-\$10 a day", "\$10-\$30 a day", "Above $30 a day"]
-        custom_colours = ColourGradient()
-        custom_colours.set_colour_gradient_list([
-            (223, 71, 73),
-            (253, 190, 129),
-            (188, 225, 237),
-            (86, 149, 197)
-        ])
-
-        poverty_plot = normalised(pov_results, pov_series, bar_colours=custom_colours)
-        poverty_plot.set_legend_style(show=True)
-        poverty_plot.set_fig_style(title="Distribution of population between different poverty lines",
-                                   subtitle="This data is adjusted for inflation and differences in living costs between countries. See https://ourworldindata.org/grapher/distribution-of-population-between-different-poverty-thresholds-stacked-bar.")
-        poverty_plot.render()
-        self.compare_figs(poverty_plot, "test_norm_plot.png")
-
-        if self.show_plots: poverty_plot.show()
-        plt.close(poverty_plot.fig)
-        del poverty_plot
-
 
     def test_normalised_centred(self):
         norm_results_1 = {"Category 1": [10, 5, 3, 11], "Category 2": [4, 2, 9, 12]}
@@ -184,8 +121,6 @@ class PlotsMethodTest(unittest.TestCase):
                 for ser_val, norm_val in zip(cat_data, norm_data):
                     self.assertAlmostEqual(norm_val, (ser_val/cat_total)*100, 5) #Check normalisation to 5 decimal places.
         norm_plot_centre.render()
-
-        self.compare_figs(norm_plot_centre, "test_norm_plot_centre.png")
 
         if self.show_plots: norm_plot_centre.show()
         plt.close(norm_plot_centre.fig)

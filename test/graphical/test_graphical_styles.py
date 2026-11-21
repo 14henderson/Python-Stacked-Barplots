@@ -11,7 +11,7 @@ from .test_tools import compare_figs
 
 
 
-class GraphicalStyleTest(unittest.TestCase):
+class GraphicalStylesTest(unittest.TestCase):
     """Unit tests for plot style functionality.
     Unit tests are designed not to be comprehensive
     but ensure that changes to codebase do not break
