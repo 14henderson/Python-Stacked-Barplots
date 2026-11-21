@@ -152,6 +152,7 @@ class StackedBarLayoutEngine(matplotlib.layout_engine.LayoutEngine):
                         an.set_ha("left")
                         an.xy = (rect.get_x() + rect.get_width() + padding_data_coords, y)
 
+                    #TODO: I believe this might produce a bug if resizing between draws un-expels ends and they really should have their colour inverted.
                     if is_squeezed: an.set_color(self.plot.get_bar_val_label_style()["fontcolour"]) #Reset colour (in case of colour invert)
 
                 #Hide bar data annotation if squeezed and style dictates it is to be hidden.
