@@ -3,6 +3,9 @@
 import unittest
 from stackedbarplots.tools import cumu1d, cumu2d, ColourGradient, ChartDataSorting
 
+
+
+
 class TestCumu1d(unittest.TestCase):
     """Unit tests for method cumu1d() in tools.py."""
 

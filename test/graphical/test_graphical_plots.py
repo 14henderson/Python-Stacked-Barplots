@@ -4,7 +4,6 @@ import unittest
 import matplotlib.pyplot as plt
 
 from stackedbarplots.plots import basic, centred, normalised, normalised_centred
-from stackedbarplots.plots import basic
 from stackedbarplots.tools import ColourGradient
 from .test_tools import compare_figs
 

@@ -8,6 +8,9 @@ from stackedbarplots.core import StackedBarplot
 from stackedbarplots.defaults import StackedPlotStyle
 from stackedbarplots.tools import ColourGradient
 
+
+
+
 class CoreClassTest(unittest.TestCase):
     """Unit tests for StackedBarplot class in core.py.
     Unit tests in this class focus on the general
