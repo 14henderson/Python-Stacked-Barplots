@@ -38,12 +38,12 @@ class GraphicalPlotsTest(unittest.TestCase):
             (213, 81, 83)
         ])
         meat_plot = basic(results, series_labels, bar_colours=custom_colours)
-        meat_plot.render()
 
         meat_plot.set_fig_style(title="Per capita meat consumption in the United States", subtitle="Average per capita meat availability, measured in kilograms per year. This data does not account for consumption-level waste, and therefore actual per capita intake will be slightly lower than meat availability. See https://ourworldindata.org/grapher/per-capita-meat-usa.")
         meat_plot.set_legend_style(show=True)
         meat_plot.set_bar_val_label_style(format="{0:.2f} kg")
         meat_plot.set_axis_style(x_axis_format="{0:.0f} kg")
+        meat_plot.set_axis_title_style(y_label="Survey year", x_label="Meat type")
         meat_plot.render()
 
         compare_figs(meat_plot, "GraphPlots_basic.png", override=self.override_expected_plots)

@@ -53,8 +53,8 @@ class Auto_Style_Calculations:
     chart data (e.g., figure height calculate from number of categories)"""
 
     #Padding around figure (in pixels)
-    fig_left_pad = 30
-    fig_top_pad = 10
+    fig_left_pad = 20
+    fig_top_pad = 20
     fig_right_pad = 30
     fig_bottom_pad = 10
 
