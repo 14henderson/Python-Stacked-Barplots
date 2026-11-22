@@ -144,8 +144,6 @@ class StackedBarplot():
             filename: The path and filename to save figure. Must be relative path.
             transparent: If True, the Axes patches will all be transparent. 
             dpi: The resolution in dots per inch. If 'figure', use the figure's dpi value.
-            bbox_inches: Bounding box in inches: only the given portion of the figure is saved. 
-                If 'tight', try to figure out the tight bbox of the figure.
             pad_inches: Amount of padding in inches around the figure when bbox_inches is 
                 'tight'.
             fig_format: The file format, e.g. 'png', 'pdf', 'svg', ... The behavior when this is 
@@ -160,7 +158,6 @@ class StackedBarplot():
         self.fig.savefig(os.path.join(path, filename),
                          transparent=transparent,
                          dpi=dpi,
-                         bbox_inches=bbox_inches,
                          pad_inches=pad_inches,
                          format=fig_format)
 
@@ -172,7 +169,6 @@ class StackedBarplot():
         self._plot_bars()
         self._plot_bar_labels()
         self._plot_axes()
-        self._plot_peritext()
         self.fig.canvas.draw()
 
         if self.get_legend_style()["show"]:
@@ -180,6 +176,7 @@ class StackedBarplot():
         if self.get_vert_line_style()["show"]:
             self._plot_vert_line()
 
+        self._plot_peritext()
         self._plot_paratext()
         self.fig.canvas.draw()
 
@@ -324,7 +321,7 @@ class StackedBarplot():
 
         if self.get_axis_title_style()["xlabel"] is not None:
             self.ax.set_xlabel(self.get_axis_title_style()["xlabel"],
-                               labelpad=5,
+                               labelpad=0,
                                fontsize=self.get_axis_title_style()["axislabelfontsize"],
                                color=self.get_axis_title_style()["axislabelfontcolour"],
                                )

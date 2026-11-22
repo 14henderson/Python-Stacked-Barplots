@@ -166,6 +166,12 @@ class StackedBarLayoutEngine(matplotlib.layout_engine.LayoutEngine):
                 else:
                     an.set_visible(True)
 
+        if self.plot.get_axis_title_style()["ylabel"] is not None:
+            self.plot.ax.yaxis.labelpad = 5
+
+        if self.plot.get_axis_title_style()["xlabel"] is not None:
+            self.plot.ax.xaxis.labelpad = 5
+
 
     def layout_legend(self, fig:Figure) -> None:
         """Layout plot legend to not overlap with plot peritext."""
@@ -248,7 +254,7 @@ class StackedBarLayoutEngine(matplotlib.layout_engine.LayoutEngine):
         """Calculates the size of the margin between the left of the axes and the left of the figure."""
         m_left_px = 0
         if self.plot.get_axis_title_style()["ylabel"] is not None:
-            m_left_px += self.plot.ax.get_window_extent().x0 - self.plot.ax.yaxis.label.get_tightbbox().x0
+            m_left_px += self.plot.ax.get_window_extent().x0 - self.plot.ax.yaxis.label.get_window_extent().x0
         else:
             labels = [label for label in self.plot.ax.get_yticklabels() if label.get_visible()]
             min_x0 = min(label.get_window_extent().x0 for label in labels)
